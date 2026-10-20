@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<script>try{if(localStorage.getItem('mt.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
+
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#a8691a">
 <link rel="apple-touch-icon" href="icons/apple-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
+<meta property="og:site_name" content="Minto English">
+<meta property="og:title" content="Minto English · Điểm yếu & tiến bộ TOEIC">
+<meta property="og:image" content="https://mangomint1805.github.io/toeic/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="icons/fav-64.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light only">
@@ -46,17 +53,17 @@ svg text{font-family:'IBM Plex Sans',sans-serif}
 @media (max-width:600px){.parts{grid-template-columns:repeat(4,1fr)}.cat{grid-template-columns:minmax(0,1fr) 80px 50px}}
 </style>
 </head>
-<body>
+<body data-nav="stats">
 <div class="wrap">
   <header>
     <a class="back" href="./">← Trang chủ</a>
     <h1>Điểm yếu & tiến bộ</h1>
     <p>Tổng hợp từ các bài đã nộp trên máy này (mỗi câu lấy kết quả lần làm gần nhất).</p>
   </header>
-  <div class="card"><h2>📈 Điểm qua các lần làm</h2><p class="sub">Điểm TOEIC ước tính của các lần làm cả Listening (100 câu) hoặc cả Reading (100 câu).</p><div id="chart"></div></div>
+  <div class="card"><h2><span data-ic="chart"></span> Điểm qua các lần làm</h2><p class="sub">Điểm TOEIC ước tính của các lần làm cả Listening (100 câu) hoặc cả Reading (100 câu).</p><div id="chart"></div></div>
   <div class="card"><h2>Theo Part</h2><div class="parts" id="parts"></div></div>
   <div class="card"><h2>Dạng câu hỏi</h2><p class="sub">Xếp từ yếu nhất trở xuống. Bấm link để luyện thêm đúng Part có nhiều câu dạng đó.</p>
-    <div class="tabs" role="tablist"><button type="button" data-s="L" aria-selected="true">🎧 Listening</button><button type="button" data-s="R" aria-selected="false">📖 Reading</button></div>
+    <div class="tabs" role="tablist"><button type="button" data-s="L" aria-selected="true">Listening</button><button type="button" data-s="R" aria-selected="false">Reading</button></div>
     <div id="cats"></div></div>
 </div>
 <script src="data/cats.js"></script>
@@ -110,5 +117,6 @@ svg text{font-family:'IBM Plex Sans',sans-serif}
 })();
 </script>
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
+<script src="assets/ui.js"></script>
 </body>
 </html>

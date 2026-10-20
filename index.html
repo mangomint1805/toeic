@@ -1,106 +1,180 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#a8691a">
-<link rel="apple-touch-icon" href="icons/apple-180.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
+<script>try{if(localStorage.getItem('mt.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light only">
-<title>ETS 2026 · Luyện đề TOEIC</title>
+<title>Minto English · Luyện đề TOEIC ETS 2026</title>
+<meta name="description" content="10 đề TOEIC ETS 2026 đủ 200 câu: chấm điểm ngay, quy đổi thang 990, lời thoại, dịch và giải thích tiếng Việt, đề mini mỗi ngày.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Minto English">
+<meta property="og:title" content="Minto English · Luyện đề TOEIC ETS 2026">
+<meta property="og:description" content="10 đề thi thử 200 câu, chấm điểm ngay, giải thích tiếng Việt, đề mini 10 phút mỗi ngày.">
+<meta property="og:image" content="https://mangomint1805.github.io/toeic/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:url" content="https://mangomint1805.github.io/toeic/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="icons/fav-64.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#a8691a">
+<link rel="apple-touch-icon" href="icons/apple-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--panel2:#f2efe8;
-  --brand:#a8691a;--brand-soft:#f2e2c4;--brand-ink:#6b4410;--ok:#1f8f6c;--ok-soft:#e1f4ec;--amber:#a8691a}
+:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#e6e0d3;--line2:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--panel2:#f4f0e8;
+  --brand:#a8691a;--brand-soft:#f2e2c4;--brand-ink:#6b4410;--ok:#1f8f6c;--ok-soft:#e1f4ec}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55}
-.wrap{max-width:860px;margin:0 auto;padding:0 20px}
-header{padding:52px 0 22px}
-.kicker{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px}
-h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:clamp(34px,6.5vw,52px);line-height:1.06;margin:0 0 12px;letter-spacing:-.01em}
-header p{margin:0;color:var(--dim);font-size:16px;max-width:60ch}
-.me{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-end;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:0 0 22px}
-.me label{display:flex;flex-direction:column;font-size:13px;font-weight:600;color:var(--dim);flex:1 1 170px}
-.me input{font:inherit;font-size:15px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--ink);margin-top:3px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:stretch;padding:34px 0 8px}
+.hello .kicker{display:flex;align-items:center;gap:8px;color:var(--brand);font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:0 0 10px}
+.hello h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:clamp(32px,5vw,46px);line-height:1.08;margin:0 0 10px;letter-spacing:-.015em}
+.hello h1 em{font-style:normal;color:var(--brand-ink)}
+.hello p{margin:0;color:var(--dim);font-size:16px;max-width:52ch}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 0}
+.btn{display:inline-flex;align-items:center;gap:8px;font:inherit;font-weight:700;font-size:15px;text-decoration:none;border-radius:11px;padding:12px 18px;border:1.5px solid var(--brand);background:var(--brand);color:#fff;cursor:pointer}
+.btn:hover{background:#94590f}
+.btn.alt{background:#fff;color:var(--brand-ink);border-color:var(--line2)}
+.btn.alt:hover{border-color:var(--brand)}
+.btn:focus-visible,.test:focus-visible,.tool:focus-visible{outline:3px solid #f2c879;outline-offset:2px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(107,68,16,.06)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--panel2);border-radius:12px;padding:12px 14px}
+.stat .lab{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--dim)}
+.stat b{display:block;font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:600;color:var(--brand-ink);line-height:1.15;margin-top:2px}
+.stat small{font-size:12px;color:var(--dim)}
+.resume{display:flex;align-items:center;gap:12px;margin-top:12px;padding:12px 14px;border-radius:12px;background:#fff8ea;border:1px solid #f0d9a8;text-decoration:none;color:var(--ink)}
+.resume b{display:block;font-size:14.5px}.resume small{color:var(--dim);font-size:12.5px}
+.resume .ic{color:var(--brand);width:22px;height:22px}
+.resume .go{margin-left:auto;color:var(--brand-ink)}
+.me{margin-top:12px;font-size:13.5px;color:var(--dim);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.me input{font:inherit;font-size:14.5px;padding:8px 10px;border:1px solid var(--line2);border-radius:8px;background:#fff;color:var(--ink);flex:1 1 140px;min-width:0}
 .me input:focus-visible{outline:3px solid var(--brand-soft);border-color:var(--brand)}
-.me .ok{font-size:13px;color:var(--ok);font-weight:600;min-width:70px}
-.tests{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.test{display:flex;gap:14px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s}
-.test:hover{border-color:var(--brand);transform:translateY(-1px)}
-.test:focus-visible{outline:3px solid var(--brand-soft);outline-offset:2px}
-.test.off{opacity:.55;pointer-events:none}
-.num{flex:none;width:58px;height:58px;border-radius:5px 9px 9px 5px;background:linear-gradient(90deg,rgba(0,0,0,.18) 0 5px,transparent 5px),var(--brand);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.num small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
-.num b{font-family:'Fraunces',Georgia,serif;font-size:26px;font-weight:600}
-.info b{display:block;font-size:17px}
-.info span{display:block;font-size:13.5px;color:var(--dim)}
-.prog{display:inline-block;margin-top:5px;font-size:12.5px;font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:1px 9px}
-.prog.none{color:var(--dim);background:var(--panel2)}
-.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0 0}
-.tool{display:flex;gap:12px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--ink)}
+.me button{font:inherit;font-weight:700;font-size:13px;border:0;background:none;color:var(--brand-ink);cursor:pointer;text-decoration:underline}
+.sec{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:34px 0 12px}
+.sec h2{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:26px;margin:0}
+.sec span{color:var(--dim);font-size:14px}
+.tests{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.test{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-decoration:none;color:var(--ink);transition:border-color .15s,box-shadow .15s,transform .15s}
+.test:hover{border-color:var(--brand);box-shadow:0 8px 22px rgba(107,68,16,.09);transform:translateY(-1px)}
+.ring{flex:none;position:relative;width:60px;height:60px}
+.ring svg{width:60px;height:60px;transform:rotate(-90deg)}
+.ring .n{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.ring .n small{font-size:9.5px;letter-spacing:.1em;color:var(--dim);font-weight:700}
+.ring .n b{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:600;color:var(--brand-ink)}
+.tinfo b{display:block;font-size:16px}
+.tinfo span{display:block;font-size:13px;color:var(--dim)}
+.badge{display:inline-block;margin-top:5px;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--panel2);color:var(--dim)}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}
+.badge.mid{background:#fff3db;color:#8a5d06}
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tool{display:flex;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-decoration:none;color:var(--ink);transition:border-color .15s}
 .tool:hover{border-color:var(--brand)}
-.tool .ic{font-size:26px;line-height:1}.tool b{display:block;font-size:15.5px}.tool span span{display:block;font-size:13px;color:var(--dim)}
-@media (max-width:760px){.tools{grid-template-columns:1fr}}
-.tips{margin:30px 0 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
-.tips h2{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:21px;margin:0 0 8px}
-.tips ul{margin:0;padding-left:20px}.tips li{margin:6px 0;font-size:15px}
-footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
-@media (max-width:640px){.tests{grid-template-columns:1fr}header{padding:36px 0 18px}}
-.inst{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;background:#fff;border:1px dashed #d9b77a;border-radius:12px;padding:12px 14px;margin:18px 0 0;font-size:14px}.inst b{color:#6b4410}.inst>span{flex:1 1 260px;color:#666e7a}.inst button{font:inherit;font-weight:700;border:0;background:#a8691a;color:#fff;border-radius:8px;padding:7px 12px;cursor:pointer}
+.tool .ico{width:40px;height:40px;border-radius:11px;background:var(--brand-soft);color:var(--brand-ink);display:flex;align-items:center;justify-content:center}
+.tool .ico .ic{width:22px;height:22px}
+.tool b{font-size:15.5px}.tool span{font-size:13px;color:var(--dim)}
+.inst{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;background:#fff;border:1px dashed #d9b77a;border-radius:14px;padding:14px 16px;margin:24px 0 0;font-size:14px}
+.inst .ic{color:var(--brand);width:22px;height:22px}.inst b{color:var(--brand-ink)}.inst>span{flex:1 1 260px;color:var(--dim)}
+.inst button{font:inherit;font-weight:700;border:0;background:var(--brand);color:#fff;border-radius:9px;padding:8px 14px;cursor:pointer}
+.tips{margin:24px 0 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px}
+.tips summary{cursor:pointer;font-weight:700;color:var(--brand-ink)}
+.tips ul{margin:10px 0 0;padding-left:20px}.tips li{margin:6px 0;font-size:14.5px}
+footer{padding:28px 0 40px;color:var(--dim);font-size:13px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+@media (max-width:860px){.hero{grid-template-columns:1fr}.tools{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.tools{grid-template-columns:1fr}.hero{padding-top:22px}.sec{margin-top:26px}}
 </style>
 </head>
-<body>
+<body data-nav="home">
 <div class="wrap">
-  <header>
-    <p class="kicker">TOEIC Listening &amp; Reading · Luyện đề tự chấm</p>
-    <h1>ETS 2026 — 10 đề thi thử</h1>
-    <p>Mỗi đề 200 câu đủ 7 part, có audio, chấm điểm và quy đổi ra thang TOEIC ngay, xem lời thoại, dịch tiếng Việt và giải thích từng câu.</p>
-  </header>
-  <div class="me">
-    <label>Họ và tên<input id="meName" autocomplete="name" placeholder="Để thầy nhận được kết quả"></label>
-    <label>Lớp / nhóm<input id="meLop" placeholder="(nếu có)"></label>
-    <span class="ok" id="meOk"></span>
-  </div>
+  <section class="hero">
+    <div class="hello">
+      <p class="kicker"><span data-ic="target"></span>TOEIC Listening &amp; Reading</p>
+      <h1 id="hi">Luyện đề TOEIC <em>ETS 2026</em></h1>
+      <p>10 đề thi thử đủ 200 câu. Chấm điểm và quy đổi thang 990 ngay khi nộp, kèm lời thoại, dịch và giải thích tiếng Việt từng câu.</p>
+      <div class="cta"><a class="btn" href="mini.html"><span data-ic="flame"></span>Đề mini hôm nay</a><a class="btn alt" href="#de-thi"><span data-ic="test"></span>Chọn đề thi thử</a></div>
+    </div>
+    <div class="panel">
+      <div class="stats" id="stats"></div>
+      <div id="resume"></div>
+      <div class="me" id="me"></div>
+    </div>
+  </section>
+
+  <div class="sec" id="de-thi"><h2>10 đề thi thử</h2><span>Mỗi đề: Listening 100 câu · Reading 100 câu</span></div>
   <ul class="tests" id="tests"></ul>
+
+  <div class="sec"><h2>Công cụ ôn tập</h2></div>
   <div class="tools">
-    <a class="tool" href="mini.html"><span class="ic" aria-hidden="true">🔥</span><span><b>Đề mini mỗi ngày</b><span>20 câu · 10 phút · giữ chuỗi ngày học liên tục</span></span></a>
-    <a class="tool" href="phan-tich.html"><span class="ic" aria-hidden="true">📊</span><span><b>Điểm yếu & tiến bộ</b><span>Hay sai Part nào, dạng câu nào; biểu đồ điểm qua các lần làm</span></span></a>
-    <a class="tool" href="chinh-ta.html"><span class="ic" aria-hidden="true">✍️</span><span><b>Chép chính tả</b><span>~1.200 câu Part 1–2 cắt từ audio, gõ lại và chấm từng từ</span></span></a>
-    <a class="tool" href="flashcards.html"><span class="ic" aria-hidden="true">🃏</span><span><b>Flashcard của tôi</b><span>Từ bạn đã lưu khi bấm tra từ trong bài</span></span></a>
+    <a class="tool" href="mini.html"><span class="ico" data-ic="flame"></span><b>Đề mini mỗi ngày</b><span>20 câu · 10 phút · giữ chuỗi ngày học</span></a>
+    <a class="tool" href="phan-tich.html"><span class="ico" data-ic="chart"></span><b>Điểm yếu & tiến bộ</b><span>Hay sai Part nào, dạng câu nào; biểu đồ điểm</span></a>
+    <a class="tool" href="chinh-ta.html"><span class="ico" data-ic="pen"></span><b>Chép chính tả</b><span>~1.200 câu Part 1–2, chấm từng từ</span></a>
+    <a class="tool" href="flashcards.html"><span class="ico" data-ic="cards"></span><b>Flashcard của tôi</b><span>Từ đã lưu khi bấm tra từ trong bài</span></a>
   </div>
-<div class="inst" id="inst"><b>📱 Cài web như một app trên điện thoại</b><span>Android (Chrome): bấm <b>⋮</b> → <b>Thêm vào màn hình chính</b>. iPhone (Safari): bấm <b>Chia sẻ</b> <span aria-hidden="true">⬆️</span> → <b>Thêm vào MH chính</b>.</span><button type="button" id="instBtn" hidden>Cài ngay</button></div>
-<script>(function(){var b=document.getElementById('instBtn'),ev=null;if(window.matchMedia&&matchMedia('(display-mode: standalone)').matches){document.getElementById('inst').hidden=true;}window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();ev=e;b.hidden=false;});b.onclick=function(){if(ev){ev.prompt();ev=null;b.hidden=true;}};})();</script>
-  <section class="tips">
-    <h2>Dùng thế nào?</h2>
+
+  <div class="inst" id="inst"><span data-ic="phone"></span><b>Cài như app trên điện thoại</b><span>Android (Chrome): bấm <b>⋮</b> → <b>Thêm vào màn hình chính</b>. iPhone (Safari): bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.</span><button type="button" id="instBtn" hidden>Cài ngay</button></div>
+
+  <details class="tips">
+    <summary>Hướng dẫn nhanh</summary>
     <ul>
-      <li>Nhập tên một lần ở trên, kết quả mỗi lần nộp bài sẽ được gửi cho thầy.</li>
+      <li>Nhập tên một lần, kết quả mỗi lần nộp bài sẽ được gửi cho thầy.</li>
       <li>Chọn một đề, rồi chọn <b>Thi thử Full test</b> (120 phút), <b>chỉ Listening</b>, <b>chỉ Reading</b>, hoặc <b>luyện từng Part</b>.</li>
-      <li>Khi thi thử, audio phát liền một mạch như thi thật. Khi luyện từng Part, mỗi câu có nút nghe riêng.</li>
-      <li>Nộp bài xong: câu xanh đúng, đỏ sai; mở <b>📜 Lời thoại</b>, <b>💬 Dịch nghĩa</b>, <b>💡 Giải thích</b> dưới từng câu.</li>
-      <li>Khi luyện tập hoặc xem lại, <b>bấm vào từ tiếng Anh bất kỳ</b> để xem nghĩa, nghe phát âm và <b>lưu vào flashcard</b>. Audio có nút chỉnh tốc độ 0.75x / 1.25x.</li>
+      <li>Khi thi thử, audio phát liền một mạch như thi thật. Khi luyện từng Part, mỗi câu có nút nghe riêng và chỉnh được tốc độ.</li>
+      <li>Nộp bài xong có phiếu điểm, câu xanh đúng / đỏ sai, mở lời thoại, dịch nghĩa và giải thích dưới từng câu.</li>
+      <li>Khi luyện tập hoặc xem lại, <b>bấm vào từ tiếng Anh bất kỳ</b> để xem nghĩa, nghe phát âm và lưu vào flashcard.</li>
       <li>Bài làm tự lưu trên máy này, tắt trang mở lại vẫn làm tiếp được.</li>
     </ul>
-  </section>
-  <footer>ETS 2026 TOEIC Listening &amp; Reading — tài liệu luyện tập cho học viên. Điểm quy đổi chỉ mang tính ước tính.</footer>
+  </details>
+  <footer><span>© Minto English · Tài liệu luyện tập cho học viên</span><span>Điểm quy đổi chỉ mang tính ước tính</span></footer>
 </div>
+<script src="assets/ui.js"></script>
 <script>
 (function(){
-  var READY=[1,2,3,4,5,6,7,8,9,10];
+  var I=window.MICON;
   function get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } }
-  var hist=get('ets26.hist')||[], h='';
-  for(var t=1;t<=10;t++){
-    var mine=hist.filter(function(r){return r.test===t;}), on=READY.indexOf(t)>=0;
-    var best=mine.filter(function(r){return r.total===200&&r.score;}).map(function(r){return parseInt(r.score,10);}).sort(function(a,b){return b-a;})[0];
-    var prog=!on?'<span class="prog none">Sắp có</span>':mine.length?'<span class="prog">✓ Đã nộp '+mine.length+' lần'+(best?' · cao nhất ~'+best:'')+'</span>':'<span class="prog none">Chưa làm</span>';
-    h+='<li><a class="test'+(on?'':' off')+'" href="test.html?t='+t+'"'+(on?'':' aria-disabled="true" tabindex="-1"')+'><span class="num" aria-hidden="true"><small>Test</small><b>'+t+'</b></span><span class="info"><b>ETS 2026 · Test '+t+'</b><span>Listening 100 câu · Reading 100 câu</span>'+prog+'</span></a></li>';
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  var hist=get('ets26.hist')||[], name=''; try{ name=localStorage.getItem('cam20.name')||''; }catch(e){}
+  if(name){ var first=name.trim().split(/\s+/).pop(); document.getElementById('hi').innerHTML='Chào <em>'+esc(first)+'</em>, hôm nay luyện gì nhỉ?'; }
+  // thống kê
+  var days=get('ets26.mini.days')||{};
+  function streak(){ var s=0,d=new Date(); function k(x){ return x.getFullYear()+'-'+('0'+(x.getMonth()+1)).slice(-2)+'-'+('0'+x.getDate()).slice(-2); } if(!days[k(d)]) d.setDate(d.getDate()-1); while(days[k(d)]){ s++; d.setDate(d.getDate()-1); } return s; }
+  var best=0, qs=0; hist.forEach(function(r){ var t=(r.lcS||0)+(r.rcS||0); if(r.lcS&&r.rcS&&t>best) best=t; qs+=r.total||0; });
+  var last=hist.length?hist[hist.length-1]:null;
+  document.getElementById('stats').innerHTML=
+    '<div class="stat"><span class="lab">'+I('flame')+'Chuỗi ngày học</span><b>'+streak()+'</b><small>ngày liên tục (đề mini)</small></div>'+
+    '<div class="stat"><span class="lab">'+I('trophy')+'Điểm cao nhất</span><b>'+(best||'–')+'</b><small>'+(best?'Full test, thang 990':'chưa làm Full test')+'</small></div>'+
+    '<div class="stat"><span class="lab">'+I('check')+'Bài đã nộp</span><b>'+hist.length+'</b><small>'+qs+' câu đã làm</small></div>'+
+    '<div class="stat"><span class="lab">'+I('clock')+'Lần gần nhất</span><b style="font-size:20px">'+(last?'Test '+last.test:'–')+'</b><small>'+(last?esc(last.name)+' · '+last.got+'/'+last.total:'chưa có')+'</small></div>';
+  // bài làm dở
+  var MN={full:'Full test',lc:'Listening',rc:'Reading'}, cur=null;
+  for(var t=1;t<=10;t++) ['full','lc','rc','p1','p2','p3','p4','p5','p6','p7'].forEach(function(m){ var s=get('ets26.t'+t+'.'+m); if(s&&!s.done&&s.ans){ var n=Object.keys(s.ans).length; if(n&&(!cur||s.t0>cur.t0)) cur={t:t,m:m,n:n,t0:s.t0}; } });
+  if(cur) document.getElementById('resume').innerHTML='<a class="resume" href="test.html?t='+cur.t+'&m='+cur.m+'">'+I('play')+'<span><b>Làm tiếp: Test '+cur.t+' · '+(MN[cur.m]||'Part '+cur.m.slice(1))+'</b><small>Đã chọn '+cur.n+' câu</small></span><span class="go">'+I('arrow')+'</span></a>';
+  // tên
+  var me=document.getElementById('me');
+  function drawMe(edit){
+    var lop=''; try{ lop=localStorage.getItem('cam20.lop')||''; }catch(e){}
+    if(name&&!edit){ me.innerHTML=I('user')+'<span>'+esc(name)+(lop?' · '+esc(lop):'')+'</span><button type="button" id="meEd">Đổi tên</button>'; document.getElementById('meEd').onclick=function(){ drawMe(true); }; return; }
+    me.innerHTML='<input id="meName" autocomplete="name" placeholder="Họ và tên (để thầy nhận kết quả)" value="'+esc(name)+'"><input id="meLop" placeholder="Lớp (nếu có)" value="'+esc(lop)+'"><button type="button" id="meOk">Lưu</button>';
+    document.getElementById('meOk').onclick=function(){ name=document.getElementById('meName').value.trim(); try{ localStorage.setItem('cam20.name',name); localStorage.setItem('cam20.lop',document.getElementById('meLop').value.trim()); }catch(e){} if(name){ var f=name.split(/\s+/).pop(); document.getElementById('hi').innerHTML='Chào <em>'+esc(f)+'</em>, hôm nay luyện gì nhỉ?'; } drawMe(false); };
+  }
+  drawMe(false);
+  // danh sách đề
+  var h='', C=2*Math.PI*26;
+  for(var k=1;k<=10;k++){
+    var mine=hist.filter(function(r){ return r.test===k; });
+    var full=mine.filter(function(r){ return r.lcS&&r.rcS; }).map(function(r){ return r.lcS+r.rcS; }).sort(function(a,b){ return b-a; })[0];
+    var done={}; mine.forEach(function(r){ Object.keys(r.parts||{}).forEach(function(p){ done[p]=1; }); });
+    var np=Object.keys(done).length, frac=full?full/990:np/7;
+    var badge=full?'<span class="badge ok">Cao nhất '+full+'</span>':np?'<span class="badge mid">Đã làm '+np+'/7 part</span>':'<span class="badge">Chưa làm</span>';
+    h+='<li><a class="test" href="test.html?t='+k+'"><span class="ring" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#f0eadf" stroke-width="5"/><circle cx="30" cy="30" r="26" fill="none" stroke="'+(full?'#1f8f6c':'#a8691a')+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+(C*frac).toFixed(1)+' '+C.toFixed(1)+'"/></svg><span class="n"><small>TEST</small><b>'+k+'</b></span></span><span class="tinfo"><b>ETS 2026 · Test '+k+'</b><span>200 câu · 7 part</span>'+badge+'</span></a></li>';
   }
   document.getElementById('tests').innerHTML=h;
-  var nm=document.getElementById('meName'), lp=document.getElementById('meLop'), ok=document.getElementById('meOk'), t0;
-  try{ nm.value=localStorage.getItem('cam20.name')||''; lp.value=localStorage.getItem('cam20.lop')||''; }catch(e){}
-  function keep(){ try{ localStorage.setItem('cam20.name',nm.value.trim()); localStorage.setItem('cam20.lop',lp.value.trim()); }catch(e){} ok.textContent='Đã lưu ✓'; clearTimeout(t0); t0=setTimeout(function(){ok.textContent='';},1500); }
-  nm.addEventListener('change',keep); lp.addEventListener('change',keep);
+  // cài app
+  var b=document.getElementById('instBtn'),ev=null;
+  if(window.matchMedia&&matchMedia('(display-mode: standalone)').matches) document.getElementById('inst').hidden=true;
+  window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); ev=e; b.hidden=false; });
+  b.onclick=function(){ if(ev){ ev.prompt(); ev=null; b.hidden=true; } };
 })();
 </script>
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>

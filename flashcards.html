@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<script>try{if(localStorage.getItem('mt.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
+
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#a8691a">
 <link rel="apple-touch-icon" href="icons/apple-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
+<meta property="og:site_name" content="Minto English">
+<meta property="og:title" content="Minto English · Flashcard">
+<meta property="og:image" content="https://mangomint1805.github.io/toeic/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="icons/fav-64.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light only">
@@ -50,7 +57,7 @@ td .w{font-weight:700;color:var(--brand-ink)}
 .x{border:0;background:none;color:var(--bad);cursor:pointer;font-size:16px}
 </style>
 </head>
-<body>
+<body data-nav="cards">
 <div class="wrap">
   <header>
     <a class="back" href="./">← Trang chủ</a>
@@ -58,8 +65,8 @@ td .w{font-weight:700;color:var(--brand-ink)}
     <p>Những từ bạn bấm <b>☆ Lưu flashcard</b> khi tra từ trong bài. Bộ thẻ dùng chung cho cả web TOEIC và IELTS, lưu trên máy này.</p>
   </header>
   <div class="tabs" role="tablist">
-    <button type="button" data-v="learn" aria-selected="true">🃏 Ôn tập</button>
-    <button type="button" data-v="list" aria-selected="false">📋 Danh sách</button>
+    <button type="button" data-v="learn" aria-selected="true">Ôn tập</button>
+    <button type="button" data-v="list" aria-selected="false">Danh sách</button>
   </div>
   <div id="main"></div>
 </div>
@@ -101,5 +108,6 @@ td .w{font-weight:700;color:var(--brand-ink)}
 })();
 </script>
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
+<script src="assets/ui.js"></script>
 </body>
 </html>

@@ -90,11 +90,11 @@
     var hist = (get('ets26.hist') || []).filter(function (h) { return h.test === T; });
     var resume = Object.keys(MODES).filter(function (m) { var s = get('ets26.t' + T + '.' + m); return s && !s.done && s.ans && Object.keys(s.ans).length; });
     var h = '<div class="start"><h2>ETS 2026 · Test ' + T + '</h2><p class="lead">200 câu · Listening 100 câu (~46 phút) · Reading 100 câu (75 phút). Chọn cách làm bài:</p>';
-    if (resume.length) h += '<div class="resume">📝 Bạn đang làm dở: ' + resume.map(function (m) { var n = Object.keys(get('ets26.t' + T + '.' + m).ans).length; return '<a href="?t=' + T + '&m=' + m + '"><b>' + MODES[m].name + '</b> (' + n + ' câu đã chọn)</a>'; }).join(' · ') + '</div>';
+    if (resume.length) h += '<div class="resume">' + window.MICON('play') + ' Bạn đang làm dở: ' + resume.map(function (m) { var n = Object.keys(get('ets26.t' + T + '.' + m).ans).length; return '<a href="?t=' + T + '&m=' + m + '"><b>' + MODES[m].name + '</b> (' + n + ' câu đã chọn)</a>'; }).join(' · ') + '</div>';
     h += '<div class="modes">' +
-      '<button class="mode" data-m="full"><span class="ic">🎯</span><b>Thi thử Full test</b><span>200 câu · 120 phút · audio phát liền như thi thật</span></button>' +
-      '<button class="mode" data-m="lc"><span class="ic">🎧</span><b>Chỉ Listening</b><span>Part 1–4 · 100 câu · audio phát liền một mạch</span></button>' +
-      '<button class="mode" data-m="rc"><span class="ic">📖</span><b>Chỉ Reading</b><span>Part 5–7 · 100 câu · đếm ngược 75 phút</span></button></div>' +
+      '<button class="mode" data-m="full"><span class="mico">' + window.MICON('target') + '</span><b>Thi thử Full test</b><span>200 câu · 120 phút · audio phát liền như thi thật</span></button>' +
+      '<button class="mode" data-m="lc"><span class="mico">' + window.MICON('headphones') + '</span><b>Chỉ Listening</b><span>Part 1–4 · 100 câu · audio phát liền một mạch</span></button>' +
+      '<button class="mode" data-m="rc"><span class="mico">' + window.MICON('book') + '</span><b>Chỉ Reading</b><span>Part 5–7 · 100 câu · đếm ngược 75 phút</span></button></div>' +
       '<div class="box"><h3>Luyện từng Part</h3><p class="hint" style="margin:0">Không giới hạn giờ. Part nghe có nút audio riêng từng câu, nghe lại thoải mái.</p><div class="parts">';
     for (var p = 1; p <= 7; p++) h += '<button data-m="p' + p + '"><b>' + PART_INFO[p][0] + '</b><span>' + PART_INFO[p][1] + '</span></button>';
     h += '</div></div>';
@@ -368,27 +368,81 @@
       var body = { kind: 'cam20', name: localStorage.getItem('cam20.name') || '', lop: localStorage.getItem('cam20.lop') || '', test: 'ETS 2026 · Test ' + T, part: name,
         mode: M.exam ? 'Thi thử' : 'Luyện tập', got: res.lc + res.rc, total: res.lcT + res.rcT, band: score ? 'TOEIC ~' + score : '', minutes: res.mins,
         wrong: res.wrong.join(', '), auto: res.auto, submittedAt: new Date(res.at).toISOString(), userAgent: navigator.userAgent.slice(0, 120) };
-      try { fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }); } catch (e) {}
+      try { fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }).catch(function () {}); } catch (e) {}
     }
     if (nm) return go();
     var box = $('#nm'); box.hidden = false;
     $('#nmOk').onclick = function () { try { localStorage.setItem('cam20.name', $('#nmName').value.trim()); localStorage.setItem('cam20.lop', $('#nmLop').value.trim()); } catch (e) {} box.hidden = true; go(); toast('Đã gửi kết quả cho thầy ✓'); };
     $('#nmSkip').onclick = function () { box.hidden = true; };
   }
+  // ---------- phiếu kết quả ----------
+  var CEFR_L = [[490, 'C1'], [400, 'B2'], [275, 'B1'], [110, 'A2'], [60, 'A1']], CEFR_R = [[455, 'C1'], [385, 'B2'], [275, 'B1'], [115, 'A2'], [60, 'A1']];
+  function cefr(tab, v) { for (var i = 0; i < tab.length; i++) if (v >= tab[i][0]) return tab[i][1]; return 'Dưới A1'; }
+  function stuName() { try { return localStorage.getItem('cam20.name') || ''; } catch (e) { return ''; } }
+  function comments(r) {
+    var ps = Object.keys(r.parts).map(function (p) { var a = r.parts[p]; return { p: +p, pc: a[0] / a[1] }; });
+    if (ps.length < 2) return [];
+    ps.sort(function (a, b) { return b.pc - a.pc; });
+    var hi = ps[0], lo = ps[ps.length - 1], out = [];
+    out.push('Mạnh nhất: ' + PART_INFO[hi.p][0] + ' (' + PART_INFO[hi.p][1] + ') – đúng ' + Math.round(hi.pc * 100) + '%.');
+    out.push('Cần cải thiện: ' + PART_INFO[lo.p][0] + ' (' + PART_INFO[lo.p][1] + ') – đúng ' + Math.round(lo.pc * 100) + '%. Luyện thêm Part này ở chế độ "Luyện từng Part".');
+    if (r.lcS && r.rcS) out.push(r.lcS > r.rcS + 40 ? 'Listening đang tốt hơn Reading: dành thêm thời gian cho ngữ pháp Part 5–6 và tốc độ đọc Part 7.' : r.rcS > r.lcS + 40 ? 'Reading đang tốt hơn Listening: nghe thêm Part 2–3 và chép chính tả mỗi ngày.' : 'Hai kỹ năng khá cân bằng, tiếp tục luyện đều cả hai.');
+    return out;
+  }
+  function skillRow(lab, v, tab, icn) {
+    var lv = cefr(tab, v), pc = Math.max(0, Math.min(100, (v - 5) / 490 * 100));
+    return '<div class="sk"><div class="skh">' + window.MICON(icn) + '<b>' + lab + '</b><span class="cefr">CEFR ' + lv + '</span><span class="skv">' + v + '<small> / 495</small></span></div><div class="skbar"><s style="width:' + pc + '%"></s>' +
+      [110, 275, 400].map(function (t) { return '<i style="left:' + ((t - 5) / 490 * 100) + '%"></i>'; }).join('') + '</div></div>';
+  }
   function showResultTop() {
     var r = ST.res; if (!r) return;
     var top = $('#resTop'); if (!top) return;
-    var tot = r.lcT + r.rcT, got = r.lc + r.rc;
-    var h = '<div class="result"><h2>Kết quả · ' + esc(M.name) + '</h2><div class="big">';
-    h += '<div><b>' + got + '/' + tot + '</b><span>câu đúng (' + Math.round(got / tot * 100) + '%)</span></div>';
-    if (r.lcS) h += '<div><b>' + r.lcS + '</b><span>Listening ước tính</span></div>';
-    if (r.rcS) h += '<div><b>' + r.rcS + '</b><span>Reading ước tính</span></div>';
-    if (r.lcS && r.rcS) h += '<div class="tot"><b>' + (r.lcS + r.rcS) + '</b><span>Tổng điểm TOEIC ước tính</span></div>';
-    h += '</div><div class="bars">';
-    Object.keys(r.parts).forEach(function (p) { var a = r.parts[p]; h += '<span>' + PART_INFO[p][0] + '</span><i><s style="width:' + Math.round(a[0] / a[1] * 100) + '%"></s></i><span>' + a[0] + '/' + a[1] + '</span>'; });
-    h += '</div><div class="filt"><button class="btn alt sm" id="hideOk" type="button">' + (ST.hideOk ? 'Hiện tất cả câu' : 'Chỉ xem câu sai') + '</button><a class="btn sm" href="?t=' + T + '">Làm lại / chọn cách khác</a></div>' +
-      '<p class="hint">Câu xanh là đúng, đỏ là sai. Mở <b>💬 Dịch nghĩa</b>, <b>📜 Lời thoại</b>, <b>💡 Giải thích</b> dưới mỗi câu. Phần nghe giờ có nút audio riêng để nghe lại.</p></div>';
+    var tot = r.lcT + r.rcT, got = r.lc + r.rc, nm = stuName(), d = new Date(r.at);
+    var h = '<div class="report"><div class="rp-head"><div class="rp-brand">' + window.MLOGO + '<span><b>Minto English</b><small>Phiếu kết quả luyện tập TOEIC</small></span></div><div class="rp-meta">' +
+      (nm ? '<b>' + esc(nm) + '</b>' : '') + '<span>ETS 2026 · Test ' + T + ' · ' + esc(M.name) + '</span><span>' + d.toLocaleDateString('vi-VN') + ' · ' + r.mins + ' phút</span></div></div>';
+    if (r.lcS || r.rcS) {
+      h += '<div class="rp-body"><div class="rp-total"><small>' + (r.lcS && r.rcS ? 'Tổng điểm ước tính' : (r.lcS ? 'Listening' : 'Reading') + ' ước tính') + '</small><b>' + ((r.lcS || 0) + (r.rcS || 0)) + '</b><span>/ ' + (r.lcS && r.rcS ? 990 : 495) + '</span><em>' + got + '/' + tot + ' câu đúng</em></div><div class="rp-skills">' +
+        (r.lcS ? skillRow('Listening', r.lcS, CEFR_L, 'headphones') : '') + (r.rcS ? skillRow('Reading', r.rcS, CEFR_R, 'book') : '') + '<p class="rp-scale">Vạch mốc trên thanh: A2 · B1 · B2 (khung tham chiếu châu Âu)</p></div></div>';
+    } else {
+      h += '<div class="rp-body"><div class="rp-total"><small>Kết quả</small><b>' + got + '</b><span>/ ' + tot + '</span><em>' + Math.round(got / tot * 100) + '% câu đúng</em></div><div class="rp-skills"><p class="rp-scale">Làm "Chỉ Listening", "Chỉ Reading" hoặc "Full test" để có điểm quy đổi thang 990.</p></div></div>';
+    }
+    h += '<div class="rp-parts">' + Object.keys(r.parts).map(function (p) { var a = r.parts[p], pc = Math.round(a[0] / a[1] * 100); return '<div><span>' + PART_INFO[p][0] + '</span><i><s style="width:' + pc + '%;background:' + (pc >= 80 ? '#1f8f6c' : pc >= 60 ? '#d9a63c' : '#c14636') + '"></s></i><b>' + a[0] + '/' + a[1] + '</b></div>'; }).join('') + '</div>';
+    var cm = comments(r);
+    if (cm.length) h += '<ul class="rp-cm">' + cm.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>';
+    h += '<p class="rp-note">Điểm ước tính dựa trên số câu đúng của bài luyện tập, không phải điểm thi chính thức.</p>' +
+      '<div class="filt"><button class="btn sm" id="rpSave" type="button">' + window.MICON('check') + ' Lưu ảnh phiếu điểm</button><button class="btn alt sm" id="hideOk" type="button">' + (ST.hideOk ? 'Hiện tất cả câu' : 'Chỉ xem câu sai') + '</button><a class="btn alt sm" href="phan-tich.html">Xem điểm yếu</a><a class="btn alt sm" href="?t=' + T + '">Làm lại</a></div></div>' +
+      '<p class="hint">Câu xanh là đúng, đỏ là sai. Mở Dịch nghĩa, Lời thoại, Giải thích dưới mỗi câu; phần nghe có nút audio riêng để nghe lại.</p>';
     top.innerHTML = h;
     $('#hideOk').onclick = function () { ST.hideOk = !ST.hideOk; save(); show(CUR); };
+    $('#rpSave').onclick = function () { saveImage(r, nm); };
+  }
+  function saveImage(r, nm) {
+    var W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H; var c = cv.getContext('2d');
+    var SER = '"Fraunces", Georgia, serif', SANS = '"IBM Plex Sans", Arial, sans-serif';
+    function txt(t, x, y, f, col, al) { c.font = f; c.fillStyle = col; c.textAlign = al || 'left'; c.fillText(t, x, y); }
+    function rr(x, y, w, h, rad, col) { c.fillStyle = col; c.beginPath(); c.moveTo(x + rad, y); c.arcTo(x + w, y, x + w, y + h, rad); c.arcTo(x + w, y + h, x, y + h, rad); c.arcTo(x, y + h, x, y, rad); c.arcTo(x, y, x + w, y, rad); c.closePath(); c.fill(); }
+    c.fillStyle = '#faf8f4'; c.fillRect(0, 0, W, H); c.fillStyle = '#a8691a'; c.fillRect(0, 0, W, 16);
+    rr(70, 70, 90, 90, 20, '#a8691a'); c.fillStyle = '#8a5512'; c.fillRect(70, 78, 11, 74); txt('M', 120, 140, '600 56px ' + SER, '#fff', 'center');
+    txt('Minto English', 185, 112, '600 44px ' + SER, '#6b4410'); txt('Phiếu kết quả luyện tập TOEIC', 187, 150, '500 26px ' + SANS, '#666e7a');
+    txt(nm || 'Học viên', 70, 250, '600 48px ' + SER, '#1e232b');
+    txt('ETS 2026 · Test ' + T + ' · ' + M.name + ' · ' + new Date(r.at).toLocaleDateString('vi-VN'), 70, 296, '500 26px ' + SANS, '#666e7a');
+    rr(70, 340, W - 140, 300, 28, '#ffffff');
+    var total = (r.lcS || 0) + (r.rcS || 0), tot = r.lcT + r.rcT, got = r.lc + r.rc;
+    txt(r.lcS || r.rcS ? (r.lcS && r.rcS ? 'TỔNG ĐIỂM ƯỚC TÍNH' : 'ĐIỂM ƯỚC TÍNH') : 'KẾT QUẢ', 110, 400, '700 22px ' + SANS, '#a8691a');
+    txt(String(r.lcS || r.rcS ? total : got), 110, 530, '600 130px ' + SER, '#6b4410');
+    txt('/ ' + (r.lcS && r.rcS ? 990 : r.lcS || r.rcS ? 495 : tot), 110 + c.measureText(String(r.lcS || r.rcS ? total : got)).width + 20, 530, '500 40px ' + SANS, '#666e7a');
+    txt(got + '/' + tot + ' câu đúng', 110, 590, '500 28px ' + SANS, '#666e7a');
+    var yy = 410;
+    [[r.lcS, 'Listening', CEFR_L], [r.rcS, 'Reading', CEFR_R]].forEach(function (k) {
+      if (!k[0]) return; txt(k[1], 600, yy, '700 28px ' + SANS, '#1e232b'); txt(k[0] + ' / 495', 970, yy, '700 28px ' + SANS, '#6b4410', 'right');
+      rr(600, yy + 18, 370, 18, 9, '#f0eadf'); rr(600, yy + 18, Math.max(18, 370 * (k[0] - 5) / 490), 18, 9, '#a8691a');
+      txt('CEFR ' + cefr(k[2], k[0]), 600, yy + 72, '600 24px ' + SANS, '#1f8f6c'); yy += 120;
+    });
+    var py = 700; txt('Theo từng Part', 70, py, '600 34px ' + SER, '#1e232b'); py += 30;
+    Object.keys(r.parts).forEach(function (p) { var a = r.parts[p], pc = a[0] / a[1]; py += 54; txt(PART_INFO[p][0] + ' · ' + PART_INFO[p][1], 70, py, '500 26px ' + SANS, '#1e232b');
+      rr(520, py - 20, 380, 18, 9, '#f0eadf'); rr(520, py - 20, Math.max(18, 380 * pc), 18, 9, pc >= .8 ? '#1f8f6c' : pc >= .6 ? '#d9a63c' : '#c14636'); txt(a[0] + '/' + a[1], 1010, py, '700 26px ' + SANS, '#1e232b', 'right'); });
+    txt('Điểm ước tính từ bài luyện tập, không phải điểm thi chính thức.', W / 2, H - 60, '500 22px ' + SANS, '#999', 'center');
+    var a = document.createElement('a'); a.download = 'phieu-diem-test' + T + '.png'; a.href = cv.toDataURL('image/png'); document.body.appendChild(a); a.click(); a.remove();
+    toast('Đã lưu ảnh phiếu điểm ✓');
   }
 })();

@@ -1,11 +1,18 @@
 <!doctype html>
 <html lang="vi">
 <head>
+<script>try{if(localStorage.getItem('mt.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
+
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#a8691a">
 <link rel="apple-touch-icon" href="icons/apple-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 
+<meta property="og:site_name" content="Minto English">
+<meta property="og:title" content="Minto English · ETS 2026 TOEIC">
+<meta property="og:image" content="https://mangomint1805.github.io/toeic/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="icons/fav-64.png">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light only">
@@ -17,6 +24,7 @@
 <body>
 <header class="top">
   <div class="bar">
+    <a class="hlogo" href="./" aria-label="Minto English — trang chủ"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#a8691a"/><rect width="5" height="40" rx="2" fill="#8a5512"/><text x="22.5" y="28.5" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="600" font-size="23" fill="#fff">M</text></svg></a>
     <h1 id="ttl">ETS 2026 · TOEIC<small id="sub">Listening &amp; Reading · luyện tập tự chấm</small></h1>
     <span class="modelabel" id="modeLabel" hidden></span>
     <span class="timer" id="timer" aria-live="off"></span>
@@ -53,6 +61,7 @@
 
 <footer><a href="./">← Danh sách 10 test</a> · ETS 2026 TOEIC — trang luyện tập cho học viên. Điểm quy đổi chỉ là ước tính.</footer>
 <script src="config.js"></script>
+<script src="assets/ui.js"></script>
 <script src="assets/test.js"></script>
 <script src="assets/lookup.js"></script>
 <script src="assets/mobile.js"></script>
