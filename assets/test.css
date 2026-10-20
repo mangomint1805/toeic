@@ -1,4 +1,4 @@
-:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--brand:#1f6f8f;--brand-soft:#dceef5;--brand-ink:#14485d;
+:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--brand:#a8691a;--brand-soft:#f2e2c4;--brand-ink:#6b4410;
 --ok:#1f8f6c;--ok-soft:#e1f4ec;--bad:#c14636;--bad-soft:#fbe6e2;--panel2:#f2efe8;--amber:#a8691a;--amber-soft:#f2e2c4}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.6;font-size:16px}
@@ -27,7 +27,7 @@ footer{max-width:1280px;margin:0 auto;padding:10px 16px 50px;color:var(--dim);fo
 .btn{font:inherit;font-weight:600;font-size:15px;border:1.5px solid var(--brand);border-radius:6px;padding:9px 16px;cursor:pointer;background:var(--brand);color:#fff;text-decoration:none;display:inline-block}
 .btn.alt{background:#fff;color:var(--brand-ink)}
 .btn.sm{font-size:13.5px;padding:5px 11px}
-.btn.warn{background:var(--amber);border-color:var(--amber)}
+.btn.warn{background:#6b4410;border-color:#6b4410}
 .btn:focus-visible,.ptabs button:focus-visible,.opt:focus-within{outline:3px solid var(--amber-soft);outline-offset:1px}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
 .hint{color:var(--dim);font-size:13.5px;margin:6px 0 0}
@@ -102,7 +102,7 @@ audio.ia{width:100%;max-width:520px;height:36px;margin:0 0 10px;display:block}
 .psg th{background:var(--panel2)}
 .psg .hdr{border-bottom:1px solid #cfc6b2;padding-bottom:6px;margin-bottom:8px}
 .psg .hdr p{margin:2px 0}
-.psg .msg{background:#f3f6f8;border-radius:10px;padding:6px 12px;margin:6px 0}
+.psg .msg{background:#f6f1e7;border-radius:10px;padding:6px 12px;margin:6px 0}
 .psg .msg p{margin:2px 0}
 .psg ul,.psg ol{margin:4px 0;padding-left:22px}
 .psg .blank{display:inline-block;min-width:68px;text-align:center;font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:13.5px;color:var(--brand-ink);background:var(--brand-soft);border-radius:5px;padding:0 6px;cursor:pointer}
