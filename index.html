@@ -69,7 +69,7 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
 .badge{display:inline-block;margin-top:5px;font-size:12px;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--panel2);color:var(--dim)}
 .badge.ok{background:var(--ok-soft);color:var(--ok)}
 .badge.mid{background:#fff3db;color:#8a5d06}
-.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 .tool{display:flex;flex-direction:column;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-decoration:none;color:var(--ink);transition:border-color .15s}
 .tool:hover{border-color:var(--brand)}
 .tool .ico{width:40px;height:40px;border-radius:11px;background:var(--brand-soft);color:var(--brand-ink);display:flex;align-items:center;justify-content:center}
@@ -84,6 +84,11 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
 footer{padding:28px 0 40px;color:var(--dim);font-size:13px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
 @media (max-width:860px){.hero{grid-template-columns:1fr}.tools{grid-template-columns:1fr 1fr}}
 @media (max-width:480px){.tools{grid-template-columns:1fr}.hero{padding-top:22px}.sec{margin-top:26px}}
+.nenbar{display:flex;gap:14px;align-items:center;margin:18px 0 0;padding:16px 18px;border-radius:16px;text-decoration:none;color:var(--ink,#1e232b);background:linear-gradient(120deg,#fff7e8,#fdf0d8);border:1px solid #ecd3a6;transition:transform .15s,box-shadow .2s}
+.nenbar:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(168,105,26,.14)}
+.nenbar .ico{width:44px;height:44px;border-radius:12px;background:#a8691a;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}.nenbar .ico .ic{width:24px;height:24px}
+.nenbar b{display:block;font-size:16px}.nenbar small{display:block;color:#6b5a40;font-size:13.5px}.nenbar .go{margin-left:auto;color:#a8691a;flex:none}
+html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)!important;border-color:#5a4422!important}html[data-theme=dark] .nenbar small{color:#c9b693}
 </style>
 </head>
 <body data-nav="home">
@@ -102,6 +107,11 @@ footer{padding:28px 0 40px;color:var(--dim);font-size:13px;display:flex;justify-
     </div>
   </section>
 
+  <div class="sec"><h2>Kế hoạch ôn thi</h2><span>Đếm ngược và gợi ý việc nên làm mỗi ngày</span></div>
+  <div id="plan"></div>
+
+  <a class="nenbar" href="nen.html"><span class="ico" data-ic="layers"></span><span><b>Mới học TOEIC? Bắt đầu với Kiến thức nền</b><small id="nenSub">Ngữ pháp Part 5–6, mẹo nghe từng Part, từ vựng theo chủ đề. Giải thích tiếng Việt, có bài tập nhỏ.</small></span><span class="go" data-ic="arrow"></span></a>
+
   <div class="sec" id="de-thi"><h2>10 đề thi thử</h2><span>Mỗi đề: Listening 100 câu · Reading 100 câu</span></div>
   <ul class="tests" id="tests"></ul>
 
@@ -110,8 +120,12 @@ footer{padding:28px 0 40px;color:var(--dim);font-size:13px;display:flex;justify-
     <a class="tool" href="mini.html"><span class="ico" data-ic="flame"></span><b>Đề mini mỗi ngày</b><span>20 câu · 10 phút · giữ chuỗi ngày học</span></a>
     <a class="tool" href="phan-tich.html"><span class="ico" data-ic="chart"></span><b>Điểm yếu & tiến bộ</b><span>Hay sai Part nào, dạng câu nào; biểu đồ điểm</span></a>
     <a class="tool" href="chinh-ta.html"><span class="ico" data-ic="pen"></span><b>Chép chính tả</b><span>~1.200 câu Part 1–2, chấm từng từ</span></a>
+    <a class="tool" href="nen.html"><span class="ico" data-ic="layers"></span><b>Kiến thức nền</b><span>Ngữ pháp, mẹo làm bài, từ vựng cho bạn mới học</span></a>
     <a class="tool" href="flashcards.html"><span class="ico" data-ic="cards"></span><b>Flashcard của tôi</b><span>Từ đã lưu khi bấm tra từ trong bài</span></a>
   </div>
+
+  <div class="sec" id="huy-hieu"><h2>Huy hiệu</h2><span id="bdgN"></span></div>
+  <div id="badges"></div>
 
   <div class="inst" id="inst"><span data-ic="phone"></span><b>Cài như app trên điện thoại</b><span>Android (Chrome): bấm <b>⋮</b> → <b>Thêm vào màn hình chính</b>. iPhone (Safari): bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.</span><button type="button" id="instBtn" hidden>Cài ngay</button></div>
 
@@ -142,7 +156,7 @@ footer{padding:28px 0 40px;color:var(--dim);font-size:13px;display:flex;justify-
   var best=0, qs=0; hist.forEach(function(r){ var t=(r.lcS||0)+(r.rcS||0); if(r.lcS&&r.rcS&&t>best) best=t; qs+=r.total||0; });
   var last=hist.length?hist[hist.length-1]:null;
   document.getElementById('stats').innerHTML=
-    '<div class="stat"><span class="lab">'+I('flame')+'Chuỗi ngày học</span><b>'+streak()+'</b><small>ngày liên tục (đề mini)</small></div>'+
+    '<div class="stat"><span class="lab">'+I('flame')+'Chuỗi ngày học</span><b>'+(window.MSTATS?MSTATS().streak:streak())+'</b><small>ngày liên tục</small></div>'+
     '<div class="stat"><span class="lab">'+I('trophy')+'Điểm cao nhất</span><b>'+(best||'–')+'</b><small>'+(best?'Full test, thang 990':'chưa làm Full test')+'</small></div>'+
     '<div class="stat"><span class="lab">'+I('check')+'Bài đã nộp</span><b>'+hist.length+'</b><small>'+qs+' câu đã làm</small></div>'+
     '<div class="stat"><span class="lab">'+I('clock')+'Lần gần nhất</span><b style="font-size:20px">'+(last?'Test '+last.test:'–')+'</b><small>'+(last?esc(last.name)+' · '+last.got+'/'+last.total:'chưa có')+'</small></div>';
@@ -170,6 +184,10 @@ footer{padding:28px 0 40px;color:var(--dim);font-size:13px;display:flex;justify-
     h+='<li><a class="test" href="test.html?t='+k+'"><span class="ring" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#f0eadf" stroke-width="5"/><circle cx="30" cy="30" r="26" fill="none" stroke="'+(full?'#1f8f6c':'#a8691a')+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+(C*frac).toFixed(1)+' '+C.toFixed(1)+'"/></svg><span class="n"><small>TEST</small><b>'+k+'</b></span></span><span class="tinfo"><b>ETS 2026 · Test '+k+'</b><span>200 câu · 7 part</span>'+badge+'</span></a></li>';
   }
   document.getElementById('tests').innerHTML=h;
+  // kế hoạch + huy hiệu
+  if(window.MPLAN) MPLAN(document.getElementById('plan'));
+  if(window.MBADGEHTML){ document.getElementById('badges').innerHTML=MBADGEHTML(); var bb=MBADGES(); document.getElementById('bdgN').textContent='Đã mở '+bb.filter(function(x){return x.at;}).length+'/'+bb.length; }
+  var nn=window.MSTATS?MSTATS().nen:0; if(nn) document.getElementById('nenSub').textContent='Đã học '+nn+' bài. Học tiếp bài kế tiếp nhé!';
   // cài app
   var b=document.getElementById('instBtn'),ev=null;
   if(window.matchMedia&&matchMedia('(display-mode: standalone)').matches) document.getElementById('inst').hidden=true;
