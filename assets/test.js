@@ -201,7 +201,7 @@
       h += '<div class="card' + (allok ? ' allok' : '') + '" id="s' + s.ns[0] + '" data-a="' + esc(s.a) + '"><p class="ghead">Questions ' + s.ns[0] + '–' + s.ns[1] + (p === 3 ? ' refer to the following conversation.' : ' refer to the following talk.') + '</p>' +
         (practiceAudio() ? audioTag(s.a) : '') + (s.img ? '<img class="graphic" src="img/t' + T + '/' + s.img + '" alt="Hình minh hoạ (graphic)">' : '');
       s.qs.forEach(function (q) { h += '<div class="' + qcls(q) + '" id="q' + q.n + '"><div class="qt"><span class="qn">' + q.n + '.</span><span class="qtext">' + esc(q.q) + mark(q) + '</span></div>' + optsHTML(q, 4, true) + xpHTML(q) + '</div>'; });
-      if (ST.done && s.script) h += '<details class="more g"><summary>📜 Lời thoại + dịch</summary><div class="in">' + scriptHTML(s.script) + '</div></details>';
+      if (ST.done && s.script && s.script.length) h += '<details class="more g"><summary>📜 Lời thoại + dịch</summary><div class="in">' + scriptHTML(s.script) + '</div></details>';
       h += '</div>';
     });
     if (p === 5) {
