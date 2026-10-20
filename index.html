@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>ETS 2026 · Luyện đề TOEIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--panel2:#f2efe8;
+  --brand:#1f6f8f;--brand-soft:#dceef5;--brand-ink:#14485d;--ok:#1f8f6c;--ok-soft:#e1f4ec;--amber:#a8691a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+header{padding:52px 0 22px}
+.kicker{color:var(--brand);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:0 0 8px}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:clamp(34px,6.5vw,52px);line-height:1.06;margin:0 0 12px;letter-spacing:-.01em}
+header p{margin:0;color:var(--dim);font-size:16px;max-width:60ch}
+.me{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-end;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:0 0 22px}
+.me label{display:flex;flex-direction:column;font-size:13px;font-weight:600;color:var(--dim);flex:1 1 170px}
+.me input{font:inherit;font-size:15px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--ink);margin-top:3px}
+.me input:focus-visible{outline:3px solid var(--brand-soft);border-color:var(--brand)}
+.me .ok{font-size:13px;color:var(--ok);font-weight:600;min-width:70px}
+.tests{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.test{display:flex;gap:14px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s}
+.test:hover{border-color:var(--brand);transform:translateY(-1px)}
+.test:focus-visible{outline:3px solid var(--brand-soft);outline-offset:2px}
+.test.off{opacity:.55;pointer-events:none}
+.num{flex:none;width:58px;height:58px;border-radius:10px;background:var(--brand);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.num small{font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.num b{font-family:'Fraunces',Georgia,serif;font-size:26px;font-weight:600}
+.info b{display:block;font-size:17px}
+.info span{display:block;font-size:13.5px;color:var(--dim)}
+.prog{display:inline-block;margin-top:5px;font-size:12.5px;font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:1px 9px}
+.prog.none{color:var(--dim);background:var(--panel2)}
+.tips{margin:30px 0 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.tips h2{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:21px;margin:0 0 8px}
+.tips ul{margin:0;padding-left:20px}.tips li{margin:6px 0;font-size:15px}
+footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
+@media (max-width:640px){.tests{grid-template-columns:1fr}header{padding:36px 0 18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="kicker">TOEIC Listening &amp; Reading · Luyện đề tự chấm</p>
+    <h1>ETS 2026 — 10 đề thi thử</h1>
+    <p>Mỗi đề 200 câu đủ 7 part, có audio, chấm điểm và quy đổi ra thang TOEIC ngay, xem lời thoại, dịch tiếng Việt và giải thích từng câu.</p>
+  </header>
+  <div class="me">
+    <label>Họ và tên<input id="meName" autocomplete="name" placeholder="Để thầy nhận được kết quả"></label>
+    <label>Lớp / nhóm<input id="meLop" placeholder="(nếu có)"></label>
+    <span class="ok" id="meOk"></span>
+  </div>
+  <ul class="tests" id="tests"></ul>
+  <section class="tips">
+    <h2>Dùng thế nào?</h2>
+    <ul>
+      <li>Nhập tên một lần ở trên, kết quả mỗi lần nộp bài sẽ được gửi cho thầy.</li>
+      <li>Chọn một đề, rồi chọn <b>Thi thử Full test</b> (120 phút), <b>chỉ Listening</b>, <b>chỉ Reading</b>, hoặc <b>luyện từng Part</b>.</li>
+      <li>Khi thi thử, audio phát liền một mạch như thi thật. Khi luyện từng Part, mỗi câu có nút nghe riêng.</li>
+      <li>Nộp bài xong: câu xanh đúng, đỏ sai; mở <b>📜 Lời thoại</b>, <b>💬 Dịch nghĩa</b>, <b>💡 Giải thích</b> dưới từng câu.</li>
+      <li>Bài làm tự lưu trên máy này, tắt trang mở lại vẫn làm tiếp được.</li>
+    </ul>
+  </section>
+  <footer>ETS 2026 TOEIC Listening &amp; Reading — tài liệu luyện tập cho học viên. Điểm quy đổi chỉ mang tính ước tính.</footer>
+</div>
+<script>
+(function(){
+  var READY=[1];
+  function get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } }
+  var hist=get('ets26.hist')||[], h='';
+  for(var t=1;t<=10;t++){
+    var mine=hist.filter(function(r){return r.test===t;}), on=READY.indexOf(t)>=0;
+    var best=mine.filter(function(r){return r.total===200&&r.score;}).map(function(r){return parseInt(r.score,10);}).sort(function(a,b){return b-a;})[0];
+    var prog=!on?'<span class="prog none">Sắp có</span>':mine.length?'<span class="prog">✓ Đã nộp '+mine.length+' lần'+(best?' · cao nhất ~'+best:'')+'</span>':'<span class="prog none">Chưa làm</span>';
+    h+='<li><a class="test'+(on?'':' off')+'" href="test.html?t='+t+'"'+(on?'':' aria-disabled="true" tabindex="-1"')+'><span class="num" aria-hidden="true"><small>Test</small><b>'+t+'</b></span><span class="info"><b>ETS 2026 · Test '+t+'</b><span>Listening 100 câu · Reading 100 câu</span>'+prog+'</span></a></li>';
+  }
+  document.getElementById('tests').innerHTML=h;
+  var nm=document.getElementById('meName'), lp=document.getElementById('meLop'), ok=document.getElementById('meOk'), t0;
+  try{ nm.value=localStorage.getItem('cam20.name')||''; lp.value=localStorage.getItem('cam20.lop')||''; }catch(e){}
+  function keep(){ try{ localStorage.setItem('cam20.name',nm.value.trim()); localStorage.setItem('cam20.lop',lp.value.trim()); }catch(e){} ok.textContent='Đã lưu ✓'; clearTimeout(t0); t0=setTimeout(function(){ok.textContent='';},1500); }
+  nm.addEventListener('change',keep); lp.addEventListener('change',keep);
+})();
+</script>
+</body>
+</html>

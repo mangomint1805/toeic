@@ -1,0 +1,19 @@
+# ETS 2026 · Luyện đề TOEIC
+
+Trang luyện đề TOEIC Listening & Reading tự chấm cho học viên: 10 đề ETS 2026, mỗi đề 200 câu.
+
+**Link cho học viên:** https://mangomint1805.github.io/toeic/
+
+## Tính năng
+- Thi thử Full test (120 phút), chỉ Listening, chỉ Reading (75 phút) hoặc luyện từng Part.
+- Khi thi thử, audio phát liền một mạch như thi thật; có nút "Phát tiếp từ chỗ dừng" nếu audio bị dừng.
+- Luyện từng Part: mỗi câu / mỗi đoạn hội thoại có nút nghe riêng.
+- Chấm điểm ngay, quy đổi điểm TOEIC ước tính, thống kê đúng/sai theo Part.
+- Xem lại: lời thoại kèm dịch tiếng Việt, dịch bài đọc, giải thích từng câu; lọc chỉ xem câu sai.
+- Bài làm tự lưu trên máy; kết quả gửi về Google Sheet của thầy.
+
+## Cấu trúc
+- `index.html` — trang chủ chọn đề
+- `test.html?t=N` — trang làm bài (một trang dùng chung cho mọi đề)
+- `data/tN.js` — nội dung đề N
+- `audio/tN/`, `img/tN/` — audio và hình của đề N

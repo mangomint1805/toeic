@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>ETS 2026 · TOEIC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/test.css">
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <h1 id="ttl">ETS 2026 · TOEIC<small id="sub">Listening &amp; Reading · luyện tập tự chấm</small></h1>
+    <span class="modelabel" id="modeLabel" hidden></span>
+    <span class="timer" id="timer" aria-live="off"></span>
+    <button class="btn alt sm" id="sheetBtn" type="button" hidden>📋 Phiếu trả lời <span id="cnt"></span></button>
+    <a class="home" href="./">← Trang chủ</a>
+  </div>
+  <nav class="ptabs" id="ptabs" hidden></nav>
+  <div class="player" id="player" hidden>
+    <span class="pl-dot" aria-hidden="true"></span>
+    <span class="pl-now" id="plNow">Chưa phát</span>
+    <button type="button" class="btn sm" id="plGo">▶ Bắt đầu nghe</button>
+    <span class="pl-hint" id="plHint"></span>
+  </div>
+</header>
+
+<main id="main"></main>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-label="Phiếu trả lời">
+  <div class="sheet-card">
+    <div class="sheet-head"><b>Phiếu trả lời</b><button type="button" class="x" id="sheetX" aria-label="Đóng">✕</button></div>
+    <div id="sheetBody"></div>
+    <p class="hint">Bấm vào số câu để nhảy tới câu đó. Ô tô màu là câu đã chọn đáp án.</p>
+  </div>
+</div>
+
+<div class="nm" id="nm" hidden role="dialog" aria-modal="true" aria-label="Nhập tên">
+  <div class="nm-card">
+    <h2>Nhập tên để thầy nhận được kết quả</h2>
+    <label>Họ và tên<input id="nmName" autocomplete="name"></label>
+    <label>Lớp / nhóm<input id="nmLop" placeholder="(nếu có)"></label>
+    <div class="row"><button class="btn" id="nmOk" type="button">Gửi kết quả</button><button class="btn alt" id="nmSkip" type="button">Bỏ qua</button></div>
+  </div>
+</div>
+
+<footer><a href="./">← Danh sách 10 test</a> · ETS 2026 TOEIC — trang luyện tập cho học viên. Điểm quy đổi chỉ là ước tính.</footer>
+<script src="config.js"></script>
+<script src="assets/test.js"></script>
+</body>
+</html>

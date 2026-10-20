@@ -1,0 +1,387 @@
+/* ETS 2026 TOEIC practice — one page for every test: test.html?t=N&m=full|lc|rc|p1..p7 */
+(function () {
+  'use strict';
+  var Q = new URLSearchParams(location.search);
+  var T = Math.max(1, Math.min(10, parseInt(Q.get('t'), 10) || 1));
+  var MODE = Q.get('m') || '';
+  var L4 = ['A', 'B', 'C', 'D'];
+  var PART_INFO = {
+    1: ['Part 1', 'Mô tả tranh', 6], 2: ['Part 2', 'Hỏi – đáp', 25], 3: ['Part 3', 'Hội thoại', 39], 4: ['Part 4', 'Bài nói', 30],
+    5: ['Part 5', 'Điền câu', 30], 6: ['Part 6', 'Điền đoạn văn', 16], 7: ['Part 7', 'Đọc hiểu', 54]
+  };
+  var MODES = {
+    full: { name: 'Full test', parts: [1, 2, 3, 4, 5, 6, 7], mins: 120, exam: true },
+    lc: { name: 'Listening', parts: [1, 2, 3, 4], mins: 0, exam: true },
+    rc: { name: 'Reading', parts: [5, 6, 7], mins: 75, exam: true }
+  };
+  for (var pp = 1; pp <= 7; pp++) MODES['p' + pp] = { name: 'Luyện ' + PART_INFO[pp][0], parts: [pp], mins: 0, exam: false };
+  var DIRS = {
+    1: 'Mỗi câu có một bức tranh. Bạn nghe 4 câu mô tả (A)–(D) — không in trong đề — và chọn câu mô tả đúng nhất.',
+    2: 'Bạn nghe một câu hỏi hoặc câu nói, rồi 3 câu đáp (A)–(C) — không in trong đề. Chọn câu đáp phù hợp nhất.',
+    3: 'Nghe các đoạn hội thoại. Mỗi đoạn có 3 câu hỏi in sẵn, chọn đáp án đúng. Đọc trước câu hỏi khi audio đang đọc hướng dẫn.',
+    4: 'Nghe các bài nói ngắn của một người. Mỗi bài có 3 câu hỏi in sẵn.',
+    5: 'Chọn từ hoặc cụm từ phù hợp nhất để hoàn thành câu.',
+    6: 'Đọc đoạn văn và chọn đáp án điền vào chỗ trống. Có câu yêu cầu chọn cả một câu văn.',
+    7: 'Đọc các văn bản (một, hai hoặc ba bài) rồi trả lời câu hỏi.'
+  };
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return [].slice.call((r || document).querySelectorAll(s)); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+  function put(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function toast(msg, ms) { var d = document.createElement('div'); d.className = 'toast'; d.textContent = msg; document.body.appendChild(d); setTimeout(function () { d.remove(); }, ms || 2600); }
+
+  // ---------- score estimate (ước tính) ----------
+  var LCT = [[0, 5], [10, 25], [20, 85], [30, 140], [40, 195], [50, 250], [60, 305], [70, 355], [80, 405], [90, 455], [95, 485], [96, 495], [100, 495]];
+  var RCT = [[0, 5], [10, 15], [20, 70], [30, 115], [40, 165], [50, 215], [60, 265], [70, 320], [80, 375], [90, 430], [95, 465], [100, 495]];
+  function conv(tab, x) {
+    for (var i = 1; i < tab.length; i++) if (x <= tab[i][0]) {
+      var a = tab[i - 1], b = tab[i]; var v = a[1] + (b[1] - a[1]) * (x - a[0]) / ((b[0] - a[0]) || 1);
+      return Math.max(5, Math.min(495, Math.round(v / 5) * 5));
+    }
+    return 495;
+  }
+
+  // ---------- data ----------
+  var D = null, ITEMS = {}, SETOF = {}, ORDER = [];
+  function index() {
+    function addQ(q, p, set) { q.p = p; ITEMS[q.n] = q; SETOF[q.n] = set; ORDER.push(q.n); }
+    D.lc.p1.forEach(function (q) { addQ(q, 1, null); });
+    D.lc.p2.forEach(function (q) { addQ(q, 2, null); });
+    D.lc.p3.forEach(function (s) { s.qs.forEach(function (q) { addQ(q, 3, s); }); });
+    D.lc.p4.forEach(function (s) { s.qs.forEach(function (q) { addQ(q, 4, s); }); });
+    D.rc.p5.forEach(function (q) { addQ(q, 5, null); });
+    D.rc.p6.forEach(function (s) { s.qs.forEach(function (q) { addQ(q, 6, s); }); });
+    D.rc.p7.forEach(function (s) { s.qs.forEach(function (q) { addQ(q, 7, s); }); });
+  }
+  function nsOf(parts) { return ORDER.filter(function (n) { return parts.indexOf(ITEMS[n].p) >= 0; }); }
+
+  // ---------- state ----------
+  var M, KEY, ST, CUR = 0, timerId = null;
+  function save() { put(KEY, ST); }
+
+  // ---------- boot ----------
+  document.title = 'ETS 2026 · Test ' + T;
+  $('#ttl').firstChild.nodeValue = 'ETS 2026 · Test ' + T;
+  var sc = document.createElement('script');
+  sc.src = 'data/t' + T + '.js';
+  sc.onload = function () { D = window.ETSDATA && window.ETSDATA[T]; if (!D) return fail(); index(); route(); };
+  sc.onerror = fail;
+  document.head.appendChild(sc);
+  function fail() { $('#main').innerHTML = '<div class="box"><h3>Test ' + T + ' chưa có trên web.</h3><p><a href="./">← Về trang chủ</a></p></div>'; }
+
+  function route() {
+    if (!MODES[MODE]) return startScreen();
+    M = MODES[MODE]; KEY = 'ets26.t' + T + '.' + MODE;
+    ST = get(KEY) || { ans: {}, t0: Date.now(), done: false };
+    if (!ST.ans) ST.ans = {};
+    $('#modeLabel').textContent = M.name; $('#modeLabel').hidden = false;
+    $('#sub').textContent = M.parts.length > 1 ? M.parts.length + ' part · ' + nsOf(M.parts).length + ' câu' : PART_INFO[M.parts[0]][1] + ' · ' + nsOf(M.parts).length + ' câu';
+    $('#sheetBtn').hidden = false;
+    buildTabs();
+    CUR = ST.cur && M.parts.indexOf(ST.cur) >= 0 ? ST.cur : M.parts[0];
+    show(CUR);
+    if (!ST.done) { startTimer(); if (M.exam && M.parts[0] <= 4) setupPlayer(); }
+    else showResultTop();
+  }
+
+  // ---------- start screen ----------
+  function startScreen() {
+    var hist = (get('ets26.hist') || []).filter(function (h) { return h.test === T; });
+    var resume = Object.keys(MODES).filter(function (m) { var s = get('ets26.t' + T + '.' + m); return s && !s.done && s.ans && Object.keys(s.ans).length; });
+    var h = '<div class="start"><h2>ETS 2026 · Test ' + T + '</h2><p class="lead">200 câu · Listening 100 câu (~46 phút) · Reading 100 câu (75 phút). Chọn cách làm bài:</p>';
+    if (resume.length) h += '<div class="resume">📝 Bạn đang làm dở: ' + resume.map(function (m) { var n = Object.keys(get('ets26.t' + T + '.' + m).ans).length; return '<a href="?t=' + T + '&m=' + m + '"><b>' + MODES[m].name + '</b> (' + n + ' câu đã chọn)</a>'; }).join(' · ') + '</div>';
+    h += '<div class="modes">' +
+      '<button class="mode" data-m="full"><span class="ic">🎯</span><b>Thi thử Full test</b><span>200 câu · 120 phút · audio phát liền như thi thật</span></button>' +
+      '<button class="mode" data-m="lc"><span class="ic">🎧</span><b>Chỉ Listening</b><span>Part 1–4 · 100 câu · audio phát liền một mạch</span></button>' +
+      '<button class="mode" data-m="rc"><span class="ic">📖</span><b>Chỉ Reading</b><span>Part 5–7 · 100 câu · đếm ngược 75 phút</span></button></div>' +
+      '<div class="box"><h3>Luyện từng Part</h3><p class="hint" style="margin:0">Không giới hạn giờ. Part nghe có nút audio riêng từng câu, nghe lại thoải mái.</p><div class="parts">';
+    for (var p = 1; p <= 7; p++) h += '<button data-m="p' + p + '"><b>' + PART_INFO[p][0] + '</b><span>' + PART_INFO[p][1] + '</span></button>';
+    h += '</div></div>';
+    if (hist.length) {
+      h += '<div class="box"><h3>Kết quả đã nộp</h3><table class="hist"><tr><th>Ngày</th><th>Cách làm</th><th>Đúng</th><th>Điểm ước tính</th></tr>';
+      hist.slice(-12).reverse().forEach(function (r) {
+        h += '<tr><td>' + new Date(r.at).toLocaleDateString('vi-VN') + '</td><td>' + esc(r.name) + '</td><td>' + r.got + '/' + r.total + '</td><td>' + (r.score ? r.score : '–') + '</td></tr>';
+      });
+      h += '</table></div>';
+    }
+    h += '<div class="box"><h3>Mẹo</h3><ul><li>Bài làm tự lưu trên máy này — lỡ tắt trang thì mở lại là làm tiếp.</li><li>Nộp bài xong sẽ thấy đáp án đúng, <b>lời thoại + dịch tiếng Việt</b> và <b>giải thích</b> từng câu.</li><li>Điểm quy đổi chỉ là ước tính để tham khảo.</li></ul></div></div>';
+    $('#main').innerHTML = h;
+    $$('[data-m]').forEach(function (b) { b.onclick = function () {
+      var k = 'ets26.t' + T + '.' + b.dataset.m, s = get(k);
+      if (s && s.done) { try { localStorage.removeItem(k); } catch (e) {} }
+      location.search = '?t=' + T + '&m=' + b.dataset.m; }; });
+  }
+
+  // ---------- tabs & part rendering ----------
+  function buildTabs() {
+    var nav = $('#ptabs');
+    if (M.parts.length < 2) { nav.hidden = true; return; }
+    nav.hidden = false;
+    nav.innerHTML = M.parts.map(function (p) { return '<button type="button" data-p="' + p + '">' + PART_INFO[p][0] + '<span class="pc" id="pc' + p + '"></span></button>'; }).join('');
+    $$('button', nav).forEach(function (b) { b.onclick = function () { show(+b.dataset.p); window.scrollTo(0, 0); }; });
+    counts();
+  }
+  function counts() {
+    M.parts.forEach(function (p) {
+      var ns = nsOf([p]), d = ns.filter(function (n) { return ST.ans[n]; }).length, el = $('#pc' + p);
+      if (el) el.textContent = ST.done ? '' : d + '/' + ns.length;
+    });
+    var all = nsOf(M.parts), dd = all.filter(function (n) { return ST.ans[n]; }).length;
+    $('#cnt').textContent = '(' + dd + '/' + all.length + ')';
+  }
+  function show(p) {
+    CUR = p; ST.cur = p; if (!ST.done) save();
+    $$('#ptabs button').forEach(function (b) { b.setAttribute('aria-selected', String(+b.dataset.p === p)); });
+    var h = (ST.done ? '' : '') + '<div id="resTop"></div><div class="pt-head"><h2>' + PART_INFO[p][0] + '</h2><span>' + PART_INFO[p][1] + ' · ' + nsOf([p]).length + ' câu</span></div>';
+    if (!ST.done) h += '<p class="dir">' + DIRS[p] + '</p>';
+    h += '<div id="partBody" class="' + (ST.done ? 'done' + (ST.hideOk ? ' hide-ok' : '') : '') + '">' + partHTML(p) + '</div>';
+    var i = M.parts.indexOf(p);
+    h += '<div class="navrow"><span>' + (i > 0 ? '<button class="btn alt" data-go="' + M.parts[i - 1] + '">← ' + PART_INFO[M.parts[i - 1]][0] + '</button>' : '') + '</span>' +
+      '<span>' + (i < M.parts.length - 1 ? '<button class="btn alt" data-go="' + M.parts[i + 1] + '">' + PART_INFO[M.parts[i + 1]][0] + ' →</button> ' : '') +
+      (ST.done ? '<a class="btn" href="?t=' + T + '">Làm lại / chọn cách khác</a>' : '<button class="btn warn" id="submitBtn">Nộp bài</button>') + '</span></div>';
+    $('#main').innerHTML = h;
+    $$('[data-go]').forEach(function (b) { b.onclick = function () { show(+b.dataset.go); window.scrollTo(0, 0); }; });
+    var sb = $('#submitBtn'); if (sb) sb.onclick = submit;
+    bindInputs();
+    if (ST.done) showResultTop();
+    if (PL.on || PL.started) markCurrent();
+  }
+
+  function optsHTML(q, nOpt, showText) {
+    var h = '<div class="opts' + (showText ? '' : (nOpt === 3 ? ' row3' : ' row4')) + '" role="radiogroup" aria-label="Câu ' + q.n + '">';
+    for (var i = 0; i < nOpt; i++) {
+      var L = L4[i], cls = '';
+      if (ST.done) { if (L === q.ans) cls = ' right'; else if (ST.ans[q.n] === L) cls = ' wrong'; }
+      h += '<label class="opt' + cls + '"><input type="radio" name="a' + q.n + '" value="' + L + '"' + (ST.ans[q.n] === L ? ' checked' : '') + (ST.done ? ' disabled' : '') + '><span class="L">' + L + '</span>' +
+        (showText ? '<span>' + esc(q.opts[i]) + (ST.done && q.vi && q.vi[i] ? '<span class="vi">' + esc(q.vi[i]) + '</span>' : '') + '</span>' : '') + '</label>';
+    }
+    return h + '</div>';
+  }
+  function mark(q) {
+    if (!ST.done) return '';
+    var a = ST.ans[q.n];
+    if (!a) return '<span class="mark skip">Bỏ trống · đáp án ' + q.ans + '</span>';
+    return a === q.ans ? '<span class="mark ok">✓ Đúng</span>' : '<span class="mark bad">✗ Sai · đáp án ' + q.ans + '</span>';
+  }
+  function qcls(q) { return 'q' + (ST.done && ST.ans[q.n] === q.ans ? ' isok' : ''); }
+  function audioTag(a) { return a ? '<audio class="ia" controls preload="none" src="audio/t' + T + '/' + a + '"></audio>' : ''; }
+  function practiceAudio() { return ST.done || !M.exam; }
+  function scriptHTML(sc) {
+    return '<div class="script">' + sc.map(function (t) { return '<p>' + (t[0] ? '<span class="sp">' + esc(t[0]) + ':</span>' : '') + esc(t[1]) + (t[2] ? '<span class="v">' + esc(t[2]) + '</span>' : '') + '</p>'; }).join('') + '</div>';
+  }
+  function xpHTML(q) {
+    if (!ST.done) return '';
+    var body = '';
+    if (q.p === 2) body = '<b>' + esc(q.q) + '</b>' + (q.qvi ? '\n' + esc(q.qvi) : '');
+    if (q.qvi && q.p >= 3) body += esc(q.qvi);
+    if (q.xp) body += (body ? '\n\n' : '') + esc(q.xp);
+    if (q.note) body += '<span class="note">⚠ ' + esc(q.note) + '</span>';
+    if (!body) return '';
+    return '<details class="more"><summary>' + (q.p <= 4 ? '💬 Dịch nghĩa' : '💡 Giải thích') + '</summary><div class="in">' + body + '</div></details>';
+  }
+
+  function partHTML(p) {
+    var h = '';
+    if (p === 1) D.lc.p1.forEach(function (q) {
+      h += '<div class="card ' + qcls(q) + '" id="q' + q.n + '" data-a="' + esc(q.a) + '"><div class="qt"><span class="qn">' + q.n + '.</span>' + mark(q) + '</div>' +
+        (practiceAudio() ? '<div style="margin-left:42px">' + audioTag(q.a) + '</div>' : '') +
+        '<img class="photo" src="img/t' + T + '/' + q.img + '" alt="Tranh câu ' + q.n + '" loading="lazy">' + optsHTML(q, 4, ST.done) + xpHTML(q) + '</div>';
+    });
+    if (p === 2) {
+      h += '<div class="card">';
+      D.lc.p2.forEach(function (q) {
+        h += '<div class="' + qcls(q) + '" id="q' + q.n + '" data-a="' + esc(q.a) + '"><div class="qt"><span class="qn">' + q.n + '.</span><span class="blank-q">' + (ST.done ? esc(q.q) : 'Mark your answer on your answer sheet.') + '</span>' + mark(q) + '</div>' +
+          (practiceAudio() ? '<div style="margin-left:42px">' + audioTag(q.a) + '</div>' : '') + optsHTML(q, 3, ST.done) + xpHTML(q) + '</div>';
+      });
+      h += '</div>';
+    }
+    if (p === 3 || p === 4) (p === 3 ? D.lc.p3 : D.lc.p4).forEach(function (s) {
+      var allok = ST.done && s.qs.every(function (q) { return ST.ans[q.n] === q.ans; });
+      h += '<div class="card' + (allok ? ' allok' : '') + '" id="s' + s.ns[0] + '" data-a="' + esc(s.a) + '"><p class="ghead">Questions ' + s.ns[0] + '–' + s.ns[1] + (p === 3 ? ' refer to the following conversation.' : ' refer to the following talk.') + '</p>' +
+        (practiceAudio() ? audioTag(s.a) : '') + (s.img ? '<img class="graphic" src="img/t' + T + '/' + s.img + '" alt="Hình minh hoạ (graphic)">' : '');
+      s.qs.forEach(function (q) { h += '<div class="' + qcls(q) + '" id="q' + q.n + '"><div class="qt"><span class="qn">' + q.n + '.</span><span class="qtext">' + esc(q.q) + mark(q) + '</span></div>' + optsHTML(q, 4, true) + xpHTML(q) + '</div>'; });
+      if (ST.done && s.script) h += '<details class="more g"><summary>📜 Lời thoại + dịch</summary><div class="in">' + scriptHTML(s.script) + '</div></details>';
+      h += '</div>';
+    });
+    if (p === 5) {
+      h += '<div class="card">';
+      D.rc.p5.forEach(function (q) {
+        h += '<div class="' + qcls(q) + '" id="q' + q.n + '"><div class="qt"><span class="qn">' + q.n + '.</span><span class="qtext">' + esc(q.q) + mark(q) + '</span></div>' + optsHTML(q, 4, true) + xpHTML(q) + '</div>';
+      });
+      h += '</div>';
+    }
+    if (p === 6 || p === 7) (p === 6 ? D.rc.p6 : D.rc.p7).forEach(function (s) {
+      var allok = ST.done && s.qs.every(function (q) { return ST.ans[q.n] === q.ans; });
+      var ps = (s.passages || [s.passage]).map(function (x) { return '<div class="psg">' + x + '</div>'; }).join('');
+      h += '<div class="card' + (allok ? ' allok' : '') + '" id="s' + s.ns[0] + '"><p class="ghead">' + esc(s.head || ('Questions ' + s.ns[0] + '-' + s.ns[1])) + '</p><div class="split"><div class="ptext">' + ps +
+        (ST.done && s.vi ? '<details class="more g"><summary>🇻🇳 Dịch bài đọc</summary><div class="in vi-psg">' + esc(s.vi) + '</div></details>' : '') + '</div><div>';
+      s.qs.forEach(function (q) {
+        h += '<div class="' + qcls(q) + '" id="q' + q.n + '"><div class="qt"><span class="qn">' + q.n + '.</span><span class="qtext">' + (q.q ? esc(q.q) : '') + mark(q) + '</span></div>' + optsHTML(q, 4, true) + xpHTML(q) + '</div>';
+      });
+      h += '</div></div></div>';
+    });
+    return h;
+  }
+
+  function bindInputs() {
+    $$('#partBody input[type=radio]').forEach(function (r) {
+      r.onchange = function () { var n = +r.name.slice(1); ST.ans[n] = r.value; save(); counts(); blanks(); };
+    });
+    $$('#partBody .psg .blank').forEach(function (b) {
+      b.onclick = function () { var el = document.getElementById('q' + b.dataset.n); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
+    });
+    blanks();
+  }
+  function blanks() {
+    $$('#partBody .psg .blank').forEach(function (b) {
+      var n = +b.dataset.n, a = ST.ans[n], q = ITEMS[n];
+      b.classList.remove('filled', 'ok', 'bad');
+      if (ST.done && q) { b.classList.add(a === q.ans ? 'ok' : 'bad'); b.textContent = n + ' · ' + q.ans; }
+      else if (a) { b.classList.add('filled'); b.textContent = n + ' · ' + a; }
+      else b.textContent = n + ' -------';
+    });
+  }
+
+  // ---------- answer sheet ----------
+  $('#sheetBtn').onclick = function () {
+    var h = '';
+    M.parts.forEach(function (p) {
+      h += '<div class="sg-part">' + PART_INFO[p][0] + '</div><div class="sgrid">';
+      nsOf([p]).forEach(function (n) {
+        var a = ST.ans[n], c = ST.done ? (a === ITEMS[n].ans ? 'g-ok' : 'g-bad') : (a ? 'done' : '');
+        h += '<button type="button" class="' + c + '" data-n="' + n + '">' + n + (a && !ST.done ? '' : '') + '</button>';
+      });
+      h += '</div>';
+    });
+    $('#sheetBody').innerHTML = h; $('#sheet').hidden = false;
+    $$('#sheetBody button').forEach(function (b) { b.onclick = function () { $('#sheet').hidden = true; jump(+b.dataset.n); }; });
+  };
+  $('#sheetX').onclick = function () { $('#sheet').hidden = true; };
+  $('#sheet').onclick = function (e) { if (e.target.id === 'sheet') $('#sheet').hidden = true; };
+  function jump(n) { var p = ITEMS[n].p; if (p !== CUR) show(p); var el = document.getElementById('q' + n); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+
+  // ---------- timer ----------
+  function startTimer() {
+    clearInterval(timerId);
+    function tick() {
+      var el = $('#timer'), used = (Date.now() - ST.t0) / 1000;
+      if (M.mins) {
+        var left = M.mins * 60 - used;
+        if (left <= 0) { el.textContent = '00:00'; clearInterval(timerId); toast('Hết giờ — bài được nộp tự động.', 4000); submit(true); return; }
+        el.textContent = '⏱ ' + fmt(left); el.classList.toggle('low', left < 300);
+      } else el.textContent = '⏱ ' + fmt(used);
+    }
+    tick(); timerId = setInterval(tick, 1000);
+  }
+  function fmt(s) { s = Math.max(0, Math.floor(s)); var m = Math.floor(s / 60), x = s % 60; return (m < 10 ? '0' : '') + m + ':' + (x < 10 ? '0' : '') + x; }
+
+  // ---------- exam audio (plays the whole Listening section in order) ----------
+  var PL = { list: [], i: 0, au: null, on: false, started: false, stallT: 0 };
+  function setupPlayer() {
+    D.lc.p1.forEach(function (q) { PL.list.push({ a: q.a, p: 1, id: 'q' + q.n, label: 'Part 1 · Câu ' + q.n }); });
+    D.lc.p2.forEach(function (q) { PL.list.push({ a: q.a, p: 2, id: 'q' + q.n, label: 'Part 2 · Câu ' + q.n }); });
+    D.lc.p3.forEach(function (s) { PL.list.push({ a: s.a, p: 3, id: 's' + s.ns[0], label: 'Part 3 · Câu ' + s.ns[0] + '–' + s.ns[1] }); });
+    D.lc.p4.forEach(function (s) { PL.list.push({ a: s.a, p: 4, id: 's' + s.ns[0], label: 'Part 4 · Câu ' + s.ns[0] + '–' + s.ns[1] }); });
+    var au = PL.au = new Audio(); au.preload = 'auto';
+    PL.i = ST.pl ? ST.pl.i : 0;
+    $('#player').hidden = false;
+    var go = $('#plGo');
+    if (PL.i >= PL.list.length) return endAudio();
+    if (ST.pl) { go.textContent = '▶ Phát tiếp từ chỗ dừng'; $('#plNow').textContent = 'Dừng ở ' + PL.list[PL.i].label; PL.started = true; }
+    go.onclick = function () { playCur(ST.pl && ST.pl.i === PL.i ? ST.pl.t : 0); };
+    au.onended = function () { PL.i++; ST.pl = { i: PL.i, t: 0 }; save(); if (PL.i >= PL.list.length) return endAudio(); setTimeout(function () { playCur(0); }, 900); };
+    au.onerror = function () { stalled('Audio bị lỗi tải.'); };
+    au.onpause = function () { if (!au.ended && PL.on) stalled('Audio đang dừng.'); };
+    au.ontimeupdate = function () { if (PL.on && Math.floor(au.currentTime) % 3 === 0) { ST.pl = { i: PL.i, t: au.currentTime }; save(); } };
+    au.onplaying = function () { PL.on = true; PL.stallT = 0; $('#player').classList.add('on'); go.hidden = true; $('#plHint').textContent = 'Audio phát liền như thi thật — không tua lại được.'; };
+    setInterval(function () { if (!PL.on && PL.stallT && Date.now() - PL.stallT > 120000) $('#plHint').innerHTML = 'Audio dừng quá 2 phút? Bạn có thể ' + (M.parts.indexOf(5) >= 0 ? 'chuyển sang <b>Part 5</b> làm Reading trước' : 'bấm <b>Nộp bài</b>') + '.'; }, 5000);
+  }
+  function playCur(t) {
+    var it = PL.list[PL.i]; if (!it) return;
+    PL.started = true;
+    var src = 'audio/t' + T + '/' + it.a;
+    if (PL.au.getAttribute('src') !== src) PL.au.setAttribute('src', src);
+    try { if (t) PL.au.currentTime = t; } catch (e) {}
+    $('#plNow').textContent = '🔊 ' + it.label;
+    if (CUR !== it.p && CUR <= 4) show(it.p);
+    markCurrent(true);
+    var pr = PL.au.play(); if (pr && pr.catch) pr.catch(function () { stalled('Trình duyệt chặn tự phát.'); });
+  }
+  function stalled(why) {
+    PL.on = false; $('#player').classList.remove('on'); if (!PL.stallT) PL.stallT = Date.now();
+    var go = $('#plGo'); go.hidden = false; go.textContent = '▶ Phát tiếp từ chỗ dừng'; $('#plHint').textContent = why;
+    go.onclick = function () { playCur(PL.au.currentTime || 0); };
+  }
+  function endAudio() {
+    PL.on = false; $('#player').classList.remove('on'); $('#plGo').hidden = true;
+    $('#plNow').textContent = '✓ Đã hết phần Listening';
+    $('#plHint').innerHTML = M.parts.indexOf(5) >= 0 ? '<button class="btn sm" id="toRC" type="button">Sang Reading (Part 5) →</button>' : 'Kiểm tra lại rồi bấm Nộp bài nhé.';
+    var b = $('#toRC'); if (b) b.onclick = function () { show(5); window.scrollTo(0, 0); };
+    markCurrent();
+  }
+  function markCurrent(scroll) {
+    $$('.card.cur').forEach(function (c) { c.classList.remove('cur'); });
+    var it = PL.list[PL.i]; if (!it || !PL.started || PL.i >= PL.list.length) return;
+    var el = document.getElementById(it.id); if (!el) return;
+    el.classList.add('cur');
+    if (scroll) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ---------- submit & review ----------
+  function submit(auto) {
+    var ns = nsOf(M.parts), miss = ns.filter(function (n) { return !ST.ans[n]; }).length;
+    if (auto !== true && miss && !confirm('Còn ' + miss + ' câu chưa chọn đáp án. Vẫn nộp bài?')) return;
+    if (PL.au) { PL.au.pause(); PL.on = false; }
+    clearInterval(timerId);
+    var lc = 0, rc = 0, lcT = 0, rcT = 0, parts = {}, wrong = [];
+    ns.forEach(function (n) {
+      var q = ITEMS[n], ok = ST.ans[n] === q.ans;
+      parts[q.p] = parts[q.p] || [0, 0]; parts[q.p][1]++; if (ok) parts[q.p][0]++;
+      if (q.p <= 4) { lcT++; if (ok) lc++; } else { rcT++; if (ok) rc++; }
+      if (!ok) wrong.push(n);
+    });
+    var res = { lc: lc, rc: rc, lcT: lcT, rcT: rcT, parts: parts, wrong: wrong, at: Date.now(), mins: Math.round((Date.now() - ST.t0) / 60000), auto: auto === true };
+    if (lcT === 100) res.lcS = conv(LCT, lc);
+    if (rcT === 100) res.rcS = conv(RCT, rc);
+    ST.done = true; ST.res = res; delete ST.pl; save();
+    var name = MODE === 'full' ? 'Full test' : M.name;
+    var score = res.lcS && res.rcS ? (res.lcS + res.rcS) + ' (LC ' + res.lcS + ' · RC ' + res.rcS + ')' : res.lcS ? 'LC ' + res.lcS : res.rcS ? 'RC ' + res.rcS : '';
+    var hist = get('ets26.hist') || [];
+    hist.push({ test: T, mode: MODE, name: name, got: lc + rc, total: lcT + rcT, score: score, parts: parts, at: res.at, wrong: wrong });
+    put('ets26.hist', hist.slice(-300));
+    $('#player').hidden = true; $('#timer').textContent = '';
+    send(res, name, score);
+    show(M.parts[0]); window.scrollTo(0, 0);
+  }
+  function send(res, name, score) {
+    var nm = ''; try { nm = localStorage.getItem('cam20.name') || ''; } catch (e) {}
+    function go() {
+      var url = window.ETSCFG && window.ETSCFG.SCRIPT_URL; if (!url) return;
+      var body = { kind: 'cam20', name: localStorage.getItem('cam20.name') || '', lop: localStorage.getItem('cam20.lop') || '', test: 'ETS 2026 · Test ' + T, part: name,
+        mode: M.exam ? 'Thi thử' : 'Luyện tập', got: res.lc + res.rc, total: res.lcT + res.rcT, band: score ? 'TOEIC ~' + score : '', minutes: res.mins,
+        wrong: res.wrong.join(', '), auto: res.auto, submittedAt: new Date(res.at).toISOString(), userAgent: navigator.userAgent.slice(0, 120) };
+      try { fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }); } catch (e) {}
+    }
+    if (nm) return go();
+    var box = $('#nm'); box.hidden = false;
+    $('#nmOk').onclick = function () { try { localStorage.setItem('cam20.name', $('#nmName').value.trim()); localStorage.setItem('cam20.lop', $('#nmLop').value.trim()); } catch (e) {} box.hidden = true; go(); toast('Đã gửi kết quả cho thầy ✓'); };
+    $('#nmSkip').onclick = function () { box.hidden = true; };
+  }
+  function showResultTop() {
+    var r = ST.res; if (!r) return;
+    var top = $('#resTop'); if (!top) return;
+    var tot = r.lcT + r.rcT, got = r.lc + r.rc;
+    var h = '<div class="result"><h2>Kết quả · ' + esc(M.name) + '</h2><div class="big">';
+    h += '<div><b>' + got + '/' + tot + '</b><span>câu đúng (' + Math.round(got / tot * 100) + '%)</span></div>';
+    if (r.lcS) h += '<div><b>' + r.lcS + '</b><span>Listening ước tính</span></div>';
+    if (r.rcS) h += '<div><b>' + r.rcS + '</b><span>Reading ước tính</span></div>';
+    if (r.lcS && r.rcS) h += '<div class="tot"><b>' + (r.lcS + r.rcS) + '</b><span>Tổng điểm TOEIC ước tính</span></div>';
+    h += '</div><div class="bars">';
+    Object.keys(r.parts).forEach(function (p) { var a = r.parts[p]; h += '<span>' + PART_INFO[p][0] + '</span><i><s style="width:' + Math.round(a[0] / a[1] * 100) + '%"></s></i><span>' + a[0] + '/' + a[1] + '</span>'; });
+    h += '</div><div class="filt"><button class="btn alt sm" id="hideOk" type="button">' + (ST.hideOk ? 'Hiện tất cả câu' : 'Chỉ xem câu sai') + '</button><a class="btn sm" href="?t=' + T + '">Làm lại / chọn cách khác</a></div>' +
+      '<p class="hint">Câu xanh là đúng, đỏ là sai. Mở <b>💬 Dịch nghĩa</b>, <b>📜 Lời thoại</b>, <b>💡 Giải thích</b> dưới mỗi câu. Phần nghe giờ có nút audio riêng để nghe lại.</p></div>';
+    top.innerHTML = h;
+    $('#hideOk').onclick = function () { ST.hideOk = !ST.hideOk; save(); show(CUR); };
+  }
+})();
