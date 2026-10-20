@@ -82,11 +82,11 @@ footer{max-width:1280px;margin:0 auto;padding:10px 16px 50px;color:var(--dim);fo
 .opt.wrong .L{background:var(--bad)!important;border-color:var(--bad)!important;color:#fff!important}
 .done .opt{cursor:default}
 .opt .vi{display:block;color:var(--dim);font-size:13.5px}
-.photo{display:block;max-width:min(100%,520px);height:auto;border-radius:6px;border:1px solid var(--line);margin:4px 0 10px 42px}
+.photo{display:block;max-width:min(100%,560px);max-height:430px;width:auto;height:auto;border-radius:6px;border:1px solid var(--line);margin:4px 0 10px 42px}
 .graphic{display:block;max-width:min(100%,460px);height:auto;margin:0 0 12px;border-radius:4px}
 .blank-q{font-weight:600;color:var(--dim)}
 audio.ia{width:100%;max-width:520px;height:36px;margin:0 0 10px;display:block}
-.mark{font-size:13px;font-weight:700;border-radius:999px;padding:1px 9px;margin-left:6px}
+.mark{font-size:13px;font-weight:700;border-radius:999px;padding:1px 9px;margin-left:6px;white-space:nowrap;display:inline-block}
 .mark.ok{background:var(--ok-soft);color:var(--ok)}.mark.bad{background:var(--bad-soft);color:var(--bad)}.mark.skip{background:var(--panel2);color:var(--dim)}
 
 /* reading split */
