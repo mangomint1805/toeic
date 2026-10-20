@@ -10,6 +10,10 @@ Trang luyện đề TOEIC Listening & Reading tự chấm cho học viên: 10 đ
 - Luyện từng Part: mỗi câu / mỗi đoạn hội thoại có nút nghe riêng.
 - Chấm điểm ngay, quy đổi điểm TOEIC ước tính, thống kê đúng/sai theo Part.
 - Xem lại: lời thoại kèm dịch tiếng Việt, dịch bài đọc, giải thích từng câu; lọc chỉ xem câu sai.
+- Bấm vào từ tiếng Anh để tra nghĩa, nghe phát âm, lưu flashcard (`flashcards.html`, dùng chung với web IELTS).
+- Chỉnh tốc độ audio 0.75x / 1x / 1.25x khi luyện tập.
+- `chinh-ta.html`: chép chính tả ~1.200 câu Part 1–2 cắt từ audio.
+- `phan-tich.html`: điểm yếu theo Part và dạng câu hỏi, biểu đồ điểm qua các lần làm.
 - Bài làm tự lưu trên máy; kết quả gửi về Google Sheet của thầy.
 
 ## Cấu trúc

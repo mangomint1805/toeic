@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Flashcard từ vựng của tôi</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--panel2:#f2efe8;--brand:#a8691a;--brand-soft:#f2e2c4;--brand-ink:#6b4410;--ok:#1f8f6c;--ok-soft:#e1f4ec;--bad:#c14636;--bad-soft:#fbe6e2}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 50px}
+header{padding:36px 0 14px}
+.back{font-size:14px;font-weight:700;color:var(--brand-ink);text-decoration:none}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:clamp(30px,6vw,42px);margin:14px 0 6px;line-height:1.1}
+header p{margin:0;color:var(--dim)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0}
+.tabs button{font:inherit;font-weight:600;font-size:14px;border:1.5px solid var(--line);background:#fff;color:var(--dim);border-radius:999px;padding:6px 14px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+.fc{perspective:1200px;margin:6px 0 14px}
+.fc-in{position:relative;min-height:260px;transition:transform .45s;transform-style:preserve-3d;cursor:pointer}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--brand);border-radius:16px;padding:22px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;box-shadow:0 8px 24px rgba(107,68,16,.08)}
+.back-f{transform:rotateY(180deg)}
+.word{font-family:'Fraunces',Georgia,serif;font-size:40px;font-weight:600;color:var(--brand-ink);line-height:1.1}
+.ipa{color:var(--dim);margin:6px 0}
+.mean{font-size:17px;margin:6px 0}
+.ex{font-size:14.5px;color:#3b4350;font-style:italic;margin-top:10px;max-width:56ch}
+.ex b{color:var(--brand-ink);font-style:normal}
+.src{font-size:12px;color:var(--dim);margin-top:8px}
+.tip{font-size:13px;color:var(--dim);margin-top:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.btn{font:inherit;font-weight:700;font-size:15px;border:1.5px solid var(--brand);background:#fff;color:var(--brand-ink);border-radius:10px;padding:10px 16px;cursor:pointer}
+.btn.no{border-color:var(--bad);color:var(--bad)}.btn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.sm{font-size:13px;padding:5px 10px}
+.prog{text-align:center;color:var(--dim);font-size:14px;margin:4px 0 10px}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:20px;text-align:center;color:var(--dim)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+td,th{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;vertical-align:top}
+th{background:var(--panel2)}
+td .w{font-weight:700;color:var(--brand-ink)}
+.lv{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 8px;background:var(--panel2);color:var(--dim)}
+.lv.m{background:var(--ok-soft);color:var(--ok)}
+.x{border:0;background:none;color:var(--bad);cursor:pointer;font-size:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="./">← Trang chủ</a>
+    <h1>Flashcard của tôi</h1>
+    <p>Những từ bạn bấm <b>☆ Lưu flashcard</b> khi tra từ trong bài. Bộ thẻ dùng chung cho cả web TOEIC và IELTS, lưu trên máy này.</p>
+  </header>
+  <div class="tabs" role="tablist">
+    <button type="button" data-v="learn" aria-selected="true">🃏 Ôn tập</button>
+    <button type="button" data-v="list" aria-selected="false">📋 Danh sách</button>
+  </div>
+  <div id="main"></div>
+</div>
+<script>
+(function(){
+  var KEY='vocab.cards', V='learn', queue=[], i=0;
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return {}; } }
+  function save(c){ try{ localStorage.setItem(KEY,JSON.stringify(c)); }catch(e){} }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function say(t){ try{ speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(t); u.lang='en-US'; u.rate=.9; speechSynthesis.speak(u); }catch(e){} }
+  function hl(ex,w){ var re=new RegExp('\\b('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\w*)','ig'); return esc(ex).replace(re,'<b>$1</b>'); }
+  var main=document.getElementById('main');
+  [].forEach.call(document.querySelectorAll('.tabs button'),function(b){ b.onclick=function(){ V=b.dataset.v; [].forEach.call(document.querySelectorAll('.tabs button'),function(x){ x.setAttribute('aria-selected',String(x===b)); }); render(); }; });
+  function build(){ var C=load(); queue=Object.keys(C).filter(function(k){ return (C[k].lv||0)<3; }).sort(function(a,b){ return (C[a].lv||0)-(C[b].lv||0) || C[a].at-C[b].at; }); i=0; }
+  function render(){
+    var C=load(), all=Object.keys(C);
+    if(!all.length){ main.innerHTML='<div class="empty">Chưa có từ nào. Khi làm bài hoặc xem lại, <b>bấm vào một từ tiếng Anh</b> → bấm <b>☆ Lưu flashcard</b> là từ đó sẽ vào đây.</div>'; return; }
+    if(V==='list'){
+      var rows=all.sort(function(a,b){ return C[b].at-C[a].at; }).map(function(k){ var c=C[k]; return '<tr><td><span class="w">'+esc(c.w)+'</span><br><small>'+esc(c.ipa)+'</small></td><td>'+esc(c.m)+'<br><small><i>'+esc(c.ex||'')+'</i></small></td><td>'+((c.lv||0)>=3?'<span class="lv m">Đã thuộc</span>':'<span class="lv">'+(c.lv||0)+'/3</span>')+'</td><td><button class="x" data-del="'+esc(k)+'" aria-label="Xoá">✕</button></td></tr>'; }).join('');
+      main.innerHTML='<p class="prog">'+all.length+' từ · '+all.filter(function(k){return (C[k].lv||0)>=3;}).length+' từ đã thuộc</p><table><tr><th>Từ</th><th>Nghĩa · ví dụ</th><th>Mức</th><th></th></tr>'+rows+'</table>';
+      [].forEach.call(main.querySelectorAll('[data-del]'),function(b){ b.onclick=function(){ var C2=load(); delete C2[b.dataset.del]; save(C2); render(); }; });
+      return;
+    }
+    if(i>=queue.length) build();
+    if(!queue.length){ main.innerHTML='<div class="empty">🎉 Bạn đã thuộc hết '+all.length+' từ! Lưu thêm từ mới khi làm bài nhé.<br><br><button class="btn sm" id="rs">Ôn lại tất cả từ đầu</button></div>';
+      document.getElementById('rs').onclick=function(){ var C2=load(); Object.keys(C2).forEach(function(k){ C2[k].lv=0; }); save(C2); build(); render(); }; return; }
+    var c=C[queue[i]];
+    main.innerHTML='<p class="prog">Thẻ '+(i+1)+' / '+queue.length+' cần ôn</p><div class="fc" id="fc"><div class="fc-in">'+
+      '<div class="face"><div class="word">'+esc(c.w)+'</div><div class="ipa">'+esc(c.ipa)+'</div>'+(c.ex?'<div class="ex">'+hl(c.ex,c.w)+'</div>':'')+'<div class="tip">Đoán nghĩa rồi bấm vào thẻ để lật</div></div>'+
+      '<div class="face back-f"><div class="word" style="font-size:28px">'+esc(c.w)+'</div><div class="mean">'+esc(c.m)+'</div>'+(c.ex?'<div class="ex">'+hl(c.ex,c.w)+'</div>':'')+'<div class="src">'+esc(c.src||'')+'</div></div>'+
+      '</div></div><div class="row"><button class="btn sm" id="sp">🔊 Nghe</button><button class="btn no" id="no">✗ Chưa nhớ</button><button class="btn yes" id="yes">✓ Nhớ rồi</button></div>';
+    var fc=document.getElementById('fc'); fc.onclick=function(){ fc.classList.toggle('flip'); };
+    document.getElementById('sp').onclick=function(){ say(c.w); };
+    function next(d){ var C2=load(), k=queue[i]; if(C2[k]){ C2[k].lv=d?Math.min(3,(C2[k].lv||0)+1):0; save(C2); } i++; render(); }
+    document.getElementById('no').onclick=function(){ next(false); };
+    document.getElementById('yes').onclick=function(){ next(true); };
+  }
+  build(); render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Chép chính tả · TOEIC ETS 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--panel2:#f2efe8;
+  --amber:#a8691a;--amber-soft:#f2e2c4;--amber-ink:#6b4410;--teal:#1f8f6c;--teal-soft:#e1f4ec;--red:#c0392b;--red-soft:#fbe6e2}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+header{padding:40px 0 16px}
+.back{font-size:14px;font-weight:700;color:var(--amber-ink);text-decoration:none}
+.kicker{color:var(--amber);font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin:16px 0 6px}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:clamp(30px,6vw,42px);line-height:1.1;margin:0 0 10px}
+header p{margin:0;color:var(--dim);max-width:60ch}
+.pick{display:flex;flex-wrap:wrap;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:18px 0}
+.pick label{display:flex;flex-direction:column;font-size:13px;font-weight:600;color:var(--dim);flex:1 1 130px}
+select,input,textarea{font:inherit}
+.pick select{font-size:15px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--ink);margin-top:3px}
+select:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.dots{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.dots button{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);font:inherit;font-size:13px;font-weight:700;color:var(--dim);cursor:pointer}
+.dots button.cur{border-color:var(--amber);color:var(--amber-ink);background:var(--amber-soft)}
+.dots button.ok{background:var(--teal-soft);border-color:var(--teal);color:var(--teal)}
+.dots button.mid{background:#fdf3dc;border-color:#d9a63c;color:#8a5d06}
+.card{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--amber);border-radius:14px;padding:18px 18px 16px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.top b{font-family:'Fraunces',Georgia,serif;font-size:20px;font-weight:600;color:var(--amber-ink)}
+.top span{font-size:13.5px;color:var(--dim)}
+.play{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.btn{font:inherit;font-weight:700;font-size:14.5px;border:1.5px solid var(--amber);background:var(--card);color:var(--amber-ink);border-radius:9px;padding:9px 14px;cursor:pointer;min-height:44px}
+.btn.main{background:var(--amber);color:#fff}
+.btn.alt{border-color:var(--line);color:var(--ink);background:var(--panel2)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.on{background:var(--amber-soft)}
+textarea{width:100%;min-height:86px;font-size:17px;line-height:1.5;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);resize:vertical}
+.hintline{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;color:var(--amber-ink);background:var(--amber-soft);border-radius:8px;padding:8px 10px;margin:10px 0 0;word-spacing:4px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.res{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--panel2);font-size:17px;line-height:1.9}
+.res .sc{display:block;font-size:14px;font-weight:700;margin-bottom:4px}
+.w-ok{color:var(--teal);font-weight:600}
+.w-bad{color:var(--red);text-decoration:line-through;text-decoration-thickness:2px}
+.w-fix{color:var(--teal);font-weight:700;background:var(--teal-soft);border-radius:4px;padding:0 3px}
+.w-miss{color:#8a5d06;font-weight:700;background:#fdf3dc;border-radius:4px;padding:0 3px;border-bottom:2px dotted #d9a63c}
+.legend{font-size:12.5px;color:var(--dim);margin-top:6px}
+.kbd{font-size:12.5px;color:var(--dim);margin-top:12px}
+.kbd kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--card)}
+.empty{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--dim)}
+footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="./">← Trang chủ</a>
+    <p class="kicker">Luyện nghe · chép chính tả</p>
+    <h1>Nghe từng câu, gõ lại</h1>
+    <p>Các câu Part 1 (mô tả tranh) và Part 2 (hỏi – đáp) được cắt từ chính audio của đề — câu ngắn, rất hợp để luyện nghe từng từ. Nghe bao nhiêu lần cũng được, gõ lại câu nghe được rồi bấm <b>Kiểm tra</b>: web chỉ ra từ nào đúng, sai, thiếu.</p>
+  </header>
+
+  <div class="pick">
+        <label>Test<select id="sT"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></label>
+    <label>Part<select id="sP"><option value="p1">Part 1 · Mô tả tranh</option><option value="p2">Part 2 · Hỏi – đáp</option></select></label>
+  </div>
+
+  <div id="dots" class="dots" aria-label="Danh sách câu"></div>
+  <div id="main"></div>
+  <footer>Kết quả lưu trên máy này. Mẹo: nghe cả câu một lần, sau đó nghe chậm và gõ từng cụm.</footer>
+</div>
+<audio id="au" preload="auto"></audio>
+<script src="data/dict.js"></script>
+<script>
+(function(){
+  var sT=document.getElementById('sT'), sP=document.getElementById('sP');
+  var au=document.getElementById('au'), main=document.getElementById('main'), dots=document.getElementById('dots');
+  var sB={value:'ets'};
+  var QS=new URLSearchParams(location.search);
+  function lget(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
+  function lset(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  var PROG={}; try{ PROG=JSON.parse(lget('ets26.dict','{}'))||{}; }catch(e){}
+  sT.value=QS.get('t')||lget('ets26.dict.t','1'); sP.value=QS.get('p')||lget('ets26.dict.p','p1');
+  if(!sP.value) sP.value='p1';
+  var list=[], cur=0, slow=false, stopAt=0, timer=null;
+  function key(i){ var x=list[i]; return sT.value+'|'+(x?x.q+x.k:i); }
+  function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  function show(){
+    lset('ets26.dict.t',sT.value); lset('ets26.dict.p',sP.value);
+    list=((window.ETSDICT||{})[sT.value]||{})[sP.value]||[];
+    cur=0; for(var i=0;i<list.length;i++){ if(!PROG[key(i)]){ cur=i; break; } }
+    renderDots(); render();
+  }
+  function renderDots(){
+    dots.innerHTML='';
+    list.forEach(function(x,i){ var b=document.createElement('button'); b.type='button'; b.textContent=i+1; var p=PROG[key(i)];
+      b.className=(i===cur?'cur ':'')+(p>=90?'ok':p?'mid':''); b.title='Câu '+(i+1)+(p?' · '+p+'%':''); b.onclick=function(){ cur=i; renderDots(); render(); }; dots.appendChild(b); });
+  }
+  function words(t){ return t.split(/\s+/).filter(Boolean); }
+  var NUM={zero:'0',one:'1',two:'2',three:'3',four:'4',five:'5',six:'6',seven:'7',eight:'8',nine:'9',ten:'10',eleven:'11',twelve:'12',fifteen:'15',twenty:'20',thirty:'30',forty:'40',fifty:'50',hundred:'100'};
+  var CON={"it's":"it is","that's":"that is","there's":"there is","what's":"what is","he's":"he is","she's":"she is","i'm":"i am","you're":"you are","we're":"we are","they're":"they are","don't":"do not","doesn't":"does not","didn't":"did not","can't":"cannot","won't":"will not","isn't":"is not","aren't":"are not","wasn't":"was not","weren't":"were not","i've":"i have","you've":"you have","we've":"we have","they've":"they have","i'll":"i will","you'll":"you will","we'll":"we will","they'll":"they will","it'll":"it will","i'd":"i would","you'd":"you would","we'd":"we would","they'd":"they would","let's":"let us","haven't":"have not","hasn't":"has not","couldn't":"could not","wouldn't":"would not","shouldn't":"should not"};
+  function toks(t){
+    var a=t.toLowerCase().replace(/[’‘]/g,"'").replace(/[–—-]/g,' ').replace(/[^a-z0-9'£$%. ]/g,' ').split(/\s+/), out=[];
+    a.forEach(function(w){ w=w.replace(/^[.']+|[.']+$/g,''); if(!w) return; if(CON[w]){ CON[w].split(' ').forEach(function(x){ out.push(x); }); return; } out.push(NUM[w]||w); });
+    return out;
+  }
+  function diff(ref,hyp){
+    var R=toks(ref), H=toks(hyp), n=R.length, m=H.length, L=[], i, j;
+    for(i=0;i<=n;i++){ L.push(new Array(m+1).fill(0)); }
+    for(i=n-1;i>=0;i--) for(j=m-1;j>=0;j--) L[i][j]=R[i]===H[j]?L[i+1][j+1]+1:Math.max(L[i+1][j],L[i][j+1]);
+    var ops=[], ok=0; i=0; j=0;
+    while(i<n&&j<m){ if(R[i]===H[j]){ ops.push(['ok',R[i]]); ok++; i++; j++; } else if(L[i+1][j]>=L[i][j+1]){ ops.push(['miss',R[i]]); i++; } else { ops.push(['extra',H[j]]); j++; } }
+    while(i<n){ ops.push(['miss',R[i++]]); } while(j<m){ ops.push(['extra',H[j++]]); }
+    // ghép "thừa" + "thiếu" liền nhau thành "sai → đúng"
+    var out=[];
+    for(var k=0;k<ops.length;k++){
+      var a=ops[k], b=ops[k+1];
+      if(b&&((a[0]==='extra'&&b[0]==='miss')||(a[0]==='miss'&&b[0]==='extra'))){ var wrong=a[0]==='extra'?a[1]:b[1], right=a[0]==='miss'?a[1]:b[1]; out.push('<span class="w-bad">'+esc(wrong)+'</span> <span class="w-fix">'+esc(right)+'</span>'); k++; }
+      else if(a[0]==='ok') out.push('<span class="w-ok">'+esc(a[1])+'</span>');
+      else if(a[0]==='miss') out.push('<span class="w-miss">'+esc(a[1])+'</span>');
+      else out.push('<span class="w-bad">'+esc(a[1])+'</span>');
+    }
+    return {html:out.join(' '), pct:n?Math.round(ok/n*100):0};
+  }
+  function hint(t){ return words(t).map(function(w){ var m=w.match(/^([^A-Za-z0-9]*)([A-Za-z0-9’']+)(.*)$/); if(!m) return w; return m[1]+m[2][0]+m[2].slice(1).replace(/[A-Za-z0-9]/g,'_')+m[3]; }).join(' '); }
+
+  function play(){
+    var x=list[cur]; if(!x) return;
+    var src='audio/t'+sT.value+'/'+x.a; if(au.getAttribute('src')!==src){ au.setAttribute('src',src); }
+    clearInterval(timer); au.playbackRate=slow?0.75:1;
+    var go=function(){ try{ au.currentTime=Math.max(0,x.s-0.15); }catch(e){} stopAt=x.e+0.2; var p=au.play(); if(p&&p.catch) p.catch(function(){});
+      timer=setInterval(function(){ if(au.currentTime>=stopAt){ au.pause(); clearInterval(timer); } },40); };
+    if(au.readyState>=1) go(); else { au.addEventListener('loadedmetadata',function h(){ au.removeEventListener('loadedmetadata',h); go(); }); au.load(); }
+  }
+  function render(){
+    clearInterval(timer); try{ au.pause(); }catch(e){}
+    if(!list.length){ main.innerHTML='<div class="empty">Part này chưa có câu chép chính tả (đang được chuẩn bị). Chọn part khác hoặc quay lại sau nhé.</div>'; return; }
+    var x=list[cur], p=PROG[key(cur)];
+    main.innerHTML='<div class="card"><div class="top"><b>Câu '+(cur+1)+' / '+list.length+'</b><span>'+words(x.t).length+' từ'+(p?' · tốt nhất '+p+'%':'')+'</span></div>'+
+      '<div class="play"><button type="button" class="btn main" id="bPlay">▶ Nghe</button><button type="button" class="btn'+(slow?' on':'')+'" id="bSlow">🐢 Chậm</button></div>'+
+      '<textarea id="ans" placeholder="Gõ lại câu bạn nghe được…" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>'+
+      '<div id="hintbox"></div>'+
+      '<div class="acts"><button type="button" class="btn main" id="bCheck">Kiểm tra</button><button type="button" class="btn alt" id="bHint">💡 Gợi ý</button><button type="button" class="btn alt" id="bShow">Xem đáp án</button>'+
+      '<button type="button" class="btn alt" id="bPrev"'+(cur?'':' disabled')+'>‹ Câu trước</button><button type="button" class="btn alt" id="bNext"'+(cur<list.length-1?'':' disabled')+'>Câu sau ›</button></div>'+
+      '<div id="res"></div><div class="kbd"><kbd>Enter</kbd> kiểm tra · <kbd>Ctrl</kbd>+<kbd>Space</kbd> hoặc <kbd>Esc</kbd> nghe lại · <kbd>Shift</kbd>+<kbd>Enter</kbd> xuống dòng</div></div>';
+    var ans=document.getElementById('ans');
+    document.getElementById('bPlay').onclick=play;
+    document.getElementById('bSlow').onclick=function(){ slow=!slow; this.classList.toggle('on',slow); play(); };
+    document.getElementById('bHint').onclick=function(){ document.getElementById('hintbox').innerHTML='<div class="hintline">'+esc(hint(x.t))+'</div>'; };
+    document.getElementById('bShow').onclick=function(){ document.getElementById('res').innerHTML='<div class="res"><span class="sc">Đáp án</span>'+esc(x.t)+'</div>'; };
+    document.getElementById('bPrev').onclick=function(){ if(cur>0){ cur--; renderDots(); render(); } };
+    document.getElementById('bNext').onclick=function(){ if(cur<list.length-1){ cur++; renderDots(); render(); } };
+    document.getElementById('bCheck').onclick=check;
+    ans.addEventListener('keydown',function(e){
+      if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); check(); }
+      else if(e.key==='Escape'||(e.key===' '&&e.ctrlKey)){ e.preventDefault(); play(); }
+    });
+    function check(){
+      var v=ans.value.trim(); if(!v){ ans.focus(); return; }
+      var d=diff(x.t,v), k=key(cur); if(!PROG[k]||d.pct>PROG[k]){ PROG[k]=d.pct; lset('ets26.dict',JSON.stringify(PROG)); renderDots(); }
+      var msg=d.pct===100?'🎉 Chính xác 100%!':d.pct>=80?'Gần đúng rồi: '+d.pct+'%':'Đúng '+d.pct+'% số từ. Nghe lại thêm nhé!';
+      document.getElementById('res').innerHTML='<div class="res"><span class="sc">'+msg+'</span>'+d.html+'</div><div class="legend"><span class="w-ok">xanh</span> = đúng · <span class="w-bad">gạch đỏ</span> = sai, kèm <span class="w-fix">từ đúng</span> · <span class="w-miss">vàng</span> = còn thiếu</div>';
+    }
+  }
+  [sT,sP].forEach(function(s){ s.onchange=show; });
+  show();
+})();
+</script>
+</body>
+</html>

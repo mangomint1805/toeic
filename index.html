@@ -33,6 +33,11 @@ header p{margin:0;color:var(--dim);font-size:16px;max-width:60ch}
 .info span{display:block;font-size:13.5px;color:var(--dim)}
 .prog{display:inline-block;margin-top:5px;font-size:12.5px;font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:1px 9px}
 .prog.none{color:var(--dim);background:var(--panel2)}
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 0}
+.tool{display:flex;gap:12px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--ink)}
+.tool:hover{border-color:var(--brand)}
+.tool .ic{font-size:26px;line-height:1}.tool b{display:block;font-size:15.5px}.tool span span{display:block;font-size:13px;color:var(--dim)}
+@media (max-width:760px){.tools{grid-template-columns:1fr}}
 .tips{margin:30px 0 0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
 .tips h2{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:21px;margin:0 0 8px}
 .tips ul{margin:0;padding-left:20px}.tips li{margin:6px 0;font-size:15px}
@@ -53,6 +58,11 @@ footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
     <span class="ok" id="meOk"></span>
   </div>
   <ul class="tests" id="tests"></ul>
+  <div class="tools">
+    <a class="tool" href="phan-tich.html"><span class="ic" aria-hidden="true">📊</span><span><b>Điểm yếu & tiến bộ</b><span>Hay sai Part nào, dạng câu nào; biểu đồ điểm qua các lần làm</span></span></a>
+    <a class="tool" href="chinh-ta.html"><span class="ic" aria-hidden="true">✍️</span><span><b>Chép chính tả</b><span>~1.200 câu Part 1–2 cắt từ audio, gõ lại và chấm từng từ</span></span></a>
+    <a class="tool" href="flashcards.html"><span class="ic" aria-hidden="true">🃏</span><span><b>Flashcard của tôi</b><span>Từ bạn đã lưu khi bấm tra từ trong bài</span></span></a>
+  </div>
   <section class="tips">
     <h2>Dùng thế nào?</h2>
     <ul>
@@ -60,6 +70,7 @@ footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
       <li>Chọn một đề, rồi chọn <b>Thi thử Full test</b> (120 phút), <b>chỉ Listening</b>, <b>chỉ Reading</b>, hoặc <b>luyện từng Part</b>.</li>
       <li>Khi thi thử, audio phát liền một mạch như thi thật. Khi luyện từng Part, mỗi câu có nút nghe riêng.</li>
       <li>Nộp bài xong: câu xanh đúng, đỏ sai; mở <b>📜 Lời thoại</b>, <b>💬 Dịch nghĩa</b>, <b>💡 Giải thích</b> dưới từng câu.</li>
+      <li>Khi luyện tập hoặc xem lại, <b>bấm vào từ tiếng Anh bất kỳ</b> để xem nghĩa, nghe phát âm và <b>lưu vào flashcard</b>. Audio có nút chỉnh tốc độ 0.75x / 1.25x.</li>
       <li>Bài làm tự lưu trên máy này, tắt trang mở lại vẫn làm tiếp được.</li>
     </ul>
   </section>

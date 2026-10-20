@@ -132,8 +132,9 @@
   }
   function show(p) {
     CUR = p; ST.cur = p; if (!ST.done) save();
+    window.ETS_LOOKUP = !!(ST.done || !M.exam); window.LOOKUP_SRC = 'ETS 2026 · Test ' + T;
     $$('#ptabs button').forEach(function (b) { b.setAttribute('aria-selected', String(+b.dataset.p === p)); });
-    var h = (ST.done ? '' : '') + '<div id="resTop"></div><div class="pt-head"><h2>' + PART_INFO[p][0] + '</h2><span>' + PART_INFO[p][1] + ' · ' + nsOf([p]).length + ' câu</span></div>';
+    var h = (ST.done ? '' : '') + '<div id="resTop"></div><div class="pt-head"><h2>' + PART_INFO[p][0] + '</h2><span>' + PART_INFO[p][1] + ' · ' + nsOf([p]).length + ' câu</span>' + (p <= 4 && practiceAudio() ? speedHTML() : '') + (window.ETS_LOOKUP ? '<span class="lkhint">💡 Bấm vào từ tiếng Anh bất kỳ để tra nghĩa</span>' : '') + '</div>';
     if (!ST.done) h += '<p class="dir">' + DIRS[p] + '</p>';
     h += '<div id="partBody" class="' + (ST.done ? 'done' + (ST.hideOk ? ' hide-ok' : '') : '') + '">' + partHTML(p) + '</div>';
     var i = M.parts.indexOf(p);
@@ -143,11 +144,17 @@
     $('#main').innerHTML = h;
     $$('[data-go]').forEach(function (b) { b.onclick = function () { show(+b.dataset.go); window.scrollTo(0, 0); }; });
     var sb = $('#submitBtn'); if (sb) sb.onclick = submit;
-    bindInputs();
+    bindInputs(); bindSpeed();
     if (ST.done) showResultTop();
     if (PL.on || PL.started) markCurrent();
   }
 
+
+  // ---------- tốc độ audio (khi luyện tập / xem lại) ----------
+  var SPEED = parseFloat(get('ets26.speed')) || 1;
+  function speedHTML() { return '<span class="spd" role="group" aria-label="Tốc độ audio">Tốc độ: ' + [0.75, 1, 1.25].map(function (v) { return '<button type="button" data-spd="' + v + '"' + (v === SPEED ? ' aria-pressed="true"' : '') + '>' + v + 'x</button>'; }).join('') + '</span>'; }
+  function bindSpeed() { $$('[data-spd]').forEach(function (b) { b.onclick = function () { SPEED = +b.dataset.spd; put('ets26.speed', SPEED); $$('[data-spd]').forEach(function (x) { x.setAttribute('aria-pressed', String(+x.dataset.spd === SPEED)); }); $$('audio.ia').forEach(function (a) { a.playbackRate = SPEED; }); }; }); }
+  document.addEventListener('play', function (e) { if (e.target.classList && e.target.classList.contains('ia')) { e.target.playbackRate = SPEED; $$('audio.ia').forEach(function (a) { if (a !== e.target) a.pause(); }); } }, true);
   function optsHTML(q, nOpt, showText) {
     var h = '<div class="opts' + (showText ? '' : (nOpt === 3 ? ' row3' : ' row4')) + '" role="radiogroup" aria-label="Câu ' + q.n + '">';
     for (var i = 0; i < nOpt; i++) {
@@ -334,12 +341,12 @@
     if (auto !== true && miss && !confirm('Còn ' + miss + ' câu chưa chọn đáp án. Vẫn nộp bài?')) return;
     if (PL.au) { PL.au.pause(); PL.on = false; }
     clearInterval(timerId);
-    var lc = 0, rc = 0, lcT = 0, rcT = 0, parts = {}, wrong = [];
+    var lc = 0, rc = 0, lcT = 0, rcT = 0, parts = {}, wrong = [], rq = {};
     ns.forEach(function (n) {
       var q = ITEMS[n], ok = ST.ans[n] === q.ans;
       parts[q.p] = parts[q.p] || [0, 0]; parts[q.p][1]++; if (ok) parts[q.p][0]++;
       if (q.p <= 4) { lcT++; if (ok) lc++; } else { rcT++; if (ok) rc++; }
-      if (!ok) wrong.push(n);
+      if (!ok) wrong.push(n); rq[n] = ok ? 1 : 0;
     });
     var res = { lc: lc, rc: rc, lcT: lcT, rcT: rcT, parts: parts, wrong: wrong, at: Date.now(), mins: Math.round((Date.now() - ST.t0) / 60000), auto: auto === true };
     if (lcT === 100) res.lcS = conv(LCT, lc);
@@ -348,7 +355,7 @@
     var name = MODE === 'full' ? 'Full test' : M.name;
     var score = res.lcS && res.rcS ? (res.lcS + res.rcS) + ' (LC ' + res.lcS + ' · RC ' + res.rcS + ')' : res.lcS ? 'LC ' + res.lcS : res.rcS ? 'RC ' + res.rcS : '';
     var hist = get('ets26.hist') || [];
-    hist.push({ test: T, mode: MODE, name: name, got: lc + rc, total: lcT + rcT, score: score, parts: parts, at: res.at, wrong: wrong });
+    hist.push({ test: T, mode: MODE, name: name, got: lc + rc, total: lcT + rcT, score: score, parts: parts, at: res.at, wrong: wrong, r: rq, lcS: res.lcS || 0, rcS: res.rcS || 0 });
     put('ets26.hist', hist.slice(-300));
     $('#player').hidden = true; $('#timer').textContent = '';
     send(res, name, score);
