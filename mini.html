@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#a8691a">
+<link rel="apple-touch-icon" href="icons/apple-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Đề mini mỗi ngày · TOEIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--panel2:#f2efe8;--brand:#a8691a;--brand-soft:#f2e2c4;--brand-ink:#6b4410;--ok:#1f8f6c;--ok-soft:#e1f4ec;--bad:#c14636;--bad-soft:#fbe6e2}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px 60px}
+header{padding:28px 0 8px}
+.back{font-size:14px;font-weight:700;color:var(--brand-ink);text-decoration:none}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:clamp(28px,6vw,40px);margin:12px 0 4px;line-height:1.1}
+header p{margin:0;color:var(--dim)}
+.streak{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.streak div{flex:1 1 120px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.streak b{display:block;font-family:'Fraunces',Georgia,serif;font-size:26px;color:var(--brand-ink);line-height:1.1}
+.streak span{font-size:12.5px;color:var(--dim)}
+.week{display:flex;gap:6px;margin:4px 0 14px}
+.week i{flex:1;height:30px;border-radius:7px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font:600 11.5px/1 'IBM Plex Sans';color:var(--dim);font-style:normal}
+.week i.on{background:var(--ok);color:#fff}
+.big{display:block;width:100%;text-align:left;font:inherit;background:var(--brand);color:#fff;border:0;border-radius:14px;padding:16px 18px;cursor:pointer;margin:0 0 10px}
+.big b{display:block;font-size:18px}.big span{font-size:13.5px;opacity:.9}
+.big.alt{background:var(--card);color:var(--ink);border:1.5px solid var(--line)}.big.alt span{color:var(--dim);opacity:1}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;color:var(--dim);margin:0 0 8px}
+.pbar{height:6px;background:var(--panel2);border-radius:3px;overflow:hidden;margin:0 0 12px}.pbar s{display:block;height:100%;background:var(--brand)}
+.tag{font-weight:700;color:var(--brand-ink);background:var(--brand-soft);border-radius:999px;padding:2px 10px;font-size:12.5px}
+.q{font-size:17px;font-weight:500;margin:6px 0 12px}
+img.ph{display:block;width:100%;max-height:300px;object-fit:contain;border-radius:8px;border:1px solid var(--line);margin:0 0 10px;background:#fff}
+.aud{display:flex;gap:8px;align-items:center;margin:0 0 10px}
+.aud button{font:inherit;font-weight:700;font-size:14px;border:1.5px solid var(--brand);background:var(--brand);color:#fff;border-radius:999px;padding:8px 14px;cursor:pointer}
+.aud button.ghost{background:#fff;color:var(--brand-ink)}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;font:inherit;font-size:15.5px;background:var(--panel2);border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;cursor:pointer;color:var(--ink)}
+.opt .L{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid #b9b09c;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;background:#fff}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}.opt.right .L{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}.opt.wrong .L{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt:disabled{cursor:default;color:var(--ink)}
+.opt small{display:block;color:var(--dim);font-size:13px}
+.fb{margin:12px 0 0;padding:10px 12px;border-radius:10px;font-size:14.5px;white-space:pre-line}
+.fb.ok{background:var(--ok-soft)}.fb.bad{background:var(--bad-soft)}
+.nav{display:flex;justify-content:flex-end;margin-top:12px}
+.btn{font:inherit;font-weight:700;font-size:15px;border:0;background:var(--brand);color:#fff;border-radius:10px;padding:11px 18px;cursor:pointer}
+.res{text-align:center}.res .sc{font-family:'Fraunces',Georgia,serif;font-size:54px;color:var(--brand-ink);line-height:1}
+.hint{font-size:13px;color:var(--dim)}
+@media (max-width:420px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="./">← Trang chủ</a>
+    <h1>Đề mini mỗi ngày</h1>
+    <p>10 phút mỗi ngày: 20 câu trộn từ Part 1, 2 và 5 của cả 10 đề. Làm xong biết đúng sai ngay, có giải thích.</p>
+  </header>
+  <div id="main"></div>
+</div>
+<audio id="au" preload="auto"></audio>
+<script src="config.js"></script>
+<script src="data/mini.js"></script>
+<script>
+(function(){
+  var ALL=window.ETSMINI||[], au=document.getElementById('au'), main=document.getElementById('main');
+  function get(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } }
+  function put(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function today(d){ d=d||new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function rng(seed){ var h=2166136261; for(var i=0;i<seed.length;i++){ h^=seed.charCodeAt(i); h=Math.imul(h,16777619); } return function(){ h+=0x6D2B79F5; var t=h; t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; }; }
+  function pick(list,n,r,seen){ var a=list.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(r()*(i+1)); var x=a[i]; a[i]=a[j]; a[j]=x; } if(seen){ a.sort(function(x,y){ return (seen[x.t+'.'+x.n]?1:0)-(seen[y.t+'.'+y.n]?1:0); }); } return a.slice(0,n); }
+  var DAYS=get('ets26.mini.days',{}), SEEN=get('ets26.mini.seen',{});
+  function streak(){ var s=0, d=new Date(); if(!DAYS[today(d)]) d.setDate(d.getDate()-1); while(DAYS[today(d)]){ s++; d.setDate(d.getDate()-1); } return s; }
+  var SET=[], i=0, score=0, kind='', answers=[];
+  function home(){
+    au.pause();
+    var t=today(), done=DAYS[t], wk='', d=new Date(); d.setDate(d.getDate()-6);
+    var WD=['CN','T2','T3','T4','T5','T6','T7'];
+    for(var k=0;k<7;k++){ var key=today(d); wk+='<i class="'+(DAYS[key]?'on':'')+'" title="'+key+'">'+(k===6?'Nay':WD[d.getDay()])+'</i>'; d.setDate(d.getDate()+1); }
+    var best=Object.keys(DAYS).length;
+    main.innerHTML='<div class="streak"><div><b>🔥 '+streak()+'</b><span>ngày liên tục</span></div><div><b>'+best+'</b><span>ngày đã làm đề mini</span></div><div><b>'+(done?done+'/20':'–')+'</b><span>điểm hôm nay</span></div></div><div class="week">'+wk+'</div>'+
+      '<button class="big" id="bDay"><b>'+(done?'↻ Làm lại đề hôm nay':'▶ Làm đề hôm nay')+'</b><span>20 câu · 3 Part 1 + 7 Part 2 + 10 Part 5 · cả lớp cùng một đề trong ngày</span></button>'+
+      '<div class="grid2"><button class="big alt" data-k="p5"><b>📝 15 câu Part 5</b><span>Ngữ pháp & từ vựng, ưu tiên câu chưa gặp</span></button><button class="big alt" data-k="p2"><b>🎧 10 câu Part 2</b><span>Hỏi – đáp, có audio</span></button></div>'+
+      '<p class="hint">Mẹo: làm mỗi ngày một đề để giữ chuỗi 🔥. Câu nào sai, mở giải thích rồi tra từ ngay trên trang.</p>';
+    document.getElementById('bDay').onclick=function(){ var r=rng('ets-mini-'+t); var P=function(p){ return ALL.filter(function(x){ return x.p===p; }); };
+      start('day',pick(P(1),3,r).concat(pick(P(2),7,r),pick(P(5),10,r))); };
+    [].forEach.call(main.querySelectorAll('[data-k]'),function(b){ b.onclick=function(){ var p=+b.dataset.k.slice(1), r=Math.random; start(b.dataset.k,pick(ALL.filter(function(x){ return x.p===p; }),p===5?15:10,r,SEEN)); }; });
+  }
+  function start(k,set){ kind=k; SET=set; i=0; score=0; answers=[]; show(); }
+  function play(){ var x=SET[i]; if(!x||!x.au) return; var src='audio/t'+x.t+'/'+x.au; if(au.getAttribute('src')!==src) au.setAttribute('src',src); au.currentTime=0; au.play().catch(function(){}); }
+  function show(){
+    var x=SET[i]; if(!x) return end();
+    var lab=x.p===1?'Part 1 · Mô tả tranh':x.p===2?'Part 2 · Hỏi – đáp':'Part 5 · Điền câu';
+    var h='<div class="card"><div class="top"><span class="tag">'+lab+'</span><span>Câu '+(i+1)+'/'+SET.length+' · Test '+x.t+' câu '+x.n+'</span></div><div class="pbar"><s style="width:'+(i/SET.length*100)+'%"></s></div>';
+    if(x.p===1) h+='<img class="ph" src="img/t'+x.t+'/'+x.img+'" alt="Tranh">';
+    if(x.au) h+='<div class="aud"><button id="bPl">▶ Nghe</button><button class="ghost" id="bSl">🐢 Chậm</button></div>';
+    h+='<div class="q">'+(x.p===5?esc(x.q):x.p===2?'Nghe câu hỏi và chọn câu đáp phù hợp nhất.':'Nghe 4 câu mô tả và chọn câu đúng với bức tranh.')+'</div><div class="opts">';
+    var n=x.o.length;
+    for(var k=0;k<n;k++) h+='<button class="opt" data-l="'+'ABCD'[k]+'"><span class="L">'+'ABCD'[k]+'</span><span class="tx">'+(x.p===5?esc(x.o[k]):'')+'</span></button>';
+    h+='</div><div id="fb"></div><div class="nav" id="nav"></div></div>';
+    main.innerHTML=h; window.scrollTo(0,0);
+    if(x.au){ document.getElementById('bPl').onclick=function(){ au.playbackRate=1; play(); }; document.getElementById('bSl').onclick=function(){ play(); au.playbackRate=0.8; }; play(); }
+    [].forEach.call(main.querySelectorAll('.opt'),function(b){ b.onclick=function(){ choose(b.dataset.l); }; });
+  }
+  function choose(L){
+    var x=SET[i], ok=L===x.a; if(ok) score++; answers.push(ok?1:0); SEEN[x.t+'.'+x.n]=1; put('ets26.mini.seen',SEEN);
+    [].forEach.call(main.querySelectorAll('.opt'),function(b,k){ b.disabled=true; if(b.dataset.l===x.a) b.classList.add('right'); else if(b.dataset.l===L) b.classList.add('wrong');
+      if(x.p!==5) b.querySelector('.tx').innerHTML=esc(x.o[k])+(x.v&&x.v[k]?'<small>'+esc(x.v[k])+'</small>':''); });
+    var fb=ok?'✓ Chính xác!':'✗ Chưa đúng — đáp án là ('+x.a+').';
+    if(x.p===2) fb+='\n\nCâu hỏi: '+x.q+(x.qv?'\n'+x.qv:'');
+    if(x.p===5&&x.x) fb+='\n\n'+x.x;
+    document.getElementById('fb').innerHTML='<div class="fb '+(ok?'ok':'bad')+'">'+esc(fb)+'</div>';
+    document.getElementById('nav').innerHTML='<button class="btn" id="bN">'+(i<SET.length-1?'Câu tiếp →':'Xem kết quả')+'</button>';
+    document.getElementById('bN').onclick=function(){ i++; show(); };
+  }
+  function end(){
+    au.pause();
+    var pct=Math.round(score/SET.length*100);
+    if(kind==='day'){ var t=today(); DAYS[t]=Math.max(DAYS[t]||0,score); put('ets26.mini.days',DAYS); send(); }
+    main.innerHTML='<div class="card res"><p class="hint">'+(kind==='day'?'Đề mini hôm nay':'Luyện thêm')+'</p><div class="sc">'+score+'/'+SET.length+'</div><p>'+(pct>=85?'🎉 Xuất sắc!':pct>=65?'👍 Tốt lắm, cố thêm chút nữa!':'💪 Ôn lại các câu sai rồi thử lại nhé!')+'</p>'+
+      (kind==='day'?'<p>🔥 Chuỗi: <b>'+streak()+' ngày</b> liên tục</p>':'')+'<div class="nav" style="justify-content:center;gap:8px"><button class="btn" id="bH">Về trang đề mini</button></div></div>';
+    document.getElementById('bH').onclick=home;
+  }
+  function send(){
+    var url=window.ETSCFG&&window.ETSCFG.SCRIPT_URL; if(!url) return;
+    var nm=''; try{ nm=localStorage.getItem('cam20.name')||''; }catch(e){}
+    if(!nm) return;
+    var wrong=SET.filter(function(x,k){ return !answers[k]; }).map(function(x){ return 'T'+x.t+'-'+x.n; }).join(', ');
+    var body={kind:'cam20',name:nm,lop:localStorage.getItem('cam20.lop')||'',test:'ETS mini · '+today(),part:'Đề mini mỗi ngày',mode:'Luyện tập',got:score,total:SET.length,band:'',minutes:'',wrong:wrong,auto:false,submittedAt:new Date().toISOString(),userAgent:navigator.userAgent.slice(0,120)};
+    try{ fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}); }catch(e){}
+  }
+  home();
+})();
+</script>
+<script>window.LOOKUP_ZONE='.q,.opt .tx,.fb';window.LOOKUP_SRC='ETS mini';</script>
+<script src="assets/lookup.js"></script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
+</body>
+</html>

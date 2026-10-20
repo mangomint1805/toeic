@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#a8691a">
+<link rel="apple-touch-icon" href="icons/apple-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light only">
@@ -33,7 +38,7 @@ header p{margin:0;color:var(--dim);font-size:16px;max-width:60ch}
 .info span{display:block;font-size:13.5px;color:var(--dim)}
 .prog{display:inline-block;margin-top:5px;font-size:12.5px;font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:999px;padding:1px 9px}
 .prog.none{color:var(--dim);background:var(--panel2)}
-.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 0}
+.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0 0}
 .tool{display:flex;gap:12px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--ink)}
 .tool:hover{border-color:var(--brand)}
 .tool .ic{font-size:26px;line-height:1}.tool b{display:block;font-size:15.5px}.tool span span{display:block;font-size:13px;color:var(--dim)}
@@ -43,6 +48,7 @@ header p{margin:0;color:var(--dim);font-size:16px;max-width:60ch}
 .tips ul{margin:0;padding-left:20px}.tips li{margin:6px 0;font-size:15px}
 footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
 @media (max-width:640px){.tests{grid-template-columns:1fr}header{padding:36px 0 18px}}
+.inst{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;background:#fff;border:1px dashed #d9b77a;border-radius:12px;padding:12px 14px;margin:18px 0 0;font-size:14px}.inst b{color:#6b4410}.inst>span{flex:1 1 260px;color:#666e7a}.inst button{font:inherit;font-weight:700;border:0;background:#a8691a;color:#fff;border-radius:8px;padding:7px 12px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -59,10 +65,13 @@ footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
   </div>
   <ul class="tests" id="tests"></ul>
   <div class="tools">
+    <a class="tool" href="mini.html"><span class="ic" aria-hidden="true">🔥</span><span><b>Đề mini mỗi ngày</b><span>20 câu · 10 phút · giữ chuỗi ngày học liên tục</span></span></a>
     <a class="tool" href="phan-tich.html"><span class="ic" aria-hidden="true">📊</span><span><b>Điểm yếu & tiến bộ</b><span>Hay sai Part nào, dạng câu nào; biểu đồ điểm qua các lần làm</span></span></a>
     <a class="tool" href="chinh-ta.html"><span class="ic" aria-hidden="true">✍️</span><span><b>Chép chính tả</b><span>~1.200 câu Part 1–2 cắt từ audio, gõ lại và chấm từng từ</span></span></a>
     <a class="tool" href="flashcards.html"><span class="ic" aria-hidden="true">🃏</span><span><b>Flashcard của tôi</b><span>Từ bạn đã lưu khi bấm tra từ trong bài</span></span></a>
   </div>
+<div class="inst" id="inst"><b>📱 Cài web như một app trên điện thoại</b><span>Android (Chrome): bấm <b>⋮</b> → <b>Thêm vào màn hình chính</b>. iPhone (Safari): bấm <b>Chia sẻ</b> <span aria-hidden="true">⬆️</span> → <b>Thêm vào MH chính</b>.</span><button type="button" id="instBtn" hidden>Cài ngay</button></div>
+<script>(function(){var b=document.getElementById('instBtn'),ev=null;if(window.matchMedia&&matchMedia('(display-mode: standalone)').matches){document.getElementById('inst').hidden=true;}window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();ev=e;b.hidden=false;});b.onclick=function(){if(ev){ev.prompt();ev=null;b.hidden=true;}};})();</script>
   <section class="tips">
     <h2>Dùng thế nào?</h2>
     <ul>
@@ -94,5 +103,6 @@ footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
   nm.addEventListener('change',keep); lp.addEventListener('change',keep);
 })();
 </script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
 </body>
 </html>
