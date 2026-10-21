@@ -320,7 +320,7 @@
 
 
   // ================= đăng nhập Google (acc.js, tải khi cần) =================
-  var ACC_SRC = ME.replace(/ui\.js.*$/, 'acc.js?v=2'), accQ = null;
+  var ACC_SRC = ME.replace(/ui\.js.*$/, 'acc.js?v=3'), accQ = null;
   function accLoad(cb) {
     if (window.MACC) return cb && cb();
     if (!accQ) { accQ = []; var sc = document.createElement('script'); sc.src = ACC_SRC; sc.onload = function () { accQ.splice(0).forEach(function (f) { f(); }); }; document.head.appendChild(sc); }
@@ -946,6 +946,16 @@
   applySkin(skin());
 
   if (!EXAM) { var slo = document.createElement('div'); slo.className = 'mslogan'; slo.innerHTML = '<span aria-hidden="true">✦</span><p><i>Cứ đi là mình sẽ tới,</i> <i>tin là mình sẽ có,</i><br><i>sáng như viên cà rá, 22 karat</i></p><small>Minto English · ミント英語</small>'; document.body.appendChild(slo); }
+  var stA = document.createElement('style'); stA.textContent =
+    '.macc-b{width:auto!important;padding:0 12px!important;gap:7px;font:600 13.5px/1 "IBM Plex Sans",sans-serif!important;display:inline-flex!important;align-items:center;justify-content:center;white-space:nowrap}' +
+    '.macc-b.on{width:40px!important;padding:0!important;overflow:hidden}.macc-b img{width:100%;height:100%;object-fit:cover;border-radius:inherit}.macc-b i{font-style:normal;font-weight:700;color:var(--brand-ink,#6b4410)}' +
+    '@media (max-width:440px){.macc-b span{display:none}.macc-b{width:38px!important;padding:0!important}}' +
+    '@media (max-width:400px){.mnav .in{gap:6px!important;padding-left:12px!important;padding-right:12px!important}.mtool{gap:4px!important}.mtool .mbtn{width:34px!important;height:34px!important}.mbrand{gap:7px!important}.mlogo{width:32px!important;height:32px!important}.mbrand b{font-size:17px!important;gap:5px!important}.mbrand b em{font-size:8.5px!important;padding:3px 4px 2px!important}.mbrand small{letter-spacing:.2em!important}}' +
+    '@media (max-width:340px){.mbrand b em{display:none!important}}' +
+    '.minapp{display:flex;align-items:center;gap:10px;background:#fff6dd;border-bottom:1px solid #f0d996;color:#5a3a00;font:500 13.5px/1.4 "IBM Plex Sans",sans-serif;padding:9px 16px;position:relative;z-index:39}' +
+    '.minapp span{flex:1}.minapp a{flex:none;background:#a8691a;color:#fff!important;font-weight:700;text-decoration:none;border-radius:999px;padding:7px 14px}.minapp button{flex:none;border:0;background:none;font-size:15px;cursor:pointer;color:#8a6a2a}' +
+    'html[data-theme=dark] .minapp{background:#2d2614;border-color:#5a4a22;color:#f0d9a0}';
+  document.head.appendChild(stA);
   var st6 = document.createElement('style'); st6.textContent = '.mslogan{max-width:760px;margin:-10px auto 0;padding:0 20px 40px;text-align:center;color:var(--dim,#666e7a)}.mslogan span{color:var(--brand,#a8691a);font-size:14px}.mslogan p{font:italic 500 17px/1.5 Fraunces,Georgia,serif;color:var(--brand-ink,#6b4410);margin:6px 0 4px}.mslogan p i{display:inline-block;white-space:nowrap;font-style:inherit}.mslogan small{font-size:12px;letter-spacing:.08em}body.has-nav .mslogan{padding-bottom:20px}@media (max-width:760px){body.has-nav .mslogan{padding-bottom:10px}}'; document.head.appendChild(st6);
   // ================= nút: trong thanh menu (nếu có) + nút nổi =================
   var fl = document.createElement('div'); fl.className = 'mfloat';
@@ -953,10 +963,41 @@
   fl.innerHTML = (hasNav ? '' : '<button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button>') + (hasNav ? '' : '<button type="button" class="mbtn mset" aria-label="Cài đặt" title="Cài đặt: cỡ chữ, giao diện, sao lưu">'+icon('gear')+'</button>');
   document.body.appendChild(fl);
   var navIn = document.querySelector('.mnav .in');
-  if (navIn) { var tl = document.createElement('div'); tl.className = 'mtool'; tl.innerHTML = '<button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button><button type="button" class="mbtn mset" aria-label="Cài đặt" title="Cài đặt: cỡ chữ, giao diện, sao lưu">'+icon('gear')+'</button>'; navIn.appendChild(tl); }
+  if (navIn) { var tl = document.createElement('div'); tl.className = 'mtool'; tl.innerHTML = '<button type="button" class="mbtn macc-b" aria-label="Đăng nhập bằng Google"></button><button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button><button type="button" class="mbtn mset" aria-label="Cài đặt" title="Cài đặt: cỡ chữ, giao diện, sao lưu">'+icon('gear')+'</button>'; navIn.appendChild(tl); }
   [].forEach.call(document.querySelectorAll('.mtheme'), function (b) { b.onclick = toggleTheme; });
   [].forEach.call(document.querySelectorAll('.mset'), function (b) { b.onclick = function () { settings(b); }; });
   [].forEach.call(document.querySelectorAll('.mfb'), function (b) { b.onclick = feedback; });
+  // nút đăng nhập ngoài thanh menu + thanh nhắc mở bằng trình duyệt khi đang ở trong Zalo/Messenger
+  var GSVG = '<svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
+  var INAPP = /FBAN|FBAV|FB_IAB|Messenger|Instagram|Zalo|Line\/|MicroMessenger|TikTok|musical_ly/i.test(navigator.userAgent), IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  function extUrl() { var url = location.href.replace(/^https?:\/\//, ''); return IOS ? 'x-safari-https://' + url : 'intent://' + url + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(location.href) + ';end'; }
+  window.MACCPAINT = function () {
+    var a = null; try { a = JSON.parse(localStorage.getItem('mt.acc')); } catch (e) {}
+    [].forEach.call(document.querySelectorAll('.macc-b'), function (b) {
+      b.classList.toggle('on', !!a);
+      if (a) { b.innerHTML = a.photo ? '<img src="' + esc(a.photo) + '" alt="" referrerpolicy="no-referrer">' : '<i>' + esc((a.name || a.email || '?').charAt(0).toUpperCase()) + '</i>'; b.title = 'Đã đăng nhập: ' + (a.email || a.name) + ' — bấm để xem'; b.setAttribute('aria-label', 'Tài khoản ' + (a.email || '')); }
+      else { b.innerHTML = GSVG + '<span>' + (INAPP ? 'Mở để đăng nhập' : 'Đăng nhập') + '</span>'; b.title = INAPP ? 'Mở bằng ' + (IOS ? 'Safari' : 'Chrome') + ' để đăng nhập Google' : 'Đăng nhập bằng Google để lưu tiến độ'; b.setAttribute('aria-label', b.title); }
+    });
+  };
+  window.MACCPAINT();
+  [].forEach.call(document.querySelectorAll('.macc-b'), function (b) {
+    b.onclick = function (e) {
+      e.stopPropagation();
+      var signed = false; try { signed = !!localStorage.getItem('mt.acc'); } catch (x) {}
+      if (signed) { var g = document.querySelector('.mtool .mset') || document.querySelector('.mset'); if (g) settings(g); return; }
+      if (INAPP) { location.href = extUrl(); return; }
+      if (window.MACC) return window.MACC.quick();
+      accLoad(function () { window.MACC.quick(); });
+    };
+  });
+  if (document.querySelector('.macc-b') && !EXAM) setTimeout(function () { accLoad(function () { if (!INAPP) window.MACC.preload(); }); }, 1200);
+  if (INAPP && !EXAM) {
+    var ib = document.createElement('div'); ib.className = 'minapp';
+    ib.innerHTML = '<span>Bạn đang mở trong ' + (/Zalo/i.test(navigator.userAgent) ? 'Zalo' : 'ứng dụng') + ' — mở bằng ' + (IOS ? 'Safari' : 'Chrome') + ' để đăng nhập và lưu tiến độ.</span><a href="' + esc(extUrl()) + '">Mở ngay</a><button type="button" aria-label="Ẩn">✕</button>';
+    ib.querySelector('button').onclick = function () { ib.remove(); try { sessionStorage.setItem('mt-inapp-x', '1'); } catch (e) {} };
+    var hideIb = false; try { hideIb = !!sessionStorage.getItem('mt-inapp-x') || !!localStorage.getItem('mt.acc'); } catch (e) {}
+    if (!hideIb) { var nv = document.querySelector('.mnav'); if (nv) nv.insertAdjacentElement('afterend', ib); else document.body.insertBefore(ib, document.body.firstChild); }
+  }
   [].forEach.call(document.querySelectorAll('.mgem'), function (b) { b.onclick = function () { window.MGACHA(); }; });
   applySkin(skin());
   // hiệu ứng xuất hiện

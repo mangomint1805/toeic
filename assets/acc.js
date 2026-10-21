@@ -21,6 +21,7 @@
   function esc(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function hash(s) { if (s == null) return ''; var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36) + ':' + s.length; }
   function toast(ic, t, s) { if (window.MTOAST) try { window.MTOAST(ic, t, s); return; } catch (e) {} }
+  function extUrl() { var ios = /iPhone|iPad|iPod/i.test(navigator.userAgent), url = location.href.replace(/^https?:\/\//, ''); return ios ? 'x-safari-https://' + url : 'intent://' + url + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(location.href) + ';end'; }
   function inApp() { return /FBAN|FBAV|FB_IAB|Messenger|Instagram|Zalo|Line\/|MicroMessenger|TikTok|musical_ly/i.test(navigator.userAgent); }
 
   // ---------- ghi nhận thời điểm sửa từng khoá ----------
@@ -30,12 +31,12 @@
   Storage.prototype.removeItem = function (k) { rawDel.call(this, k); if (this === LS) mark(String(k)); };
 
   // ---------- Firebase (tải khi cần) ----------
-  var FB = null, fbP = null;
+  var FB = null, fbP = null, dbP = null;
   function load() {
     if (fbP) return fbP;
-    fbP = Promise.all([import(SDK + 'firebase-app.js'), import(SDK + 'firebase-auth.js'), import(SDK + 'firebase-firestore.js')]).then(function (m) {
+    fbP = Promise.all([import(SDK + 'firebase-app.js'), import(SDK + 'firebase-auth.js')]).then(function (m) {
       var app = m[0].initializeApp(CFG), auth = m[1].getAuth(app);
-      FB = { A: m[1], F: m[2], auth: auth, db: m[2].getFirestore(app) };
+      FB = { A: m[1], F: null, auth: auth, app: app };
       m[1].onAuthStateChanged(auth, function (u) {
         USER = u || null;
         if (u) { put('mt.acc', { uid: u.uid, name: u.displayName || '', email: u.email || '', photo: u.photoURL || '' }); sync('load'); }
@@ -46,6 +47,12 @@
     });
     fbP.catch(function () { fbP = null; });
     return fbP;
+  }
+  function loadDB() {
+    if (dbP) return dbP;
+    dbP = load().then(function () { return import(SDK + 'firebase-firestore.js'); }).then(function (F) { FB.F = F; FB.db = F.getFirestore(FB.app); return FB; });
+    dbP.catch(function () { dbP = null; });
+    return dbP;
   }
   var USER = null, busy = false, again = false, pTimer = 0, lastErr = '';
   function schedule() { if (!get('mt.acc')) return; clearTimeout(pTimer); pTimer = setTimeout(function () { sync('push'); }, 5000); }
@@ -72,6 +79,7 @@
   }
   function sync(why) {
     if (!FB || !USER) return Promise.resolve();
+    if (!FB.F) return loadDB().then(function () { return sync(why); }, function () { lastErr = 'không tải được'; redraw(); });
     if (busy) { again = true; return Promise.resolve(); }
     busy = true;
     var F = FB.F, ref = F.doc(FB.db, 'users', USER.uid), last = J('mt.sync.last', { h: {}, at: 0 }), first = !last.at;
@@ -112,7 +120,7 @@
 
   // ---------- giao diện trong bảng ⚙ ----------
   var EL = null;
-  function redraw() { if (EL && document.body.contains(EL)) render(EL); }
+  function redraw() { if (EL && document.body.contains(EL)) render(EL); if (window.MACCPAINT) try { window.MACCPAINT(); } catch (e) {} }
   function fmt(t) { if (!t) return ''; var d = new Date(t); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); }
   function render(el) {
     EL = el; var a = J('mt.acc', null), last = J('mt.sync.last', {});
@@ -122,8 +130,7 @@
         '<small class="ma-st">' + (lastErr ? '⚠ Chưa đồng bộ được (' + esc(lastErr) + ')' : last.at ? '☁ Đã đồng bộ lúc ' + fmt(last.at) : '☁ Đang đồng bộ…') + '</small>' +
         '<div class="ma-b"><button type="button" data-a="sync">Đồng bộ ngay</button><button type="button" data-a="out">Đăng xuất</button></div>';
     } else if (inApp()) {
-      var ios = /iPhone|iPad|iPod/i.test(navigator.userAgent), url = location.href.replace(/^https?:\/\//, '');
-      var ext = ios ? 'x-safari-https://' + url : 'intent://' + url + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(location.href) + ';end';
+      var ios = /iPhone|iPad|iPod/i.test(navigator.userAgent), ext = extUrl();
       el.innerHTML = '<b class="ma-t">Đăng nhập để lưu tiến độ</b><small class="ma-st">Google không cho đăng nhập ngay trong Zalo / Messenger. Bấm nút dưới để mở trang này bằng ' + (ios ? 'Safari' : 'Chrome') + ' rồi đăng nhập nhé.</small>' +
         '<a class="ma-g" href="' + esc(ext) + '" style="text-decoration:none">🌐 Mở bằng ' + (ios ? 'Safari' : 'Chrome') + '</a>' +
         '<small class="ma-st" style="margin-top:8px">Không mở được? Bấm <b>⋮</b> hoặc <b>…</b> ở góc trên → <b>Mở bằng trình duyệt</b>.</small>';
@@ -152,6 +159,7 @@
       if (c === 'auth/popup-closed-by-user' || c === 'auth/cancelled-popup-request') return;
       lastErr = c === 'auth/popup-blocked' ? 'trình duyệt chặn cửa sổ đăng nhập' : c === 'auth/unauthorized-domain' ? 'tên miền chưa được cho phép' : c || 'lỗi';
       if (EL) { var s = EL.querySelector('.ma-st'); if (s) s.textContent = '⚠ Không đăng nhập được: ' + lastErr + '.'; }
+      toast('help', c === 'auth/popup-blocked' ? 'Bấm lại nút Đăng nhập nhé' : 'Chưa đăng nhập được', c === 'auth/popup-blocked' ? 'Trình duyệt vừa chặn cửa sổ đăng nhập.' : lastErr);
     });
   }
   function outMenu() {
@@ -183,6 +191,11 @@
     'html[data-theme=dark] .mp-acc{border-color:#373b44}html[data-theme=dark] .mp-acc .ma-st,html[data-theme=dark] .mp-acc .ma-u small{color:#9aa1ad}html[data-theme=dark] .mp-acc .ma-b button{border-color:#3a3f48}';
   document.head.appendChild(css);
 
-  window.MACC = { render: render, load: load, sync: function () { return sync('manual'); } };
+  function quick() {
+    if (inApp()) { location.href = extUrl(); return; }
+    if (FB) return signIn();
+    load().then(signIn, function () { toast('help', 'Chưa tải được đăng nhập', 'Kiểm tra mạng rồi thử lại nhé.'); });
+  }
+  window.MACC = { render: render, load: load, preload: function () { load(); }, quick: quick, inApp: inApp, extUrl: extUrl, sync: function () { return sync('manual'); } };
   if (get('mt.acc')) load();
 })();
