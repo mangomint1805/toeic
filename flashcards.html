@@ -80,27 +80,36 @@ td .w{font-weight:700;color:var(--brand-ink)}
   function hl(ex,w){ var re=new RegExp('\\b('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\w*)','ig'); return esc(ex).replace(re,'<b>$1</b>'); }
   var main=document.getElementById('main');
   [].forEach.call(document.querySelectorAll('.tabs button'),function(b){ b.onclick=function(){ V=b.dataset.v; [].forEach.call(document.querySelectorAll('.tabs button'),function(x){ x.setAttribute('aria-selected',String(x===b)); }); render(); }; });
-  function build(){ var C=load(); queue=Object.keys(C).filter(function(k){ return (C[k].lv||0)<3; }).sort(function(a,b){ return (C[a].lv||0)-(C[b].lv||0) || C[a].at-C[b].at; }); i=0; }
+  var INT=[0,1,2,4,7,15,30], extra=false;
+  function dk(d){ d=d||new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+  function addDays(n){ var d=new Date(); d.setDate(d.getDate()+n); return dk(d); }
+  function fmt(k){ var p=k.split('-'); return p[2]+'/'+p[1]; }
+  function box(c){ return c.box!=null?c.box:Math.min(6,(c.lv||0)*2); }
+  function isDue(c){ return !c.due || c.due<=dk(); }
+  function build(){ var C=load(); queue=Object.keys(C).filter(function(k){ return extra ? box(C[k])<6 : isDue(C[k]); }).sort(function(a,b){ return (C[a].due||'').localeCompare(C[b].due||'') || box(C[a])-box(C[b]); }); i=0; }
   function render(){
     var C=load(), all=Object.keys(C);
     if(!all.length){ main.innerHTML='<div class="empty">Chưa có từ nào. Khi làm bài hoặc xem lại, <b>bấm vào một từ tiếng Anh</b> → bấm <b>☆ Lưu flashcard</b> là từ đó sẽ vào đây.</div>'; return; }
+    var dueN=all.filter(function(k){ return isDue(C[k]); }).length, mast=all.filter(function(k){ return box(C[k])>=5; }).length;
     if(V==='list'){
-      var rows=all.sort(function(a,b){ return C[b].at-C[a].at; }).map(function(k){ var c=C[k]; return '<tr><td><span class="w">'+esc(c.w)+'</span><br><small>'+esc(c.ipa)+'</small></td><td>'+esc(c.m)+'<br><small><i>'+esc(c.ex||'')+'</i></small></td><td>'+((c.lv||0)>=3?'<span class="lv m">Đã thuộc</span>':'<span class="lv">'+(c.lv||0)+'/3</span>')+'</td><td><button class="x" data-del="'+esc(k)+'" aria-label="Xoá">✕</button></td></tr>'; }).join('');
-      main.innerHTML='<p class="prog">'+all.length+' từ · '+all.filter(function(k){return (C[k].lv||0)>=3;}).length+' từ đã thuộc</p><table><tr><th>Từ</th><th>Nghĩa · ví dụ</th><th>Mức</th><th></th></tr>'+rows+'</table>';
+      var rows=all.sort(function(a,b){ return C[b].at-C[a].at; }).map(function(k){ var c=C[k], bx=box(c); return '<tr><td><span class="w">'+esc(c.w)+'</span><br><small>'+esc(c.ipa)+'</small></td><td>'+esc(c.m)+'<br><small><i>'+esc(c.ex||'')+'</i></small></td><td>'+(bx>=5?'<span class="lv m">Đã thuộc</span>':'<span class="lv">Mức '+bx+'/6</span>')+'<br><small>'+(isDue(c)?'Ôn hôm nay':'Ôn ngày '+fmt(c.due))+'</small></td><td><button class="x" data-del="'+esc(k)+'" aria-label="Xoá">✕</button></td></tr>'; }).join('');
+      main.innerHTML='<p class="prog">'+all.length+' từ · '+mast+' từ đã thuộc · '+dueN+' từ cần ôn hôm nay</p><table><tr><th>Từ</th><th>Nghĩa · ví dụ</th><th>Mức</th><th></th></tr>'+rows+'</table>';
       [].forEach.call(main.querySelectorAll('[data-del]'),function(b){ b.onclick=function(){ var C2=load(); delete C2[b.dataset.del]; save(C2); render(); }; });
       return;
     }
     if(i>=queue.length) build();
-    if(!queue.length){ main.innerHTML='<div class="empty">🎉 Bạn đã thuộc hết '+all.length+' từ! Lưu thêm từ mới khi làm bài nhé.<br><br><button class="btn sm" id="rs">Ôn lại tất cả từ đầu</button></div>';
-      document.getElementById('rs').onclick=function(){ var C2=load(); Object.keys(C2).forEach(function(k){ C2[k].lv=0; }); save(C2); build(); render(); }; return; }
-    var c=C[queue[i]];
-    main.innerHTML='<p class="prog">Thẻ '+(i+1)+' / '+queue.length+' cần ôn</p><div class="fc" id="fc"><div class="fc-in">'+
+    if(!queue.length){
+      var next=all.map(function(k){ return C[k].due; }).filter(function(d){ return d && d>dk(); }).sort()[0], nN=next?all.filter(function(k){ return C[k].due===next; }).length:0;
+      main.innerHTML='<div class="empty">🎉 Hôm nay bạn đã ôn xong tất cả từ cần ôn!'+(next?'<br>Lần ôn tiếp theo: <b>'+fmt(next)+'</b> ('+nN+' từ).':'')+'<br><small>Web tự hẹn lịch: từ hay quên sẽ gặp lại sớm, từ đã nhớ sẽ giãn ra 1, 2, 4, 7, 15, 30 ngày.</small><br><br><button class="btn sm" id="rs">Ôn thêm trước hạn</button></div>';
+      document.getElementById('rs').onclick=function(){ extra=true; build(); render(); }; return; }
+    var c=C[queue[i]], bx=box(c);
+    main.innerHTML='<p class="prog">'+(extra?'Ôn thêm · ':'Cần ôn hôm nay · ')+'thẻ '+(i+1)+' / '+queue.length+' · mức '+bx+'/6</p><div class="fc" id="fc"><div class="fc-in">'+
       '<div class="face"><div class="word">'+esc(c.w)+'</div><div class="ipa">'+esc(c.ipa)+'</div>'+(c.ex?'<div class="ex">'+hl(c.ex,c.w)+'</div>':'')+'<div class="tip">Đoán nghĩa rồi bấm vào thẻ để lật</div></div>'+
       '<div class="face back-f"><div class="word" style="font-size:28px">'+esc(c.w)+'</div><div class="mean">'+esc(c.m)+'</div>'+(c.ex?'<div class="ex">'+hl(c.ex,c.w)+'</div>':'')+'<div class="src">'+esc(c.src||'')+'</div></div>'+
-      '</div></div><div class="row"><button class="btn sm" id="sp">🔊 Nghe</button><button class="btn no" id="no">✗ Chưa nhớ</button><button class="btn yes" id="yes">✓ Nhớ rồi</button></div>';
+      '</div></div><div class="row"><button class="btn sm" id="sp">🔊 Nghe</button><button class="btn no" id="no">✗ Chưa nhớ<small style="display:block;font-weight:500;font-size:11px;opacity:.8">gặp lại hôm nay</small></button><button class="btn yes" id="yes">✓ Nhớ rồi<small style="display:block;font-weight:500;font-size:11px;opacity:.85">ôn lại sau '+INT[Math.min(6,bx+1)]+' ngày</small></button></div>';
     var fc=document.getElementById('fc'); fc.onclick=function(){ fc.classList.toggle('flip'); };
     document.getElementById('sp').onclick=function(){ say(c.w); };
-    function next(d){ var C2=load(), k=queue[i]; if(C2[k]){ C2[k].lv=d?Math.min(3,(C2[k].lv||0)+1):0; save(C2); } i++; render(); }
+    function next(ok){ var C2=load(), k=queue[i], x=C2[k]; if(x){ var b2=box(x); if(ok){ b2=Math.min(6,b2+1); x.due=addDays(INT[b2]); } else { b2=0; x.due=dk(); queue.push(k); } x.box=b2; x.lv=b2>=5?3:Math.floor(b2/2); save(C2); } i++; render(); }
     document.getElementById('no').onclick=function(){ next(false); };
     document.getElementById('yes').onclick=function(){ next(true); };
   }

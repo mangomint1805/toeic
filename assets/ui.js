@@ -160,7 +160,7 @@
     var days = {}, o = { site: SITE, today: dkey(new Date()) };
     var nen = J('mt.nen.' + SITE, {}); o.nenMap = nen; o.nenAll = Object.keys(nen).length; o.nen = Object.keys(nen).filter(function (k) { return k.indexOf('mh-') !== 0; }).length; o.nenToday = 0;
     Object.keys(nen).forEach(function (k) { if (nen[k] && nen[k].t) { days[dkey(nen[k].t)] = 1; if (dkey(nen[k].t) === o.today) o.nenToday++; } });
-    var cards = J('vocab.cards', {}); o.cards = Array.isArray(cards) ? cards.length : Object.keys(cards || {}).length;
+    var cards = J('vocab.cards', {}); o.cards = Array.isArray(cards) ? cards.length : Object.keys(cards || {}).length; o.cardsDue = Array.isArray(cards) ? 0 : Object.keys(cards || {}).filter(function (k) { var c = cards[k]; return c && (!c.due || c.due <= o.today) && !((c.box != null ? c.box : (c.lv || 0) * 2) >= 6); }).length;
     if (SITE === 'toeic') {
       var h = J('ets26.hist', []), pa = {}; o.subs = h.length; o.best = 0; o.full = 0; o.perfect = 0; o.tests = {}; o.lastFull = 0;
       h.forEach(function (r) {
@@ -294,10 +294,13 @@
       p.innerHTML = '<div class="mp-row"><span>Cỡ chữ</span><div class="mp-fs"><button type="button" data-d="-1" aria-label="Chữ nhỏ hơn"' + (v === FS[0] ? ' disabled' : '') + '>A−</button><b>' + Math.round(v * 100) + '%</b><button type="button" data-d="1" aria-label="Chữ to hơn"' + (v === FS[FS.length - 1] ? ' disabled' : '') + '>A+</button></div></div>' +
 
         '<div class="mp-row"><span>Phong cách<small class="mp-skn">' + SKINS.filter(function (k) { return k[0] === skin(); })[0][1] + '</small></span><div class="mp-skins">' + SKINS.map(function (k) { return '<button type="button" data-k="' + k[0] + '" title="' + k[1] + '" aria-label="Phong cách ' + k[1] + '" aria-pressed="' + (skin() === k[0]) + '" style="background:' + k[2] + '"></button>'; }).join('') + '</div></div>' +
-        '<button type="button" class="mp-tour">' + icon('help') + ' Xem lại hướng dẫn</button>';
+        '<button type="button" class="mp-tour">' + icon('help') + ' Xem lại hướng dẫn</button>' +
+        '<div class="mp-bk"><button type="button" class="mp-tour" id="mpBk">💾 Sao lưu</button><button type="button" class="mp-tour" id="mpRs">📂 Khôi phục</button></div>';
       [].forEach.call(p.querySelectorAll('.mp-skins button'), function (b) { b.onclick = function () { S('mt.skin', b.getAttribute('data-k')); applySkin(skin()); draw(); }; });
       [].forEach.call(p.querySelectorAll('.mp-fs button'), function (b) { b.onclick = function () { var i = FS.indexOf(fs()) + (+b.getAttribute('data-d')); i = Math.max(0, Math.min(FS.length - 1, i)); S('mt.fs', FS[i]); applyFs(FS[i]); draw(); }; });
       p.querySelector('.mp-tour').onclick = function () { p.remove(); tour(true); };
+      p.querySelector('#mpBk').onclick = function () { backup(); };
+      p.querySelector('#mpRs').onclick = function () { p.remove(); restore(); };
     }
     draw(); document.body.appendChild(p); p.addEventListener('click', function (e) { e.stopPropagation(); });
     var r = btn.getBoundingClientRect(), pw = 250;
@@ -306,6 +309,35 @@
     setTimeout(function () { document.addEventListener('click', function off(e) { if (!p.contains(e.target) && !btn.contains(e.target)) { p.remove(); document.removeEventListener('click', off); } }); }, 0);
   }
 
+
+  // ================= sao lưu / khôi phục tiến độ =================
+  var BKRE = /^(ets26\.|cam\d+\.|cam\.|cam20\.|mt\.|vocab\.|summaryNew\.|summaryOld\.)/;
+  function backup() {
+    var o = { app: 'minto-english', v: 1, at: new Date().toISOString(), data: {} };
+    try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (BKRE.test(k)) o.data[k] = localStorage.getItem(k); } } catch (e) {}
+    var nm = ''; try { nm = (localStorage.getItem('cam20.name') || '').trim().split(/\s+/).pop() || ''; } catch (e) {}
+    var blob = new Blob([JSON.stringify(o)], { type: 'application/json' }), a = document.createElement('a');
+    a.download = 'minto-sao-luu' + (nm ? '-' + nm.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/gi, 'd') : '') + '-' + dkey(new Date()) + '.json';
+    a.href = URL.createObjectURL(blob); document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    mtoast('check', 'Đã tải file sao lưu', 'Gửi file này sang máy khác (Zalo, Drive…) rồi bấm Khôi phục ở máy đó.');
+  }
+  function restore() {
+    var inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json,application/json';
+    inp.onchange = function () {
+      var f = inp.files && inp.files[0]; if (!f) return; var rd = new FileReader();
+      rd.onload = function () {
+        try {
+          var o = JSON.parse(rd.result); if (!o || o.app !== 'minto-english' || !o.data) throw 0;
+          var n = Object.keys(o.data).length;
+          if (!confirm('Khôi phục ' + n + ' mục tiến độ từ file sao lưu ngày ' + String(o.at || '').slice(0, 10) + '? Tiến độ hiện tại trên máy này sẽ được thay bằng bản trong file.')) return;
+          Object.keys(o.data).forEach(function (k) { if (BKRE.test(k)) try { localStorage.setItem(k, o.data[k]); } catch (e) {} });
+          alert('Đã khôi phục xong! Trang sẽ tải lại.'); location.reload();
+        } catch (e) { alert('File này không phải file sao lưu của Minto English.'); }
+      };
+      rd.readAsText(f);
+    };
+    inp.click();
+  }
   // ================= hướng dẫn lần đầu =================
   var TOUR = SITE === 'summary' ? [] : SITE === 'toeic' ? [
     [null, 'Chào bạn 👋', 'Đây là web luyện TOEIC của lớp thầy Minto. Mình chỉ nhanh mấy chỗ quan trọng nhé, chưa tới 1 phút.'],
@@ -397,6 +429,7 @@
       tasks.push(['pen', 'Viết 1 bài Writing (tuần này ' + (s.lastWs >= wk ? 'đã viết' : 'chưa viết') + ')', 'ws.html?b=c' + nb + '&t=' + nt + '&v=w' + (left > 30 ? 1 : 2), s.lastWs >= wk]);
       if (left >= 0 && left <= 60 && s.lastFull < wk) tasks.push(['test', 'Thi thử đủ Listening + Reading (tuần này chưa làm)', 'c' + nb + '/test-' + nt + '.html', false]);
     }
+    if (s.cardsDue > 0) tasks.push(['cards', 'Ôn ' + s.cardsDue + ' từ flashcard đến hạn hôm nay', 'flashcards.html', false]);
     var best = T ? s.best : Math.max(s.bestL, s.bestR), pct = best ? Math.min(100, Math.round(best / ex.target * 100)) : 0;
     el.innerHTML = '<div class="mplan"><div class="mp-top"><div class="mp-cd"><b>' + (left < 0 ? '✓' : left) + '</b><small>' + (left < 0 ? 'đã thi' : left === 0 ? 'hôm nay thi!' : 'ngày nữa') + '</small></div>' +
       '<div class="mp-i"><small>Thi ngày ' + p[2] + '/' + p[1] + '/' + p[0] + ' · mục tiêu <b>' + ex.target + '</b><button type="button" id="mpE">Đổi</button></small><b>' + phase[0] + '</b><span>' + phase[1] + '</span>' +
@@ -837,7 +870,7 @@
     '@keyframes mcb{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}15%{opacity:1;transform:translate(-50%,0) scale(1.15)}30%{transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-40px)}}' +
     '@media (prefers-reduced-motion:reduce){.mcombo{animation:none;opacity:1}}' +
     // phong cách
-    '.mp-skn{display:block;font-weight:500;font-size:12px;color:var(--dim,#8a8f98)}.mp-skins{display:flex;gap:6px;flex-wrap:nowrap;justify-content:flex-end}.mp-skins button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 3px #fff}.mp-skins button[aria-pressed=true]{border-color:var(--ink,#1e232b)}' +
+    '.mp-bk{display:flex;gap:6px}.mp-bk .mp-tour{flex:1;padding:9px 6px;font-size:12.5px}.mp-skn{display:block;font-weight:500;font-size:12px;color:var(--dim,#8a8f98)}.mp-skins{display:flex;gap:6px;flex-wrap:nowrap;justify-content:flex-end}.mp-skins button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 3px #fff}.mp-skins button[aria-pressed=true]{border-color:var(--ink,#1e232b)}' +
     '.mp-gacha{margin-top:6px;width:100%;display:flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;padding:10px;font:700 13.5px/1 "IBM Plex Sans",sans-serif;color:#fff;background:linear-gradient(135deg,#ff8a3d,#e0559a);cursor:pointer}' +
     'html[data-skin] .mlogo .lg-bg{fill:var(--brand)}' +
     'html[data-skin] :is(.mt-next,.mp-f button,.fbk-row .ok,.fbk-types button[aria-pressed=true],.mp-sw[aria-checked=true],.btn:not(.alt),.big:not(.alt),.mark button:not(.on)){background:var(--brand)!important;border-color:var(--brand)!important}' +
