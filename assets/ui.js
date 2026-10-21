@@ -97,7 +97,7 @@
     'html[data-theme=dark] .mbtn{background:#1c1f25;border-color:#373b44;color:#f0c787}.mbtn .ic{width:19px;height:19px}' +
     '.mfloat{position:fixed;right:14px;bottom:16px;z-index:58;display:flex;flex-direction:column;gap:8px}' +
     'body.has-nav .mfloat{bottom:84px}@media (min-width:761px){body.has-nav .mfloat{bottom:16px}}' +
-    '.mfloat .mbtn{box-shadow:0 6px 18px rgba(0,0,0,.14);width:44px;height:44px;border-radius:50%}' +
+    '.mfloat .mbtn{box-shadow:0 4px 12px rgba(0,0,0,.12);width:38px;height:38px;border-radius:50%;opacity:.72;transition:opacity .2s}.mfloat .mbtn:hover,.mfloat .mbtn:focus-visible{opacity:1}' +
     '.fbk{position:fixed;inset:0;z-index:90;background:rgba(15,17,21,.5);display:flex;align-items:flex-end;justify-content:center;padding:12px}' +
     '@media (min-width:600px){.fbk{align-items:center}}' +
     '.fbk-card{background:#fff;color:#1e232b;border-radius:18px;padding:18px;max-width:460px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);font:15px/1.5 "IBM Plex Sans",sans-serif;animation:fbkup .25s ease}' +
@@ -389,6 +389,23 @@
   }
   window.MTOUR = tour;
 
+
+  // ================= bắt đầu trong 3 bước (bạn mới) =================
+  window.MSTART = function (el) {
+    if (!el) return false; var s = stats(); if (s.subs > 0 || (s.mini || 0) > 0) return false;
+    var nm = ''; try { nm = localStorage.getItem('cam20.name') || ''; } catch (e) {}
+    var T = SITE === 'toeic', steps = [
+      ['user', 'Nhập họ tên', 'Để thầy nhận được kết quả', '#me', !!nm],
+      ['layers', 'Học 1 bài Kiến thức nền', '10 phút, có bài tập nhỏ', 'nen.html', s.nenAll > 0],
+      T ? ['flame', 'Làm đề mini 10 phút', '20 câu, chấm ngay', 'mini.html', false] : ['headphones', 'Làm Listening Part 1', 'Cam 21 · Test 1, 10 câu', 'c21/test-1.html?part=L1', false]
+    ], n = steps.filter(function (x) { return x[4]; }).length;
+    el.className = 'mstart';
+    el.innerHTML = '<div class="ms-h"><b>Bắt đầu trong 3 bước</b><span>' + n + '/3</span></div>' + steps.map(function (x, i) {
+      return '<a class="ms-s' + (x[4] ? ' done' : '') + '" href="' + (x[3][0] === '#' ? x[3] : ROOT + x[3]) + '"><span class="ms-n">' + (x[4] ? icon('check') : i + 1) + '</span><span><b>' + x[1] + '</b><small>' + x[2] + '</small></span>' + icon('arrow', 'ms-go') + '</a>';
+    }).join('');
+    var a = el.querySelector('a[href="#me"]'); if (a) a.onclick = function (e) { e.preventDefault(); var i = document.getElementById('meName') || document.getElementById('meEd'); if (i) { i.scrollIntoView({ block: 'center' }); if (i.focus) i.focus(); if (i.id === 'meEd') i.click(); } };
+    return true;
+  };
   // ================= kế hoạch ôn thi + đếm ngược (trang chủ) =================
   window.MPLAN = function (el) {
     if (!el) return;
@@ -552,7 +569,7 @@
     'html{background:var(--paper,#faf8f4)!important}body{background:transparent!important;position:relative}' +
     '.mdeco{position:absolute;left:0;right:0;top:0;height:460px;z-index:-1;pointer-events:none;background-image:' + seigaiha('#faf8f4', '#a8691a', '.22') + ';background-size:56px 28px;-webkit-mask-image:linear-gradient(#000,rgba(0,0,0,.35) 45%,transparent);mask-image:linear-gradient(#000,rgba(0,0,0,.35) 45%,transparent);opacity:.75}' +
     'html[data-theme=dark] .mdeco{background-image:' + seigaiha('#14161a', '#d39a4a', '.20') + ';opacity:.6}' +
-    '.mseal{display:inline-flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:upright;font:700 10px/1 "Hiragino Mincho ProN","Noto Serif JP","Yu Mincho",serif;letter-spacing:.05em;color:#fff;background:#c4473a;border-radius:5px;padding:5px 3px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55),inset 0 0 0 3px #c4473a;transform:rotate(-6deg);margin-left:10px;vertical-align:middle;flex:none}' +
+    '.mseal{display:inline-flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:upright;font:700 10px/1 "Hiragino Mincho ProN","Noto Serif JP","Yu Mincho",serif;letter-spacing:.05em;color:#fff;background:#c4473a;border-radius:5px;padding:5px 3px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55),inset 0 0 0 3px #c4473a;transform:rotate(-6deg);margin-left:4px;vertical-align:middle;flex:none}' +
     'html[data-theme=dark] .mseal{background:#b8483c;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4),inset 0 0 0 3px #b8483c}' +
     '.mmint{width:64px;height:auto;flex:none;overflow:visible}' +
     '@media (prefers-reduced-motion:no-preference){.mbuddy .mmint{animation:mbob 3.2s ease-in-out infinite;transform-origin:50% 95%}@keyframes mbob{0%,100%{transform:rotate(-3deg) translateY(0)}50%{transform:rotate(3deg) translateY(-3px)}}' +
@@ -788,6 +805,11 @@
   var st3 = document.createElement('style');
   st3.textContent =
     'html[data-fs] body>:not(.mnav):not(.mfloat):not(.fbk):not(.mtour):not(.mtoast):not(.mpop):not(.mconf){zoom:var(--fs)}' +
+    '.mstart{display:block!important}.ms-h{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 6px}.ms-h b{font:600 18px/1.2 Fraunces,Georgia,serif}.ms-h span{font-size:12.5px;color:var(--dim,#666e7a);font-weight:700}' +
+    '.ms-s{display:flex;align-items:center;gap:10px;padding:9px 6px;border-radius:10px;text-decoration:none;color:var(--ink,#1e232b)}.ms-s:hover{background:var(--panel2,#f4f0e8)}.ms-s b{display:block;font-size:14.5px}.ms-s small{font-size:12.5px;color:var(--dim,#666e7a)}' +
+    '.ms-n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--brand-soft,#f2e2c4);color:var(--brand-ink,#6b4410);display:flex;align-items:center;justify-content:center;font:600 15px/1 Fraunces,Georgia,serif}.ms-n .ic{width:16px;height:16px}.ms-s.done .ms-n{background:var(--ok,#1f8f6c);color:#fff}.ms-s.done b{text-decoration:line-through;color:var(--dim,#666e7a)}.ms-go{margin-left:auto;color:var(--dim,#9a9fa8)}' +
+    '.hello h1 em,.top h1 em{background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27200%27 height=%2714%27 viewBox=%270 0 200 14%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M3 9 C 40 3 80 12 120 6 S 180 4 197 8%27 fill=%27none%27 stroke=%27%23f2b84b%27 stroke-width=%275%27 stroke-linecap=%27round%27 opacity=%27.75%27/%3E%3C/svg%3E") left 92%/100% .32em no-repeat;padding-bottom:.08em}.sec h2,h2.grp{background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27120%27 height=%2710%27 viewBox=%270 0 120 10%27%3E%3Cpath d=%27M2 6 Q 12 1 22 6 T 42 6 T 62 6 T 82 6 T 102 6 T 118 5%27 fill=%27none%27 stroke=%27%23e0a43a%27 stroke-width=%273%27 stroke-linecap=%27round%27/%3E%3C/svg%3E") left bottom/72px 8px no-repeat;padding-bottom:12px}' +
+    '.mb-tap{color:#7d838c!important}.mbadge small{color:#6c727c}.mbadge.on small{color:#8a5a1c}' +
     '.mconf{position:fixed;inset:0;pointer-events:none;z-index:120}' +
     '.mtoast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:110;display:flex;gap:12px;align-items:center;background:#1e232b;color:#fff;border-radius:16px;padding:12px 18px 12px 12px;box-shadow:0 14px 40px rgba(0,0,0,.28);text-decoration:none;max-width:min(420px,calc(100vw - 24px));font:14px/1.4 "IBM Plex Sans",sans-serif;animation:mtin .45s cubic-bezier(.2,.9,.3,1.3)}' +
     'body.has-nav .mtoast{bottom:86px}@media (min-width:761px){body.has-nav .mtoast{bottom:24px}}' +
@@ -908,13 +930,13 @@
   // ================= nút: trong thanh menu (nếu có) + nút nổi =================
   var fl = document.createElement('div'); fl.className = 'mfloat';
   var hasNav = !!document.querySelector('.mnav');
-  fl.innerHTML = '<button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button>' + (hasNav ? '' : '<button type="button" class="mbtn mset" aria-label="Cỡ chữ và phong cách" title="Cỡ chữ, phong cách">Aa</button>');
+  fl.innerHTML = (hasNav ? '' : '<button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button>') + (hasNav ? '' : '<button type="button" class="mbtn mset" aria-label="Cỡ chữ và phong cách" title="Cỡ chữ, phong cách">Aa</button>');
   document.body.appendChild(fl);
   var navIn = document.querySelector('.mnav .in');
-  if (navIn) { var tl = document.createElement('div'); tl.className = 'mtool'; tl.innerHTML = '<button type="button" class="mbtn mset" aria-label="Cỡ chữ và phong cách" title="Cỡ chữ, phong cách">Aa</button>'; navIn.appendChild(tl); }
+  if (navIn) { var tl = document.createElement('div'); tl.className = 'mtool'; tl.innerHTML = '<button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button><button type="button" class="mbtn mset" aria-label="Cỡ chữ và phong cách" title="Cỡ chữ, phong cách">Aa</button>'; navIn.appendChild(tl); }
   [].forEach.call(document.querySelectorAll('.mtheme'), function (b) { b.onclick = toggleTheme; });
   [].forEach.call(document.querySelectorAll('.mset'), function (b) { b.onclick = function () { settings(b); }; });
-  fl.querySelector('.mfb').onclick = feedback;
+  [].forEach.call(document.querySelectorAll('.mfb'), function (b) { b.onclick = feedback; });
   [].forEach.call(document.querySelectorAll('.mgem'), function (b) { b.onclick = function () { window.MGACHA(); }; });
   applySkin(skin());
   // hiệu ứng xuất hiện

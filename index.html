@@ -86,9 +86,18 @@ footer{padding:28px 0 40px;color:var(--dim);font-size:13px;display:flex;justify-
 @media (max-width:480px){.tools{grid-template-columns:1fr}.hero{padding-top:22px}.sec{margin-top:26px}}
 .nenbar{display:flex;gap:14px;align-items:center;margin:18px 0 0;padding:16px 18px;border-radius:16px;text-decoration:none;color:var(--ink,#1e232b);background:linear-gradient(120deg,#fff7e8,#fdf0d8);border:1px solid #ecd3a6;transition:transform .15s,box-shadow .2s}
 .nenbar:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(168,105,26,.14)}
-.nenbar .ico{width:44px;height:44px;border-radius:12px;background:#a8691a;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}.nenbar .ico .ic{width:24px;height:24px}
-.nenbar b{display:block;font-size:16px}.nenbar small{display:block;color:#6b5a40;font-size:13.5px}.nenbar .go{margin-left:auto;color:#a8691a;flex:none}
+.nenbar .ico{width:44px;height:44px;border-radius:12px;background:var(--brand,#a8691a);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}.nenbar .ico .ic{width:24px;height:24px}
+.nenbar b{display:block;font-size:16px}.nenbar small{display:block;color:#6b5a40;font-size:13.5px}.nenbar .go{margin-left:auto;color:var(--brand,#a8691a);flex:none}
 html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)!important;border-color:#5a4422!important}html[data-theme=dark] .nenbar small{color:#c9b693}
+
+.bdg{margin:24px 0 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.bdg summary{display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;font-size:15.5px}.bdg summary::-webkit-details-marker{display:none}
+.bdg summary .ico{width:34px;height:34px;border-radius:10px;background:var(--brand-soft);color:var(--brand-ink);display:flex;align-items:center;justify-content:center}.bdg summary .ico .ic{width:19px;height:19px}
+.bdg summary #bdgN{margin-left:auto;color:var(--dim);font-size:13.5px}.bdg summary::after{content:"▾";color:var(--dim);margin-left:6px;transition:transform .2s}.bdg[open] summary::after{transform:rotate(180deg)}
+.bdg #badges{margin-top:12px}
+.inst2 p{margin:8px 0;font-size:14.5px;color:var(--dim)}.inst2 button{font:inherit;font-weight:700;border:0;background:var(--brand);color:#fff;border-radius:9px;padding:8px 14px;cursor:pointer}
+@media (max-width:860px){.stats{grid-template-columns:repeat(4,1fr);gap:6px}.stat{padding:8px 6px;text-align:center}.stat .lab{justify-content:center;font-size:10.5px;line-height:1.2}.stat .lab .ic{display:none}.stat b{font-size:21px!important}.stat small{display:none}.panel{padding:12px}}
+@media (max-width:520px){.sec{flex-direction:column;align-items:flex-start;gap:2px}.tools{grid-template-columns:1fr 1fr!important;gap:8px}.tool{padding:12px;gap:6px}.tool b{font-size:14px;line-height:1.3}.tool span{font-size:12px}.tool .ico{width:34px;height:34px}.cta{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cta .btn{justify-content:center;padding:12px 10px;font-size:14px}}
 </style>
 </head>
 <body data-nav="home">
@@ -124,10 +133,9 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
     <a class="tool" href="flashcards.html"><span class="ico" data-ic="cards"></span><b>Flashcard của tôi</b><span>Từ đã lưu khi bấm tra từ trong bài</span></a>
   </div>
 
-  <div class="sec" id="huy-hieu"><h2>Huy hiệu</h2><span id="bdgN"></span></div>
-  <div id="badges"></div>
+  <details class="bdg" id="huy-hieu"><summary><span class="ico" data-ic="trophy"></span><b>Huy hiệu</b><span id="bdgN"></span></summary><div id="badges"></div></details>
 
-  <div class="inst" id="inst"><span data-ic="phone"></span><b>Cài như app trên điện thoại</b><span>Android (Chrome): bấm <b>⋮</b> → <b>Thêm vào màn hình chính</b>. iPhone (Safari): bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.</span><button type="button" id="instBtn" hidden>Cài ngay</button></div>
+  <details class="tips inst2" id="inst"><summary>📱 Cài web như app trên điện thoại</summary><p>Android (Chrome): bấm <b>⋮</b> → <b>Thêm vào màn hình chính</b>.<br>iPhone (Safari): bấm <b>Chia sẻ</b> → <b>Thêm vào MH chính</b>.</p><button type="button" id="instBtn" hidden>Cài ngay</button></details>
 
   <details class="tips">
     <summary>Hướng dẫn nhanh</summary>
@@ -160,6 +168,7 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
     '<div class="stat"><span class="lab">'+I('trophy')+'Điểm cao nhất</span><b>'+(best||'–')+'</b><small>'+(best?'Full test, thang 990':'chưa làm Full test')+'</small></div>'+
     '<div class="stat"><span class="lab">'+I('check')+'Bài đã nộp</span><b>'+hist.length+'</b><small>'+qs+' câu đã làm</small></div>'+
     '<div class="stat"><span class="lab">'+I('clock')+'Lần gần nhất</span><b style="font-size:20px">'+(last?'Test '+last.test:'–')+'</b><small>'+(last?esc(last.name)+' · '+last.got+'/'+last.total:'chưa có')+'</small></div>';
+  if(window.MSTART) MSTART(document.getElementById('stats'));
   // bài làm dở
   var MN={full:'Full test',lc:'Listening',rc:'Reading'}, cur=null;
   for(var t=1;t<=10;t++) ['full','lc','rc','p1','p2','p3','p4','p5','p6','p7'].forEach(function(m){ var s=get('ets26.t'+t+'.'+m); if(s&&!s.done&&s.ans){ var n=Object.keys(s.ans).length; if(n&&(!cur||s.t0>cur.t0)) cur={t:t,m:m,n:n,t0:s.t0}; } });
