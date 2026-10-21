@@ -569,6 +569,7 @@
     'html{background:var(--paper,#faf8f4)!important}body{background:transparent!important;position:relative}' +
     '.mdeco{position:absolute;left:0;right:0;top:0;height:460px;z-index:-1;pointer-events:none;background-image:' + seigaiha('#faf8f4', '#a8691a', '.22') + ';background-size:56px 28px;-webkit-mask-image:linear-gradient(#000,rgba(0,0,0,.35) 45%,transparent);mask-image:linear-gradient(#000,rgba(0,0,0,.35) 45%,transparent);opacity:.75}' +
     'html[data-theme=dark] .mdeco{background-image:' + seigaiha('#14161a', '#d39a4a', '.20') + ';opacity:.6}' +
+    '.mdeco2{position:fixed;inset:0;z-index:-2;pointer-events:none;background-image:' + seigaiha('#faf8f4', '#a8691a', '.22') + ';background-size:56px 28px;opacity:.38!important}' +
     '.mseal{display:inline-flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:upright;font:700 10px/1 "Hiragino Mincho ProN","Noto Serif JP","Yu Mincho",serif;letter-spacing:.05em;color:#fff;background:#c4473a;border-radius:5px;padding:5px 3px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55),inset 0 0 0 3px #c4473a;transform:rotate(-6deg);margin-left:4px;vertical-align:middle;flex:none}' +
     'html[data-theme=dark] .mseal{background:#b8483c;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4),inset 0 0 0 3px #b8483c}' +
     '.mmint{width:64px;height:auto;flex:none;overflow:visible}' +
@@ -582,9 +583,9 @@
     // chuyển trang mượt
     '@view-transition{navigation:auto}::view-transition-old(root),::view-transition-new(root){animation-duration:.28s}.mnav{view-transition-name:mnav}' +
     '@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}' +
-    'html[data-exam] .mdeco{display:none}html[data-exam] *{animation:none!important}html[data-exam] .btn:active,html[data-exam] .opt:active{transform:none}';
+    'html[data-exam] .mdeco,html[data-exam] .mdeco2{display:none}html[data-exam] *{animation:none!important}html[data-exam] .btn:active,html[data-exam] .opt:active{transform:none}';
   document.head.appendChild(st4);
-  var deco = document.createElement('div'); deco.className = 'mdeco'; deco.setAttribute('aria-hidden', 'true'); document.body.insertBefore(deco, document.body.firstChild);
+  var deco = document.createElement('div'); deco.className = 'mdeco'; deco.setAttribute('aria-hidden', 'true'); document.body.insertBefore(deco, document.body.firstChild); var deco2 = document.createElement('div'); deco2.className = 'mdeco2'; deco2.setAttribute('aria-hidden', 'true'); document.body.insertBefore(deco2, document.body.firstChild);
   function seal() { var s = document.createElement('span'); s.className = 'mseal'; s.setAttribute('lang', 'ja'); s.setAttribute('aria-hidden', 'true'); s.textContent = 'ミント'; return s; }
   [].forEach.call(document.querySelectorAll('.hello .kicker, .top > .kicker'), function (k) { k.appendChild(seal()); });
 
@@ -901,11 +902,11 @@
     'html[data-skin] :is(.kicker,.hello .kicker,.mp-todo h4,.rp-total small,h2.sec + *){color:var(--brand)}' +
     // Idol
     'html[data-skin=idol]:not([data-theme=dark]){--paper:#f4fbfb;--brand:#12a4a3;--brand-soft:#d3f3f1;--brand-ink:#0a6766;--amber:#12a4a3;--amber-soft:#d3f3f1;--amber-ink:#0a6766;--line:#d8ecea}' +
-    'html[data-skin=idol] .mdeco{background-image:' + pat('width="60" height="60" viewBox="0 0 60 60"><path d="M15 8l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#12a4a3" opacity=".22"/><path d="M45 38v-10l8-2v10M45 38a3 3 0 1 1-1-1M53 36a3 3 0 1 1-1-1" stroke="#ff5fa2" stroke-width="1.8" fill="none" opacity=".35"/>') + ';background-size:60px 60px}' +
+    'html[data-skin=idol] :is(.mdeco,.mdeco2){background-image:' + pat('width="60" height="60" viewBox="0 0 60 60"><path d="M15 8l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#12a4a3" opacity=".22"/><path d="M45 38v-10l8-2v10M45 38a3 3 0 1 1-1-1M53 36a3 3 0 1 1-1-1" stroke="#ff5fa2" stroke-width="1.8" fill="none" opacity=".35"/>') + ';background-size:60px 60px}' +
     'html[data-skin=idol] .mnav{border-bottom:2px solid #ff9cc8}html[data-skin=idol] .mb-bub b,html[data-skin=idol] h1 em{color:#e0559a!important}' +
     // Y2K
     'html[data-skin=y2k]:not([data-theme=dark]){--paper:#fff5fb;--card:#fff;--brand:#e0559a;--brand-soft:#ffe0f0;--brand-ink:#9b2c66;--amber:#e0559a;--amber-soft:#ffe0f0;--amber-ink:#9b2c66;--line:#f0c9e6}' +
-    'html[data-skin=y2k] .mdeco{background-image:' + pat('width="32" height="32" viewBox="0 0 32 32"><rect width="16" height="16" fill="#e0559a" opacity=".07"/><rect x="16" y="16" width="16" height="16" fill="#8b5cf6" opacity=".07"/><path d="M22 6h2v1h1v-1h2v1h1v3h-1v1h-1v1h-1v1h-1v-1h-1v-1h-1v-1h-1v-3h1z" fill="#e0559a" opacity=".35"/>') + ';background-size:32px 32px}' +
+    'html[data-skin=y2k] :is(.mdeco,.mdeco2){background-image:' + pat('width="32" height="32" viewBox="0 0 32 32"><rect width="16" height="16" fill="#e0559a" opacity=".07"/><rect x="16" y="16" width="16" height="16" fill="#8b5cf6" opacity=".07"/><path d="M22 6h2v1h1v-1h2v1h1v3h-1v1h-1v1h-1v1h-1v-1h-1v-1h-1v-1h-1v-3h1z" fill="#e0559a" opacity=".35"/>') + ';background-size:32px 32px}' +
     'html[data-skin=y2k] :is(.panel,.test,.tool,.mplan,.lesson,.book,.stat,.report,.sec .card,.mb-bub,.doc,.box,.mode){border:2px solid #d9a6e6!important;box-shadow:4px 4px 0 #c7a6f0!important;border-radius:10px!important}' +
     'html[data-skin=y2k]:not([data-theme=dark]) .mnav{background:linear-gradient(90deg,#ffd6ec,#e8dcff)!important}html[data-skin=y2k] .mnav{border-bottom:2px solid #c7a6f0}html[data-skin=y2k][data-theme=dark] .mnav{background:linear-gradient(90deg,#2a1830,#221a3a)!important;border-bottom-color:#6a4a8a}html[data-skin=y2k]:not([data-theme=dark]) h1,html[data-skin=y2k]:not([data-theme=dark]) .sec h2{text-shadow:2px 2px 0 #ffc2e2}html[data-skin=y2k][data-theme=dark] h1{text-shadow:2px 2px 0 #6a2a50}' +
     'html[data-skin=idol][data-theme=dark]{--paper:#0e1718;--card:#152224;--panel2:#1b2c2e;--line:#24393b;--line2:#2c4649;--brand:#3fd0cc;--brand-soft:#123a3a;--brand-ink:#8af0ec;--amber:#3fd0cc;--amber-soft:#123a3a;--amber-ink:#8af0ec}' +
@@ -914,7 +915,7 @@
     // Băng hoại
     'html[data-skin=scifi][data-theme=dark]{--paper:#0a1024;--card:#111a35;--panel2:#18234a;--line:#24345f;--line2:#2e4377;--ink:#e6ecff;--dim:#93a3cf;--brand:#ffd23f;--brand-soft:#2c2a4a;--brand-ink:#ffe27a;--amber:#ffd23f;--amber-soft:#2c2a4a;--amber-ink:#ffe27a;--ok:#4ad7ff;--ok-soft:#10324d;--bad:#ff5fa8;--bad-soft:#3d1838;--teal:#4ad7ff;--teal-soft:#10324d}' +
     'html[data-skin=scifi] body{background:radial-gradient(1200px 600px at 85% -10%,rgba(176,76,255,.22),transparent 60%),radial-gradient(900px 500px at -10% 10%,rgba(74,215,255,.16),transparent 60%)!important;background-attachment:fixed!important}' +
-    'html[data-skin=scifi] .mdeco{background-image:' + pat('width="44" height="44" viewBox="0 0 44 44"><path d="M44 0H0v44" fill="none" stroke="#4ad7ff" stroke-width=".6" opacity=".35"/><path d="M22 18l4 4-4 4-4-4z" fill="#b04cff" opacity=".35"/>') + ';background-size:44px 44px;opacity:.9}' +
+    'html[data-skin=scifi] :is(.mdeco,.mdeco2){background-image:' + pat('width="44" height="44" viewBox="0 0 44 44"><path d="M44 0H0v44" fill="none" stroke="#4ad7ff" stroke-width=".6" opacity=".35"/><path d="M22 18l4 4-4 4-4-4z" fill="#b04cff" opacity=".35"/>') + ';background-size:44px 44px;opacity:.9}' +
     'html[data-skin=scifi] :is(.panel,.test,.tool,.mplan,.lesson,.book,.report,.doc,.box,.mode){border:1px solid #2e4377!important;box-shadow:inset 0 1px 0 rgba(74,215,255,.25),0 0 0 1px rgba(176,76,255,.10),0 10px 30px rgba(5,8,20,.5)!important;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}' +
     'html[data-skin=scifi] .mnav{background:linear-gradient(90deg,rgba(10,16,36,.95),rgba(26,17,64,.95))!important;border-bottom:1px solid rgba(74,215,255,.35)}' +
     'html[data-skin=scifi] :is(h1,.sec h2){text-shadow:0 0 18px rgba(74,215,255,.35)}html[data-skin=scifi] h1 em,html[data-skin=scifi] .mb-bub b{color:#4ad7ff!important}' +
