@@ -6,6 +6,7 @@
   var TOEIC_URL = 'https://mangomint1805.github.io/toeic/';
   var EXAM = /\/(test\.html|test-\d+\.html|ws\.html)$/.test(location.pathname); window.MEXAM = EXAM;
   if (EXAM) document.documentElement.setAttribute('data-exam', '');
+  if (SITE === 'ielts' && /\/c\d+\/test-\d+\.html$/.test(location.pathname)) { var mks = document.createElement('script'); mks.src = ROOT + 'shared/marks-ielts.js?v=1'; document.head.appendChild(mks); }
   var P = {
     home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
     test: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
@@ -402,7 +403,7 @@
     var nm = ''; try { nm = localStorage.getItem('cam20.name') || ''; } catch (e) {}
     var T = SITE === 'toeic', steps = [
       ['user', 'Nhập họ tên', 'Để thầy nhận được kết quả', '#me', !!nm],
-      T ? ['compass', 'Kiểm tra xếp lớp 15 phút', 'Biết trình độ và nên học gì trước', 'xep-lop.html', (function () { try { return !!localStorage.getItem('mt.place.toeic'); } catch (e) { return false; } })()] : ['layers', 'Học 1 bài Kiến thức nền', '10 phút, có bài tập nhỏ', 'nen.html', s.nenAll > 0],
+      ['compass', 'Kiểm tra xếp lớp 15 phút', T ? 'Biết trình độ và nên học gì trước' : 'Biết band ước tính và nên học gì trước', 'xep-lop.html', (function () { try { return !!localStorage.getItem('mt.place.' + (T ? 'toeic' : 'ielts')); } catch (e) { return false; } })()],
       T ? ['flame', 'Làm đề mini 10 phút', '20 câu, chấm ngay', 'mini.html', false] : ['headphones', 'Làm Listening Part 1', 'Cam 21 · Test 1, 10 câu', 'c21/test-1.html?part=L1', false]
     ], n = steps.filter(function (x) { return x[4]; }).length;
     el.className = 'mstart';
