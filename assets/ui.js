@@ -24,6 +24,11 @@
     phone: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
     trophy: '<path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/>',
     layers: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
+    game: '<rect x="2" y="7" width="20" height="11" rx="5"/><path d="M7 11v3M5.5 12.5h3M15 12h.01M18 13.5h.01"/>',
+    bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+    star: '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z"/>',
+    compass: '<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
+    quote: '<path d="M7 7h4v4c0 3-1.5 5-4 6M15 7h4v4c0 3-1.5 5-4 6"/>',
     help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/>'
   };
   function icon(n, cls) { return '<svg class="ic ' + (cls || '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (P[n] || '') + '</svg>'; }
@@ -396,7 +401,7 @@
     var nm = ''; try { nm = localStorage.getItem('cam20.name') || ''; } catch (e) {}
     var T = SITE === 'toeic', steps = [
       ['user', 'Nhập họ tên', 'Để thầy nhận được kết quả', '#me', !!nm],
-      ['layers', 'Học 1 bài Kiến thức nền', '10 phút, có bài tập nhỏ', 'nen.html', s.nenAll > 0],
+      T ? ['compass', 'Kiểm tra xếp lớp 15 phút', 'Biết trình độ và nên học gì trước', 'xep-lop.html', (function () { try { return !!localStorage.getItem('mt.place.toeic'); } catch (e) { return false; } })()] : ['layers', 'Học 1 bài Kiến thức nền', '10 phút, có bài tập nhỏ', 'nen.html', s.nenAll > 0],
       T ? ['flame', 'Làm đề mini 10 phút', '20 câu, chấm ngay', 'mini.html', false] : ['headphones', 'Làm Listening Part 1', 'Cam 21 · Test 1, 10 câu', 'c21/test-1.html?part=L1', false]
     ], n = steps.filter(function (x) { return x[4]; }).length;
     el.className = 'mstart';

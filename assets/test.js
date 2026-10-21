@@ -83,6 +83,8 @@
     show(CUR);
     if (!ST.done) { startTimer(); if (M.exam && M.parts[0] <= 4) setupPlayer(); }
     else showResultTop();
+    var hq = /^#q(\d+)$/.exec(location.hash);
+    if (hq) setTimeout(function () { var el = document.getElementById('q' + hq[1]); if (el) { el.scrollIntoView({ block: 'center' }); el.style.transition = 'box-shadow .6s'; el.style.boxShadow = '0 0 0 4px #ffc94a'; setTimeout(function () { el.style.boxShadow = ''; }, 1800); } }, 300);
   }
 
   // ---------- start screen ----------
@@ -105,13 +107,36 @@
       });
       h += '</table></div>';
     }
+    h += '<details class="box tv" id="tuvung"><summary><h3 style="display:inline">📚 Từ vựng khó của đề này</h3> <span class="hint">— xem trước 20 từ để làm bài tự tin hơn</span></summary><div id="tvBody"><p class="hint">Đang tải…</p></div></details>';
     h += '<div class="box"><h3>Mẹo</h3><ul><li>Bài làm tự lưu trên máy này — lỡ tắt trang thì mở lại là làm tiếp.</li><li>Nộp bài xong sẽ thấy đáp án đúng, <b>lời thoại + dịch tiếng Việt</b> và <b>giải thích</b> từng câu.</li><li>Điểm quy đổi chỉ là ước tính để tham khảo.</li></ul></div></div>';
     $('#main').innerHTML = h;
     $$('[data-m]').forEach(function (b) { b.onclick = function () {
       var k = 'ets26.t' + T + '.' + b.dataset.m, s = get(k);
       if (s && s.done) { try { localStorage.removeItem(k); } catch (e) {} }
       location.search = '?t=' + T + '&m=' + b.dataset.m; }; });
+    loadVocab();
   }
+  function loadVocab() {
+    var box = $('#tuvung'); if (!box) return;
+    function render() {
+      var L = (window.TESTVOCAB || {})[T] || [], C = get('vocab.cards') || {};
+      if (!L.length) { box.hidden = true; return; }
+      var h = '<p class="hint" style="margin:6px 0 10px">Các từ ít gặp xuất hiện trong Test ' + T + ' · bấm 🔊 để nghe, ☆ để lưu vào flashcard.</p><div class="tvl">';
+      L.forEach(function (w, i) {
+        h += '<div class="tvi"><div><b>' + esc(w.w) + '</b> <small>' + esc(w.ipa) + '</small> <button type="button" class="tvs" data-say="' + esc(w.w) + '" aria-label="Nghe">🔊</button></div><div class="tvm">' + esc(w.m) + '</div><div class="tve">' + esc(w.ex) + '</div>' +
+          '<button type="button" class="tvsv' + (C[w.w] ? ' on' : '') + '" data-i="' + i + '">' + (C[w.w] ? '★ Đã lưu' : '☆ Lưu') + '</button></div>';
+      });
+      h += '</div><div class="tvact"><button type="button" class="btn sm" id="tvAll">☆ Lưu cả ' + L.length + ' từ vào flashcard</button> <a class="btn alt sm" href="go-tu.html?t=' + T + '">🎮 Chơi gõ từ rơi với bộ này</a></div>';
+      $('#tvBody').innerHTML = h;
+      function add(w, C2) { if (!C2[w.w]) C2[w.w] = { w: w.w, ipa: w.ipa, m: w.m, ex: w.ex, src: 'ETS 2026 · Test ' + T, at: Date.now(), box: 0 }; }
+      $$('#tvBody .tvsv').forEach(function (b) { b.onclick = function () { var C2 = get('vocab.cards') || {}, w = L[+b.dataset.i]; if (C2[w.w]) delete C2[w.w]; else add(w, C2); put('vocab.cards', C2); b.classList.toggle('on', !!C2[w.w]); b.textContent = C2[w.w] ? '★ Đã lưu' : '☆ Lưu'; }; });
+      $('#tvAll').onclick = function () { var C2 = get('vocab.cards') || {}; L.forEach(function (w) { add(w, C2); }); put('vocab.cards', C2); $$('#tvBody .tvsv').forEach(function (b) { b.classList.add('on'); b.textContent = '★ Đã lưu'; }); toast('Đã lưu ' + L.length + ' từ vào flashcard ✓'); };
+      $$('#tvBody [data-say]').forEach(function (b) { b.onclick = function () { try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {} }; });
+    }
+    if (window.TESTVOCAB) return render();
+    var s = document.createElement('script'); s.src = 'data/tuvung.js?v=1'; s.onload = render; s.onerror = function () { box.hidden = true; }; document.head.appendChild(s);
+  }
+
 
   // ---------- tabs & part rendering ----------
   function buildTabs() {
@@ -147,6 +172,7 @@
     bindInputs(); bindSpeed();
     if (ST.done) showResultTop();
     if (PL.on || PL.started) markCurrent();
+    if (window.MMARKS) window.MMARKS.decorate(T, ITEMS);
   }
 
 

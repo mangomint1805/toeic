@@ -188,3 +188,15 @@ details.more.g{margin-left:0}
 @media (max-width:640px){.rp-body{grid-template-columns:1fr}.rp-meta{text-align:left}.rp-total b{font-size:54px}}
 
 .rp-buddy{margin:12px 0 4px}.rp-buddy .mmint{width:74px}.rp-buddy .mb-bub{max-width:none;flex:1}.rp-buddy .rp-cm{margin:6px 0 0}
+
+/* từ vựng của đề */
+.tv summary{cursor:pointer;list-style:none}.tv summary::-webkit-details-marker{display:none}
+.tv summary::after{content:"▾";float:right;color:var(--dim)}.tv[open] summary::after{content:'▴'}
+.tvl{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.tvi{position:relative;border:1px solid var(--line);border-radius:12px;padding:9px 11px 9px;background:var(--card)}
+.tvi b{font:600 16.5px/1.2 Fraunces,Georgia,serif;color:var(--brand-ink)}.tvi small{color:var(--dim)}
+.tvm{font-size:14px;margin:3px 60px 3px 0}.tve{font-size:12.5px;color:var(--dim);font-style:italic}
+.tvs{border:0;background:none;cursor:pointer;font-size:14px;padding:0 2px}
+.tvsv{position:absolute;top:8px;right:8px;border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:3px 8px;font:600 12px/1 "IBM Plex Sans",sans-serif;cursor:pointer;color:var(--brand-ink)}
+.tvsv.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.tvact{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
