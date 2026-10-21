@@ -288,7 +288,7 @@
       var v = fs(), dk = theme() === 'dark';
       p.innerHTML = '<div class="mp-row"><span>Cỡ chữ</span><div class="mp-fs"><button type="button" data-d="-1" aria-label="Chữ nhỏ hơn"' + (v === FS[0] ? ' disabled' : '') + '>A−</button><b>' + Math.round(v * 100) + '%</b><button type="button" data-d="1" aria-label="Chữ to hơn"' + (v === FS[FS.length - 1] ? ' disabled' : '') + '>A+</button></div></div>' +
         '<div class="mp-row"><span>Giao diện tối</span><button type="button" class="mp-sw" role="switch" aria-checked="' + dk + '"><i></i></button></div>' +
-        '<div class="mp-row"><span>Phong cách</span><div class="mp-skins">' + SKINS.map(function (k) { return '<button type="button" data-k="' + k[0] + '" title="' + k[1] + '" aria-label="Phong cách ' + k[1] + '" aria-pressed="' + (skin() === k[0]) + '" style="background:' + k[2] + '"></button>'; }).join('') + '</div></div>' +
+        '<div class="mp-row"><span>Phong cách<small class="mp-skn">' + SKINS.filter(function (k) { return k[0] === skin(); })[0][1] + '</small></span><div class="mp-skins">' + SKINS.map(function (k) { return '<button type="button" data-k="' + k[0] + '" title="' + k[1] + '" aria-label="Phong cách ' + k[1] + '" aria-pressed="' + (skin() === k[0]) + '" style="background:' + k[2] + '"></button>'; }).join('') + '</div></div>' +
         '<button type="button" class="mp-tour">' + icon('help') + ' Xem lại hướng dẫn</button>' + (SITE !== 'summary' ? '<button type="button" class="mp-gacha">🎁 Tủ đồ bé Xoài · 💎 ' + bag().g + '</button>' : '');
       [].forEach.call(p.querySelectorAll('.mp-skins button'), function (b) { b.onclick = function () { S('mt.skin', b.getAttribute('data-k')); applySkin(skin()); draw(); }; });
       var gb = p.querySelector('.mp-gacha'); if (gb) gb.onclick = function () { p.remove(); window.MGACHA(); };
@@ -719,7 +719,7 @@
   window.MCOMBO.reset = function () { combo = 0; };
 
   // ================= bộ giao diện theo phong cách =================
-  var SKINS = [['', 'Xoài', '#a8691a'], ['idol', 'Idol', '#12a4a3'], ['y2k', 'Streamer Y2K', '#e0559a'], ['scifi', 'Sci-fi', '#38d6ff']];
+  var SKINS = [['', 'Xoài', '#a8691a'], ['idol', 'Hành baro', '#12a4a3'], ['y2k', 'Thiên thần', '#e0559a'], ['scifi', 'Băng hoại', '#38d6ff']];
   function skin() { var v = J('mt.skin', ''); return SKINS.some(function (k) { return k[0] === v; }) ? v : ''; }
   function applySkin(v) { var r = document.documentElement; if (v) r.setAttribute('data-skin', v); else r.removeAttribute('data-skin'); if (v === 'scifi') applyTheme('dark', false); else applyTheme(theme(), false); }
 
@@ -809,7 +809,7 @@
     '@keyframes mcb{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}15%{opacity:1;transform:translate(-50%,0) scale(1.15)}30%{transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-40px)}}' +
     '@media (prefers-reduced-motion:reduce){.mcombo{animation:none;opacity:1}}' +
     // phong cách
-    '.mp-skins{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.mp-skins button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 3px #fff}.mp-skins button[aria-pressed=true]{border-color:var(--ink,#1e232b)}' +
+    '.mp-skn{display:block;font-weight:500;font-size:12px;color:var(--dim,#8a8f98)}.mp-skins{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.mp-skins button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 3px #fff}.mp-skins button[aria-pressed=true]{border-color:var(--ink,#1e232b)}' +
     '.mp-gacha{margin-top:6px;width:100%;display:flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;padding:10px;font:700 13.5px/1 "IBM Plex Sans",sans-serif;color:#fff;background:linear-gradient(135deg,#ff8a3d,#e0559a);cursor:pointer}' +
     'html[data-skin] .mlogo rect:first-child{fill:var(--brand)}html[data-skin] .mlogo rect+rect{fill:var(--brand-ink);opacity:.5}' +
     'html[data-skin] :is(.mt-next,.mp-f button,.fbk-row .ok,.fbk-types button[aria-pressed=true],.mp-sw[aria-checked=true],.btn:not(.alt),.big:not(.alt),.mark button:not(.on)){background:var(--brand)!important;border-color:var(--brand)!important}' +
