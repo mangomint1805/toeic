@@ -948,6 +948,9 @@
   if (!EXAM) { var slo = document.createElement('div'); slo.className = 'mslogan'; slo.innerHTML = '<span aria-hidden="true">✦</span><p><i>Cứ đi là mình sẽ tới,</i> <i>tin là mình sẽ có,</i><br><i>sáng như viên cà rá, 22 karat</i></p><small>Minto English · ミント英語</small>'; document.body.appendChild(slo); }
   var stA = document.createElement('style'); stA.textContent =
     '.macc-b{width:auto!important;padding:0 12px!important;gap:7px;font:600 13.5px/1 "IBM Plex Sans",sans-serif!important;display:inline-flex!important;align-items:center;justify-content:center;white-space:nowrap}' +
+    '.macc-b[hidden]{display:none!important}' +
+    '.mset.acc{position:relative;padding:0!important;overflow:visible}.mset.acc img,.mset.acc>i{width:100%;height:100%;border-radius:inherit;object-fit:cover;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;color:var(--brand-ink,#6b4410)}.mset.acc img{display:block}' +
+    '.mset-g{position:absolute;right:-5px;bottom:-5px;width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid #e6e0d3;display:flex;align-items:center;justify-content:center;color:#6b4410}.mset-g .ic{width:12px;height:12px}html[data-theme=dark] .mset-g{background:#1c1f25;border-color:#373b44;color:#f0c787}' +
     '.macc-b.on{width:40px!important;padding:0!important;overflow:hidden}.macc-b img{width:100%;height:100%;object-fit:cover;border-radius:inherit}.macc-b i{font-style:normal;font-weight:700;color:var(--brand-ink,#6b4410)}' +
     '@media (max-width:440px){.macc-b span{display:none}.macc-b{width:38px!important;padding:0!important}}' +
     '@media (max-width:400px){.mnav .in{gap:6px!important;padding-left:12px!important;padding-right:12px!important}.mtool{gap:4px!important}.mtool .mbtn{width:34px!important;height:34px!important}.mbrand{gap:7px!important}.mlogo{width:32px!important;height:32px!important}.mbrand b{font-size:17px!important;gap:5px!important}.mbrand b em{font-size:8.5px!important;padding:3px 4px 2px!important}.mbrand small{letter-spacing:.2em!important}}' +
@@ -973,7 +976,12 @@
   function extUrl() { var url = location.href.replace(/^https?:\/\//, ''); return IOS ? 'x-safari-https://' + url : 'intent://' + url + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent(location.href) + ';end'; }
   window.MACCPAINT = function () {
     var a = null; try { a = JSON.parse(localStorage.getItem('mt.acc')); } catch (e) {}
+    [].forEach.call(document.querySelectorAll('.mset'), function (g) {
+      if (a) { g.classList.add('acc'); g.innerHTML = (a.photo ? '<img src="' + esc(a.photo) + '" alt="" referrerpolicy="no-referrer">' : '<i>' + esc((a.name || a.email || '?').charAt(0).toUpperCase()) + '</i>') + '<b class="mset-g">' + icon('gear') + '</b>'; g.title = 'Tài khoản & cài đặt (' + (a.email || a.name) + ')'; g.setAttribute('aria-label', 'Tài khoản và cài đặt'); }
+      else if (g.classList.contains('acc')) { g.classList.remove('acc'); g.innerHTML = icon('gear'); g.title = 'Cài đặt: cỡ chữ, giao diện, sao lưu'; g.setAttribute('aria-label', 'Cài đặt'); }
+    });
     [].forEach.call(document.querySelectorAll('.macc-b'), function (b) {
+      b.hidden = !!a; b.style.display = a ? 'none' : '';
       b.classList.toggle('on', !!a);
       if (a) { b.innerHTML = a.photo ? '<img src="' + esc(a.photo) + '" alt="" referrerpolicy="no-referrer">' : '<i>' + esc((a.name || a.email || '?').charAt(0).toUpperCase()) + '</i>'; b.title = 'Đã đăng nhập: ' + (a.email || a.name) + ' — bấm để xem'; b.setAttribute('aria-label', 'Tài khoản ' + (a.email || '')); }
       else { b.innerHTML = GSVG + '<span>' + (INAPP ? 'Mở để đăng nhập' : 'Đăng nhập') + '</span>'; b.title = INAPP ? 'Mở bằng ' + (IOS ? 'Safari' : 'Chrome') + ' để đăng nhập Google' : 'Đăng nhập bằng Google để lưu tiến độ'; b.setAttribute('aria-label', b.title); }
