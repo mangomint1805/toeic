@@ -302,12 +302,14 @@
 
         '<div class="mp-row"><span>Phong cách<small class="mp-skn">' + SKINS.filter(function (k) { return k[0] === skin(); })[0][1] + '</small></span><div class="mp-skins">' + SKINS.map(function (k) { return '<button type="button" data-k="' + k[0] + '" title="' + k[1] + '" aria-label="Phong cách ' + k[1] + '" aria-pressed="' + (skin() === k[0]) + '" style="background:' + k[2] + '"></button>'; }).join('') + '</div></div>' +
         '<button type="button" class="mp-tour">' + icon('help') + ' Xem lại hướng dẫn</button>' +
-        '<div class="mp-bk"><button type="button" class="mp-tour" id="mpBk">💾 Sao lưu</button><button type="button" class="mp-tour" id="mpRs">📂 Khôi phục</button></div>';
+        '<div class="mp-bk"><button type="button" class="mp-tour" id="mpBk">💾 Sao lưu</button><button type="button" class="mp-tour" id="mpRs">📂 Khôi phục</button></div>' +
+        '<div class="mp-acc" id="mpAcc"></div>';
       [].forEach.call(p.querySelectorAll('.mp-skins button'), function (b) { b.onclick = function () { S('mt.skin', b.getAttribute('data-k')); applySkin(skin()); draw(); }; });
       [].forEach.call(p.querySelectorAll('.mp-fs button'), function (b) { b.onclick = function () { var i = FS.indexOf(fs()) + (+b.getAttribute('data-d')); i = Math.max(0, Math.min(FS.length - 1, i)); S('mt.fs', FS[i]); applyFs(FS[i]); draw(); }; });
       p.querySelector('.mp-tour').onclick = function () { p.remove(); tour(true); };
       p.querySelector('#mpBk').onclick = function () { backup(); };
       p.querySelector('#mpRs').onclick = function () { p.remove(); restore(); };
+      accLoad(function () { var a = p.querySelector('#mpAcc'); if (a && window.MACC) window.MACC.render(a); });
     }
     draw(); document.body.appendChild(p); p.addEventListener('click', function (e) { e.stopPropagation(); });
     var r = btn.getBoundingClientRect(), pw = 250;
@@ -316,6 +318,15 @@
     setTimeout(function () { document.addEventListener('click', function off(e) { if (!p.contains(e.target) && !btn.contains(e.target)) { p.remove(); document.removeEventListener('click', off); } }); }, 0);
   }
 
+
+  // ================= đăng nhập Google (acc.js, tải khi cần) =================
+  var ACC_SRC = ME.replace(/ui\.js.*$/, 'acc.js?v=1'), accQ = null;
+  function accLoad(cb) {
+    if (window.MACC) return cb && cb();
+    if (!accQ) { accQ = []; var sc = document.createElement('script'); sc.src = ACC_SRC; sc.onload = function () { accQ.splice(0).forEach(function (f) { f(); }); }; document.head.appendChild(sc); }
+    if (cb) accQ.push(cb);
+  }
+  try { if (localStorage.getItem('mt.acc')) accLoad(); } catch (e) {}
 
   // ================= sao lưu / khôi phục tiến độ =================
   var BKRE = /^(ets26\.|cam\d+\.|cam\.|cam20\.|mt\.|vocab\.|summaryNew\.|summaryOld\.)/;
@@ -833,7 +844,7 @@
     'html[data-theme=dark] .mbadge.on{background:#2a2216;border-color:#5a4422;color:#e6b876}html[data-theme=dark] .mbadge.on b{color:#f3ede3}' +
     '@media (prefers-reduced-motion:no-preference){.mbadge.on .mb-i{animation:mbpop .6s cubic-bezier(.2,.9,.3,1.4) both}}@keyframes mbpop{from{transform:scale(.4)}}' +
     '.mset .ic{width:20px;height:20px}' +
-    '.mpop{position:fixed;z-index:95;width:250px;background:#fff;color:#1e232b;border:1px solid #e6e0d3;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.18);padding:12px;font:14px/1.4 "IBM Plex Sans",sans-serif;animation:fbkup .2s ease}' +
+    '.mpop{position:fixed;z-index:95;width:250px;max-height:calc(100vh - 16px);overflow:auto;background:#fff;color:#1e232b;border:1px solid #e6e0d3;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.18);padding:12px;font:14px/1.4 "IBM Plex Sans",sans-serif;animation:fbkup .2s ease}' +
     '.mp-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 2px}.mp-row>span{font-weight:600}' +
     '.mp-fs{display:flex;align-items:center;gap:6px}.mp-fs b{min-width:44px;text-align:center;font-size:13px}.mp-fs button{width:38px;height:34px;border-radius:9px;border:1px solid #ddd7c9;background:#faf8f4;color:#6b4410;font:700 14px/1 "IBM Plex Sans",sans-serif;cursor:pointer}.mp-fs button:disabled{opacity:.35;cursor:default}' +
     '.mp-sw{width:46px;height:26px;border-radius:999px;border:0;background:#d8d2c5;position:relative;cursor:pointer;transition:background .2s}.mp-sw i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}.mp-sw[aria-checked=true]{background:#a8691a}.mp-sw[aria-checked=true] i{transform:translateX(20px)}' +
