@@ -36,7 +36,9 @@
     '.mbrand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#1e232b}' +
     '.mlogo{width:34px;height:34px;flex:none;border-radius:9px}' +
     '.mbrand b{font:600 19px/1 Fraunces,Georgia,serif;letter-spacing:-.01em}' +
-    '.mbrand small{display:block;font:700 10.5px/1 "IBM Plex Sans",sans-serif;letter-spacing:.12em;color:#a8691a;margin-top:3px}' +
+    '.mbrand b{display:flex;align-items:center;gap:7px}.mbrand b em{font:700 9.5px/1 "IBM Plex Sans",sans-serif;letter-spacing:.1em;color:#a8691a;background:#f6ead3;border-radius:5px;padding:3px 5px 2px;font-style:normal}' +
+    '.mbrand small{display:block;font:500 10.5px/1 "Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;letter-spacing:.16em;color:#9a8f7d;margin-top:5px}' +
+    'html[data-theme=dark] .mbrand b em{background:#3b2d1b;color:#f0c787}html[data-theme=dark] .mbrand small{color:#8d8678}' +
     '.mlinks{display:flex;gap:4px;margin-left:auto}' +
     '.mlinks a{display:flex;align-items:center;gap:7px;font:600 14px/1 "IBM Plex Sans",sans-serif;color:#4b5260;text-decoration:none;padding:9px 12px;border-radius:9px}' +
     '.mlinks a:hover{background:#f6f1e7;color:#6b4410}' +
@@ -51,7 +53,7 @@
   if (cur !== null) {
     var L = (window.MNAV_LINKS || (SITE === 'summary' ? [['home', '', 'Bài học', 'book'], ['nen', TOEIC_URL + 'nen.html#mshoa', 'Kiến thức nền', 'layers'], ['toeic', TOEIC_URL, 'Luyện đề TOEIC', 'test'], ['mini', TOEIC_URL + 'mini.html', 'Đề mini', 'flame']] : SITE === 'ielts' ? [['home', '', 'Bộ đề', 'book'], ['nen', 'nen.html', 'Nền tảng', 'layers'], ['stats', 'phan-tich.html', 'Điểm yếu', 'chart'], ['dict', 'chinh-ta.html', 'Chính tả', 'pen'], ['cards', 'flashcards.html', 'Flashcard', 'cards'], ['help', 'huong-dan.html', 'Hướng dẫn', 'help']] : [['home', '', 'Đề thi', 'test'], ['mini', 'mini.html', 'Đề mini', 'flame'], ['nen', 'nen.html', 'Nền tảng', 'layers'], ['stats', 'phan-tich.html', 'Điểm yếu', 'chart'], ['dict', 'chinh-ta.html', 'Chính tả', 'pen'], ['cards', 'flashcards.html', 'Flashcard', 'cards']])).map(function (l) { return [l[0], /^https?:/.test(l[1]) ? l[1] : ROOT + l[1], l[2], l[3]]; });
     var nav = document.createElement('header'); nav.className = 'mnav';
-    nav.innerHTML = '<div class="in"><a class="mbrand" href="' + L[0][1] + '" aria-label="Minto English — trang chủ">' + LOGO + '<span><b>Minto English</b><small>' + (window.MNAV_LABEL || (SITE === 'ielts' ? 'IELTS' : SITE === 'summary' ? 'TOEIC PRE' : 'TOEIC')) + '</small></span></a><nav class="mlinks" aria-label="Menu">' +
+    nav.innerHTML = '<div class="in"><a class="mbrand" href="' + L[0][1] + '" aria-label="Minto English — trang chủ">' + LOGO + '<span><b>Minto English<em>' + (window.MNAV_LABEL || (SITE === 'ielts' ? 'IELTS' : SITE === 'summary' ? 'TOEIC PRE' : 'TOEIC')) + '</em></b><small lang="ja">ミント・イングリッシュ</small></span></a><nav class="mlinks" aria-label="Menu">' +
       L.map(function (l) { return '<a href="' + l[1] + '"' + (l[0] === cur ? ' aria-current="page"' : '') + '>' + icon(l[3]) + '<span>' + l[2] + '</span></a>'; }).join('') + '</nav></div>';
     document.body.insertBefore(nav, document.body.firstChild);
     document.body.classList.add('has-nav');
