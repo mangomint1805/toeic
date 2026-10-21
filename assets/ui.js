@@ -400,29 +400,31 @@
 
   // ================= linh vật bé Mint (lá bạc hà) =================
   function mascot(mood, cls) {
-    mood = mood || 'happy';
-    var up = mood === 'think', ey = up ? 76 : 80;
-    var eye = function (x) { return '<ellipse cx="' + x + '" cy="' + ey + '" rx="5" ry="6.5" fill="#3a2410"/><circle cx="' + (x + 1.8) + '" cy="' + (ey - 2.5) + '" r="1.9" fill="#fff"/>'; };
-    var mouth = mood === 'cheer' ? '<path d="M50 92 Q60 107 70 92 Z" fill="#7a2f2a"/><path d="M54 96 Q60 101 66 96" fill="#e8837a"/>' :
-      mood === 'think' ? '<path d="M55 96 h9" stroke="#3a2410" stroke-width="2.6" stroke-linecap="round"/>' :
-      mood === 'oops' ? '<path d="M52 97 Q60 91 68 97" stroke="#3a2410" stroke-width="2.6" fill="none" stroke-linecap="round"/>' :
-      '<path d="M51 92 Q60 102 69 92" stroke="#3a2410" stroke-width="2.8" fill="none" stroke-linecap="round"/>';
-    var A = 'stroke="#e08a1e" stroke-width="5" fill="none" stroke-linecap="round"';
-    var arms = mood === 'cheer' ? '<path d="M20 96 Q10 84 9 70" ' + A + '/><path d="M101 96 Q111 84 112 70" ' + A + '/>' +
-      '<path d="M8 50l2 5 5 2-5 2-2 5-2-5-5-2 5-2z M110 44l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#7fd6a4"/>' :
-      mood === 'think' ? '<path d="M100 104 Q107 98 99 90" ' + A + '/><text x="104" y="52" font-family="Fraunces,Georgia,serif" font-size="22" font-weight="600" fill="#2f9a63">?</text>' :
-      mood === 'oops' ? '<path d="M88 60 q4 7 0 10 q-4 -3 0 -10z" fill="#8fd0f0"/><path d="M20 102 Q12 108 11 116" ' + A + '/><path d="M101 102 Q109 108 110 116" ' + A + '/>' :
-      '<path d="M20 102 Q11 106 9 114" ' + A + '/><path d="M101 98 Q111 92 113 82" ' + A + '/>';
-    return '<svg class="mmint ' + (cls || '') + '" viewBox="0 0 120 140" aria-hidden="true"><defs>' +
-      '<radialGradient id="mgo" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#ffe27a"/><stop offset=".55" stop-color="#ffbf3c"/><stop offset="1" stop-color="#f08a24"/></radialGradient>' +
-      '<linearGradient id="mlf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9be8b8"/><stop offset="1" stop-color="#2f9a63"/></linearGradient></defs>' + arms +
-      '<path d="M62 34 C 96 31 110 64 103 96 C 97 126 67 137 44 129 C 19 121 11 93 17 68 C 23 46 40 35 62 34 Z" fill="url(#mgo)" stroke="#d97a16" stroke-width="2.5"/>' +
-      '<ellipse cx="86" cy="52" rx="12" ry="8" fill="#ff7a4a" opacity=".28" transform="rotate(30 86 52)"/><path d="M34 58 Q30 70 31 80" stroke="#fff6cf" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".7"/>' +
-      '<path d="M62 35 Q62 28 65 22" stroke="#7a5320" stroke-width="3.5" fill="none" stroke-linecap="round"/>' +
-      '<path d="M65 23 C 74 8 93 7 100 13 C 92 24 78 29 65 23 Z" fill="url(#mlf)" stroke="#2f8f5f" stroke-width="2"/><path d="M68 22 Q82 16 95 13" stroke="#e9fbf0" stroke-width="1.6" fill="none" opacity=".8"/>' +
-      '<path d="M63 25 C 53 12 39 12 34 18 C 42 27 54 30 63 25 Z" fill="url(#mlf)" stroke="#2f8f5f" stroke-width="2"/><path d="M60 24 Q49 19 38 18" stroke="#e9fbf0" stroke-width="1.4" fill="none" opacity=".8"/>' +
-      eye(48) + eye(72) + '<ellipse cx="38" cy="93" rx="6.5" ry="4" fill="#ff6f61" opacity=".4"/><ellipse cx="82" cy="93" rx="6.5" ry="4" fill="#ff6f61" opacity=".4"/>' + mouth + '</svg>';
-  }
+  mood=mood||'happy'; var K='#2b2118', SW=3.2;
+  var L='stroke="'+K+'" stroke-width="'+SW+'" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+  var up=mood==='think', ey=up?77:81;
+  var eyes = mood==='cheer' ? '<path d="M43 82 q5 -7 10 0 M67 82 q5 -7 10 0" '+L+'/>' :
+             '<path d="M47 '+(ey-3)+' l1 6 M72 '+(ey-3)+' l1 6" stroke="'+K+'" stroke-width="5" stroke-linecap="round"/>';
+  var mouth = mood==='cheer' ? '<path d="M50 92 q10 14 20 0 z" fill="#ff7b6b" '+L.replace('fill="none" ','')+'/>' :
+     mood==='think' ? '<path d="M55 97 q5 -2 10 0" '+L+'/>' :
+     mood==='oops' ? '<path d="M51 99 q9 -8 18 0" '+L+'/>' : '<path d="M50 92 q10 10 20 -1" '+L+'/>';
+  var blush='<path d="M33 92 l4 -4 M37 93 l4 -4 M41 94 l4 -4 M76 94 l4 -4 M80 93 l4 -4 M84 92 l4 -4" stroke="#ff7b6b" stroke-width="2.4" stroke-linecap="round"/>';
+  var arms = mood==='cheer' ? '<path d="M20 95 q-8 -12 -9 -24 M100 95 q8 -12 10 -24" '+L+'/><path d="M10 50 v10 M5 55 h10 M110 42 v8 M106 46 h8" '+L+' stroke-width="2.4"/>' :
+     mood==='think' ? '<path d="M100 104 q7 -6 -1 -14" '+L+'/><path d="M104 38 q6 -6 11 0 q2 5 -5 8 v4 M110 56 v1" '+L+' stroke-width="2.6"/>' :
+     mood==='oops' ? '<path d="M20 103 q-7 6 -8 14 M100 103 q7 6 8 14" '+L+'/><path d="M88 58 q4 7 0 10 q-4 -3 0 -10z" fill="#9fd8f5" '+L.replace('fill="none" ','')+' stroke-width="2"/>' :
+     '<path d="M20 103 q-8 4 -10 12 M100 99 q9 -6 12 -16" '+L+'/>';
+  var body='M62 34 C 95 30 111 63 104 96 C 98 126 66 138 44 129 C 18 121 10 92 17 67 C 23 45 40 35 62 34 Z';
+  return '<svg class="mmint '+(cls||'')+' doodle" viewBox="0 0 120 140" aria-hidden="true"><defs><filter id="rough" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter></defs><g filter="url(#rough)">'+
+    arms+
+    '<path d="'+body+'" fill="#ffc94a" transform="translate(3 3)"/>'+
+    '<path d="M30 60 q-4 14 -2 26 M36 54 q-3 8 -2 14" stroke="#fff3c4" stroke-width="4" stroke-linecap="round" fill="none"/>'+
+    '<path d="M84 104 l10 -10 M80 112 l14 -14 M78 120 l12 -12" stroke="#f0a033" stroke-width="2.4" stroke-linecap="round"/>'+
+    '<path d="'+body+'" '+L+'/>'+
+    '<path d="M62 35 q0 -7 3 -13" '+L+'/>'+
+    '<path d="M65 23 C 74 8 93 7 100 13 C 92 24 78 29 65 23 Z" fill="#8fe0ad" transform="translate(2 2)"/><path d="M65 23 C 74 8 93 7 100 13 C 92 24 78 29 65 23 Z M69 21 q12 -6 25 -8" '+L+' stroke-width="2.8"/>'+
+    '<path d="M63 25 C 53 12 39 12 34 18 C 42 27 54 30 63 25 Z" fill="#8fe0ad" transform="translate(2 2)"/><path d="M63 25 C 53 12 39 12 34 18 C 42 27 54 30 63 25 Z M59 23 q-10 -5 -21 -5" '+L+' stroke-width="2.8"/>'+
+    eyes+blush+mouth+'</g></svg>';
+}
   window.MMINT = mascot;
   function buddy(text, mood, cls) { return '<div class="mbuddy ' + (cls || '') + '">' + mascot(mood) + '<div class="mb-bub">' + text + '</div></div>'; }
   window.MBUDDY = buddy;
