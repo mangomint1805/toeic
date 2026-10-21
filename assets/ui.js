@@ -140,7 +140,7 @@
       var body = { kind: 'cam20', name: nm || '(ẩn danh)', lop: lop, test: document.title, part: 'Góp ý · ' + sel, mode: 'Góp ý', got: '', total: '', band: '', minutes: '',
         wrong: m + '\n— Trang: ' + location.href, auto: false, submittedAt: new Date().toISOString(), userAgent: navigator.userAgent.slice(0, 160) };
       if (url) { try { fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }).catch(function () {}); } catch (e) {} }
-      w.querySelector('.fbk-card').innerHTML = '<h3>Cảm ơn bạn!</h3>' + buddy('Thầy đã nhận được góp ý rồi nha, sẽ sửa sớm thôi. Cảm ơn bạn nhiều!', 'cheer') + '<div class="fbk-row"><button type="button" class="ok">Đóng</button></div>';
+      w.querySelector('.fbk-card').innerHTML = '<h3>Cảm ơn bạn!</h3>' + buddy('Thầy đã nhận được góp ý rồi nha, sẽ sửa sớm thôi. Cảm ơn bạn nhiều!', 'love') + '<div class="fbk-row"><button type="button" class="ok">Đóng</button></div>';
       w.querySelector('.ok').onclick = close;
     };
   }
@@ -400,34 +400,80 @@
 
   // ================= linh vật bé Mint (lá bạc hà) =================
   function mascot(mood, cls) {
-  mood=mood||'happy'; var K='#2b2118', SW=3.2;
-  var L='stroke="'+K+'" stroke-width="'+SW+'" fill="none" stroke-linecap="round" stroke-linejoin="round"';
-  var up=mood==='think', ey=up?77:81;
-  var eyes = mood==='cheer' ? '<path d="M43 82 q5 -7 10 0 M67 82 q5 -7 10 0" '+L+'/>' :
-             '<path d="M47 '+(ey-3)+' l1 6 M72 '+(ey-3)+' l1 6" stroke="'+K+'" stroke-width="5" stroke-linecap="round"/>';
-  var mouth = mood==='cheer' ? '<path d="M50 92 q10 14 20 0 z" fill="#ff7b6b" '+L.replace('fill="none" ','')+'/>' :
-     mood==='think' ? '<path d="M55 97 q5 -2 10 0" '+L+'/>' :
-     mood==='oops' ? '<path d="M51 99 q9 -8 18 0" '+L+'/>' : '<path d="M50 92 q10 10 20 -1" '+L+'/>';
-  var blush='<path d="M33 92 l4 -4 M37 93 l4 -4 M41 94 l4 -4 M76 94 l4 -4 M80 93 l4 -4 M84 92 l4 -4" stroke="#ff7b6b" stroke-width="2.4" stroke-linecap="round"/>';
-  var arms = mood==='cheer' ? '<path d="M20 95 q-8 -12 -9 -24 M100 95 q8 -12 10 -24" '+L+'/><path d="M10 50 v10 M5 55 h10 M110 42 v8 M106 46 h8" '+L+' stroke-width="2.4"/>' :
-     mood==='think' ? '<path d="M100 104 q7 -6 -1 -14" '+L+'/><path d="M104 38 q6 -6 11 0 q2 5 -5 8 v4 M110 56 v1" '+L+' stroke-width="2.6"/>' :
-     mood==='oops' ? '<path d="M20 103 q-7 6 -8 14 M100 103 q7 6 8 14" '+L+'/><path d="M88 58 q4 7 0 10 q-4 -3 0 -10z" fill="#9fd8f5" '+L.replace('fill="none" ','')+' stroke-width="2"/>' :
-     '<path d="M20 103 q-8 4 -10 12 M100 99 q9 -6 12 -16" '+L+'/>';
-  var body='M62 34 C 95 30 111 63 104 96 C 98 126 66 138 44 129 C 18 121 10 92 17 67 C 23 45 40 35 62 34 Z';
-  return '<svg class="mmint '+(cls||'')+' doodle" viewBox="0 0 120 140" aria-hidden="true"><defs><filter id="rough" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter></defs><g filter="url(#rough)">'+
-    arms+
-    '<path d="'+body+'" fill="#ffc94a" transform="translate(3 3)"/>'+
-    '<path d="M30 60 q-4 14 -2 26 M36 54 q-3 8 -2 14" stroke="#fff3c4" stroke-width="4" stroke-linecap="round" fill="none"/>'+
-    '<path d="M84 104 l10 -10 M80 112 l14 -14 M78 120 l12 -12" stroke="#f0a033" stroke-width="2.4" stroke-linecap="round"/>'+
-    '<path d="'+body+'" '+L+'/>'+
-    '<path d="M62 35 q0 -7 3 -13" '+L+'/>'+
-    '<path d="M65 23 C 74 8 93 7 100 13 C 92 24 78 29 65 23 Z" fill="#8fe0ad" transform="translate(2 2)"/><path d="M65 23 C 74 8 93 7 100 13 C 92 24 78 29 65 23 Z M69 21 q12 -6 25 -8" '+L+' stroke-width="2.8"/>'+
-    '<path d="M63 25 C 53 12 39 12 34 18 C 42 27 54 30 63 25 Z" fill="#8fe0ad" transform="translate(2 2)"/><path d="M63 25 C 53 12 39 12 34 18 C 42 27 54 30 63 25 Z M59 23 q-10 -5 -21 -5" '+L+' stroke-width="2.8"/>'+
-    eyes+blush+mouth+'</g></svg>';
-}
+    mood = mood || 'happy'; var K = '#2b2118';
+    var L = 'stroke="' + K + '" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"', LF = L.replace('fill="none" ', '');
+    var dot = function (x, y) { return '<path d="M' + x + ' ' + (y - 3) + ' l1 6" stroke="' + K + '" stroke-width="5" stroke-linecap="round"/>'; };
+    var E = { // mắt
+      dots: dot(47, 81) + dot(72, 81), up: dot(47, 77) + dot(72, 77), smile: '<path d="M43 82 q5 -7 10 0 M67 82 q5 -7 10 0" ' + L + '/>',
+      wink: dot(47, 81) + '<path d="M67 81 q5 -5 10 0" ' + L + '/>', closed: '<path d="M43 80 q5 5 10 0 M67 80 q5 5 10 0" ' + L + '/>',
+      heart: '<path d="M48 86 l-6 -6 a3.5 3.5 0 0 1 6 -4 a3.5 3.5 0 0 1 6 4 z M73 86 l-6 -6 a3.5 3.5 0 0 1 6 -4 a3.5 3.5 0 0 1 6 4 z" fill="#ff5d6c" ' + LF + ' stroke-width="2"/>',
+      wow: '<circle cx="48" cy="80" r="4.5" ' + L + ' stroke-width="2.6"/><circle cx="73" cy="80" r="4.5" ' + L + ' stroke-width="2.6"/>' + dot(48, 81).replace('stroke-width="5"', 'stroke-width="3"') + dot(73, 81).replace('stroke-width="5"', 'stroke-width="3"'),
+      angry: '<path d="M41 74 l11 4 M80 74 l-11 4" ' + L + '/>' + dot(48, 82) + dot(72, 82),
+      cry: '<path d="M43 81 q5 -4 10 0 M67 81 q5 -4 10 0" ' + L + '/><path d="M45 86 q-2 8 1 12 M76 86 q2 8 -1 12" stroke="#7cc8f0" stroke-width="3.4" fill="none" stroke-linecap="round"/>',
+      fire: '<path d="M41 75 l11 3 M80 75 l-11 3" ' + L + '/>' + dot(48, 82) + dot(72, 82),
+      cool: '<path d="M38 76 h20 q-1 10 -10 10 q-9 0 -10 -10 z M63 76 h20 q-1 10 -10 10 q-9 0 -10 -10 z M58 78 h5" fill="' + K + '" ' + LF + ' stroke-width="2.4"/><path d="M43 79 l4 -2" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'
+    };
+    var M = { // miệng
+      smile: '<path d="M50 92 q10 10 20 -1" ' + L + '/>', open: '<path d="M50 92 q10 14 20 0 z" fill="#ff7b6b" ' + LF + '/>', flat: '<path d="M55 97 q5 -2 10 0" ' + L + '/>',
+      sad: '<path d="M51 99 q9 -8 18 0" ' + L + '/>', o: '<ellipse cx="60" cy="96" rx="4.5" ry="5.5" fill="#ff7b6b" ' + LF + ' stroke-width="2.6"/>', pout: '<path d="M54 96 q3 -3 6 0 q3 3 6 0" ' + L + '/>',
+      grin: '<path d="M48 91 q12 4 24 0 q-3 10 -12 10 q-9 0 -12 -10 z" fill="#fff" ' + LF + ' stroke-width="2.6"/><path d="M50 94 h20" stroke="' + K + '" stroke-width="1.6"/>',
+      tongue: '<path d="M50 92 q10 10 20 -1" ' + L + '/><path d="M58 97 q3 7 7 1" fill="#ff7b6b" ' + LF + ' stroke-width="2.2"/>', zz: '<path d="M56 96 q4 3 8 0" ' + L + '/>'
+    };
+    var A = { // tay
+      wave: '<path d="M20 103 q-8 4 -10 12 M100 99 q9 -6 12 -16" ' + L + '/>', up: '<path d="M20 95 q-8 -12 -9 -24 M100 95 q8 -12 10 -24" ' + L + '/>',
+      down: '<path d="M20 103 q-7 6 -8 14 M100 103 q7 6 8 14" ' + L + '/>', chin: '<path d="M20 103 q-8 4 -10 12 M100 104 q7 -6 -1 -14" ' + L + '/>',
+      hips: '<path d="M21 100 q-12 -2 -6 10 M99 100 q12 -2 6 10" ' + L + '/>', fist: '<path d="M20 103 q-8 4 -10 12 M100 98 q8 -10 10 -20" ' + L + '/><circle cx="111" cy="75" r="5" fill="#ffc94a" ' + LF + ' stroke-width="2.6"/>'
+    };
+    var X = { // phụ kiện
+      spark: '<path d="M10 50 v10 M5 55 h10 M110 42 v8 M106 46 h8" ' + L + ' stroke-width="2.4"/>',
+      q: '<path d="M104 38 q6 -6 11 0 q2 5 -5 8 v4 M110 56 v1" ' + L + ' stroke-width="2.6"/>',
+      sweat: '<path d="M88 58 q4 7 0 10 q-4 -3 0 -10z" fill="#9fd8f5" ' + LF + ' stroke-width="2"/>',
+      hearts: '<path d="M14 52 l-5 -5 a3 3 0 0 1 5 -3.5 a3 3 0 0 1 5 3.5 z M108 40 l-4 -4 a2.5 2.5 0 0 1 4 -3 a2.5 2.5 0 0 1 4 3 z" fill="#ff5d6c" ' + LF + ' stroke-width="1.8"/>',
+      zzz: '<path d="M92 30 h8 l-8 8 h8 M104 16 h6 l-6 6 h6" ' + L + ' stroke-width="2.4"/>',
+      vein: '<path d="M86 50 l3 3 M92 48 l-3 5 M84 56 l5 -1" stroke="#e5484d" stroke-width="2.6" stroke-linecap="round"/>',
+      hat: '<path d="M44 38 l14 -30 l14 28 z" fill="#7cc8f0" ' + LF + ' stroke-width="2.6"/><path d="M50 26 l14 4 M47 33 l18 3" stroke="#ff5d6c" stroke-width="2.4"/><circle cx="58" cy="7" r="4" fill="#ffc94a" ' + LF + ' stroke-width="2"/>' +
+        '<path d="M14 40 l4 6 M106 30 l-3 7 M20 60 l6 -2 M101 52 l6 2" stroke="#ff5d6c" stroke-width="2.6" stroke-linecap="round"/><path d="M10 48 l3 3 M110 40 l-2 3" stroke="#7cc8f0" stroke-width="2.6" stroke-linecap="round"/>',
+      band: '<path d="M22 60 q38 -14 76 0" stroke="#e5484d" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M96 58 l12 -6 M96 60 l10 6" stroke="#e5484d" stroke-width="4" stroke-linecap="round"/>',
+      flame: '<path d="M106 70 q-8 -8 -2 -18 q2 6 5 6 q-1 -8 6 -14 q-1 8 4 12 q4 8 -3 14 q-4 4 -10 0z" fill="#ff8a3d" ' + LF + ' stroke-width="2.2"/>',
+      book: '<path d="M30 112 l28 -6 l0 22 l-28 6 z M58 106 l28 6 l0 22 l-28 -6 z" fill="#fff" ' + LF + ' stroke-width="2.6"/><path d="M36 116 l16 -3 M36 122 l16 -3 M64 113 l16 3 M64 119 l16 3" stroke="#a8691a" stroke-width="1.8" stroke-linecap="round"/>',
+      star: '<path d="M106 34 l3 7 7 1 -5 5 1.5 7 -6.5 -3.5 -6.5 3.5 1.5 -7 -5 -5 7 -1 z" fill="#ffc94a" ' + LF + ' stroke-width="2.2"/>',
+      note: '<path d="M100 44 v-14 l10 -3 v14 M100 44 a3 3 0 1 1 -1 -1 M110 41 a3 3 0 1 1 -1 -1" ' + L + ' stroke-width="2.4"/>'
+    };
+    var P = {
+      happy: ['dots', 'smile', 'wave', ''], cheer: ['smile', 'open', 'up', 'spark'], think: ['up', 'flat', 'chin', 'q'], oops: ['dots', 'sad', 'down', 'sweat'],
+      love: ['heart', 'open', 'up', 'hearts'], wink: ['wink', 'tongue', 'wave', 'star'], sleepy: ['closed', 'zz', 'down', 'zzz'], wow: ['wow', 'o', 'up', 'spark'],
+      pout: ['angry', 'pout', 'hips', 'vein'], cry: ['cry', 'sad', 'down', ''], party: ['smile', 'open', 'up', 'hat'], fire: ['fire', 'grin', 'fist', 'band'],
+      cool: ['cool', 'smile', 'hips', 'star'], study: ['dots', 'smile', 'down', 'book'], sing: ['closed', 'o', 'wave', 'note']
+    }[mood] || ['dots', 'smile', 'wave', ''];
+    var extra = P[3] === 'band' ? X.band + X.flame : (X[P[3]] || '');
+    var front = { book: 1, sweat: 1 }[P[3]], below = front ? '' : extra, over = front ? extra : (P[3] === 'band' ? X.band : '');
+    if (P[3] === 'band') below = X.flame;
+    var body = 'M62 34 C 95 30 111 63 104 96 C 98 126 66 138 44 129 C 18 121 10 92 17 67 C 23 45 40 35 62 34 Z';
+    return '<svg class="mmint ' + (cls || '') + ' doodle" viewBox="0 0 120 140" aria-hidden="true"><defs><filter id="rough" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter></defs><g filter="url(#rough)">' +
+      (P[3] === 'book' ? '' : A[P[2]]) + below +
+      '<path d="' + body + '" fill="#ffc94a" transform="translate(3 3)"/>' +
+      '<path d="M30 60 q-4 14 -2 26 M36 54 q-3 8 -2 14" stroke="#fff3c4" stroke-width="4" stroke-linecap="round" fill="none"/>' +
+      '<path d="M84 104 l10 -10 M80 112 l14 -14 M78 120 l12 -12" stroke="#f0a033" stroke-width="2.4" stroke-linecap="round"/>' +
+      '<path d="' + body + '" ' + L + '/><path d="M62 35 q0 -7 3 -13" ' + L + '/>' +
+      (P[3] === 'hat' ? '' : '<path d="M65 23 C 74 8 93 7 100 13 C 92 24 78 29 65 23 Z" fill="#8fe0ad" transform="translate(2 2)"/><path d="M65 23 C 74 8 93 7 100 13 C 92 24 78 29 65 23 Z M69 21 q12 -6 25 -8" ' + L + ' stroke-width="2.8"/>' +
+        '<path d="M63 25 C 53 12 39 12 34 18 C 42 27 54 30 63 25 Z" fill="#8fe0ad" transform="translate(2 2)"/><path d="M63 25 C 53 12 39 12 34 18 C 42 27 54 30 63 25 Z M59 23 q-10 -5 -21 -5" ' + L + ' stroke-width="2.8"/>') +
+      E[P[0]] + '<path d="M33 92 l4 -4 M37 93 l4 -4 M41 94 l4 -4 M76 94 l4 -4 M80 93 l4 -4 M84 92 l4 -4" stroke="#ff7b6b" stroke-width="2.4" stroke-linecap="round"/>' + M[P[1]] + over +
+      (P[3] === 'book' ? '<path d="M24 108 q4 6 8 4 M96 108 q-4 6 -8 4" ' + L + '/>' : '') + '</g></svg>';
+  }
+  window.MMOODS = ['happy', 'cheer', 'love', 'wink', 'party', 'fire', 'cool', 'study', 'sing', 'wow', 'think', 'sleepy', 'pout', 'oops', 'cry'];
   window.MMINT = mascot;
   function buddy(text, mood, cls) { return '<div class="mbuddy ' + (cls || '') + '">' + mascot(mood) + '<div class="mb-bub">' + text + '</div></div>'; }
   window.MBUDDY = buddy;
+  var SAYS = { happy: 'Hì hì 😊', cheer: 'Yeah! Cố lên nào!', love: 'Thương bạn ghê á 💛', wink: 'Bí mật nha 😉', party: 'Quẩy thôi! 🎉', fire: 'Học như chưa từng được học! 🔥', cool: 'Ngầu chưa? 😎', study: 'Đọc thêm một bài nữa nha 📖', sing: 'La la la~ 🎵', wow: 'Ồ wow!', think: 'Hmm… câu này khó nhỉ?', sleepy: 'Buồn ngủ quá… 💤', pout: 'Hứ! Đừng chọc mình nữa!', oops: 'Ui da…', cry: 'Huhu bị chọc hoài 😭' };
+  var taps = 0;
+  document.addEventListener('click', function (e) {
+    var sv = e.target.closest && e.target.closest('.mbuddy .mmint'); if (!sv) return;
+    taps++; var ms = window.MMOODS, m = taps >= 6 ? (taps >= 9 ? 'cry' : 'pout') : ms[Math.floor(Math.random() * 11)];
+    if (taps >= 10) taps = 0;
+    var wrap = sv.parentNode, bub = wrap.querySelector('.mb-bub'); if (!wrap.dataset.orig && bub) wrap.dataset.orig = bub.innerHTML;
+    sv.outerHTML = mascot(m, 'pop'); if (bub) bub.innerHTML = SAYS[m] || 'Hì';
+    clearTimeout(wrap._t); wrap._t = setTimeout(function () { if (bub && wrap.dataset.orig) bub.innerHTML = wrap.dataset.orig; }, 3500);
+  });
 
   // ================= hoạ tiết sóng seigaiha + con dấu =================
   function seigaiha(paper, ink, a) {
@@ -445,7 +491,8 @@
     '.mmint{width:64px;height:auto;flex:none;overflow:visible}' +
     '@media (prefers-reduced-motion:no-preference){.mbuddy .mmint{animation:mbob 3.2s ease-in-out infinite;transform-origin:50% 95%}@keyframes mbob{0%,100%{transform:rotate(-3deg) translateY(0)}50%{transform:rotate(3deg) translateY(-3px)}}' +
     '.mbuddy:hover .mmint{animation:mjump .5s ease}@keyframes mjump{40%{transform:translateY(-10px) rotate(-6deg)}}}' +
-    '.mbuddy{display:flex;align-items:flex-end;gap:10px;margin:16px 0 0}' +
+    '.mbuddy{display:flex;align-items:flex-end;gap:10px;margin:16px 0 0}.mbuddy .mmint{cursor:pointer}.mb-tap{display:block;font-size:11.5px;color:#9a9fa8;margin-top:2px}' +
+    '@media (prefers-reduced-motion:no-preference){.mmint.pop{animation:mpop .45s cubic-bezier(.2,.9,.3,1.5)}@keyframes mpop{0%{transform:scale(.7) rotate(-8deg)}}}' +
     '.mb-bub{position:relative;background:var(--card,#fff);border:1px solid #e6dcc8;border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:14.5px;line-height:1.45;color:var(--ink,#1e232b);box-shadow:0 6px 18px rgba(107,68,16,.08);max-width:440px;margin-bottom:22px}' +
     '.mb-bub b{color:#2f8f5f}html[data-theme=dark] .mb-bub{background:#1c1f25;border-color:#373b44}html[data-theme=dark] .mb-bub b{color:#6fd39d}' +
     '@media (prefers-reduced-motion:no-preference){.mb-bub{animation:mbub .5s .25s cubic-bezier(.2,.9,.3,1.3) both}@keyframes mbub{from{opacity:0;transform:scale(.85) translateY(6px);transform-origin:0 100%}}}' +
@@ -488,16 +535,19 @@
       var first = nm ? nm.trim().split(/\s+/).pop() : '';
       var tips = SITE === 'toeic' ? ['Mẹo: Part 2 hay có bẫy <b>từ phát âm giống</b> câu hỏi. Nghe thấy lặp từ thì cẩn thận nha!', 'Mẹo: Part 5 nhìn đáp án trước, nếu <b>cùng gốc từ</b> thì là câu từ loại, làm nhanh lắm!', 'Mẹo: Part 7 đọc <b>câu hỏi trước</b> rồi mới tìm trong bài, đỡ mất giờ hơn nhiều.', 'Mẹo: nghe lại câu sai ở tốc độ <b>0.75x</b> rồi chép chính tả, nhớ lâu cực!']
         : ['Mẹo: Listening luôn đọc trước câu hỏi và <b>đoán loại từ</b> cần điền nha.', 'Mẹo: phân biệt <b>FALSE</b> (trái ngược) và <b>NOT GIVEN</b> (không nhắc tới) là ăn điểm Reading đó!', 'Mẹo: Writing Task 1 nhớ viết <b>overview</b>, thiếu là khó qua band 6 lắm.', 'Mẹo: Speaking Part 1 trả lời <b>2–3 câu</b>: ý chính + lý do + ví dụ.'];
-      var txt;
-      if (!nm) txt = 'Chào bạn! Mình là <b>Xoài Bạc Hà</b> 🥭🌿 Nhập tên ở khung bên cạnh để thầy nhận được kết quả nhé.';
-      else if (s.streak >= 2) txt = '<b>' + s.streak + ' ngày liên tục</b> rồi đó ' + first + '! Hôm nay học tiếp để giữ chuỗi nha 🔥';
-      else if (SITE === 'toeic' && s.miniToday) txt = 'Đề mini hôm nay xong rồi, giỏi quá! Làm thêm một Part nữa không ' + first + '?';
-      else if (s.subs + s.nenAll === 0) txt = 'Chào ' + first + '! Mới bắt đầu thì học một bài <b>Kiến thức nền</b> trước nha, chỉ 10 phút thôi.';
-      else txt = tips[new Date().getDate() % tips.length];
-      cta.insertAdjacentHTML('beforebegin', buddy(txt, nm ? 'happy' : 'cheer'));
+      var txt, md = 'happy', hr = new Date().getHours();
+      if (!nm) { txt = 'Chào bạn! Mình là <b>Xoài Bạc Hà</b> 🥭🌿 Nhập tên ở khung bên cạnh để thầy nhận được kết quả nhé.'; md = 'cheer'; }
+      else if (hr >= 23 || hr < 5) { txt = 'Khuya rồi đó ' + first + '… học một xíu thôi rồi đi ngủ nha, ngủ đủ mới nhớ bài 💤'; md = 'sleepy'; }
+      else if (s.streak >= 7) { txt = '<b>' + s.streak + ' ngày liên tục</b>! ' + first + ' đang cháy quá trời, giữ lửa nha 🔥'; md = 'fire'; }
+      else if (s.streak >= 2) { txt = '<b>' + s.streak + ' ngày liên tục</b> rồi đó ' + first + '! Hôm nay học tiếp để giữ chuỗi nha'; md = 'cheer'; }
+      else if (SITE === 'toeic' && s.miniToday) { txt = 'Đề mini hôm nay xong rồi, ngầu ghê! Làm thêm một Part nữa không ' + first + '?'; md = 'cool'; }
+      else if (s.subs + s.nenAll === 0) { txt = 'Chào ' + first + '! Mới bắt đầu thì học một bài <b>Kiến thức nền</b> trước nha, chỉ 10 phút thôi.'; md = 'study'; }
+      else if (s.streak === 0 && s.ndays > 0) { txt = 'Hứ, mấy hôm nay ' + first + ' bỏ học đúng không? Vào làm đề mini 10 phút đi nè!'; md = 'pout'; }
+      else { txt = tips[new Date().getDate() % tips.length]; md = 'think'; }
+      cta.insertAdjacentHTML('beforebegin', buddy(txt + '<small class="mb-tap">(bấm vào mình thử xem)</small>', md));
     }
     var sh = document.querySelector('.hero');
-    if (SITE === 'summary' && sh && !sh.querySelector('.mbuddy')) sh.insertAdjacentHTML('beforeend', buddy('Đọc tóm tắt <b>trước buổi học</b> để nắm ý chính, học xong thì ôn bảng từ vựng bằng flashcard nha!', 'happy'));
+    if (SITE === 'summary' && sh && !sh.querySelector('.mbuddy')) sh.insertAdjacentHTML('beforeend', buddy('Đọc tóm tắt <b>trước buổi học</b> để nắm ý chính, học xong thì ôn bảng từ vựng bằng flashcard nha!', 'study'));
   }, 30);
 
   // ================= ảnh chia sẻ dạng story =================
