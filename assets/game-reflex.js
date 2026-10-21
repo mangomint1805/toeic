@@ -31,15 +31,15 @@
       '<button class="chip" data-m="read" aria-pressed="' + (mode === 'read') + '">👀 Đọc câu hỏi <small>khi không tiện bật loa</small></button></div>' +
       '<div class="best"><div><b>' + (B[mode] || 0) + '</b><span>điểm cao nhất</span></div><div><b>' + (B.streak || 0) + '</b><span>chuỗi đúng dài nhất</span></div><div><b>' + (B.games || 0) + '</b><span>ván đã chơi</span></div></div>' +
       '<p style="margin:16px 0 0"><button class="btn" id="go">▶ Bắt đầu</button></p>' +
-      '<p class="hint">Bắt đầu với <b>4 giây</b> mỗi câu (tính từ lúc nghe xong câu hỏi). Cứ đúng 3 câu liền thời gian giảm 0,25 giây, nhanh nhất 1,75 giây. Sai hoặc hết giờ mất 1 ❤ — có 3 ❤. ' + ITEMS.length + ' câu hỏi Part 2 lấy từ 10 đề ETS 2026.</p></div>';
+      '<p class="hint">Bắt đầu với <b>6 giây</b> mỗi câu (tính từ lúc nghe xong câu hỏi). Cứ đúng 3 câu liền thời gian giảm 0,25 giây, nhanh nhất 3 giây. Sai hoặc hết giờ mất 1 ❤ — có 3 ❤. ' + ITEMS.length + ' câu hỏi Part 2 lấy từ 10 đề ETS 2026.</p></div>';
     [].forEach.call(main.querySelectorAll('[data-m]'), function (b) { b.onclick = function () { mode = b.dataset.m; put(KEY + '.mode', mode); menu(); }; });
     document.getElementById('go').onclick = play;
   }
 
   function play() {
     var deck = ITEMS.slice().sort(function () { return Math.random() - .5; });
-    var hp = 3, score = 0, streak = 0, bestStreak = 0, win = 4, ok3 = 0, idx = 0, wrong = [], timer = 0, t0 = 0, running = true, answered = false;
-    main.innerHTML = '<div class="hud"><span id="hp"></span><span>⭐ <span id="sc">0</span></span><span>🔥 <span id="st">0</span></span><span class="sp">⚡ <span id="wn">4.00</span>s / câu</span></div>' +
+    var hp = 3, score = 0, streak = 0, bestStreak = 0, win = 6, ok3 = 0, idx = 0, wrong = [], timer = 0, t0 = 0, running = true, answered = false;
+    main.innerHTML = '<div class="hud"><span id="hp"></span><span>⭐ <span id="sc">0</span></span><span>🔥 <span id="st">0</span></span><span class="sp">⚡ <span id="wn">6.00</span>s / câu</span></div>' +
       '<div class="stage"><div class="ring"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" id="fg" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="0"/></svg><b id="tm">–</b></div>' +
       '<div class="ear" id="ear"></div><div class="qtxt" id="qt"></div><div class="ops" id="ops"></div>' +
       '<p style="margin:12px 0 0"><button class="btn alt" id="quit" type="button">Kết thúc</button></p></div>';
@@ -58,7 +58,7 @@
       ops.className = 'ops wait';
       ops.innerHTML = it.o.map(function (o, i) { return '<button class="op" data-l="' + L3[i] + '" disabled><span class="L">' + L3[i] + '</span><span>' + esc(o) + '</span></button>'; }).join('');
       [].forEach.call(ops.querySelectorAll('.op'), function (b) { b.onclick = function () { pick(it, b.dataset.l); }; });
-      if (mode === 'read') { qt.innerHTML = esc(it.q); ear.textContent = ''; setTimeout(function () { go(it, 1.5); }, 350); }
+      if (mode === 'read') { qt.innerHTML = esc(it.q); ear.textContent = ''; setTimeout(function () { go(it, 2); }, 350); }
       else { qt.innerHTML = ''; ear.textContent = '🎧 Đang nghe câu hỏi…'; playSeg(it, function () { if (running) go(it, 0); }); }
     }
     function go(it, extra) {
@@ -88,7 +88,7 @@
         streak++; bestStreak = Math.max(bestStreak, streak); ok3++;
         score += 10 + Math.max(0, Math.round((win - rt) * 5)) + Math.min(10, streak);
         ear.textContent = '✓ Chuẩn! ' + rt.toFixed(1) + ' giây';
-        if (ok3 >= 3) { ok3 = 0; win = Math.max(1.75, win - .25); }
+        if (ok3 >= 3) { ok3 = 0; win = Math.max(3, win - .25); }
       } else {
         hp--; streak = 0; ok3 = 0; wrong.push({ it: it, l: l });
         ear.textContent = l ? '✗ Chưa đúng — đáp án ' + it.a : '⌛ Hết giờ — đáp án ' + it.a;
