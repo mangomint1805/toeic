@@ -102,7 +102,7 @@
         last.h[key] = hash(val);
       });
       var done = function () {
-        last.at = Date.now(); put('mt.sync.last', last); lastErr = ''; redraw();
+        last.at = Date.now(); put('mt.sync.last', last); lastErr = ''; redraw(); pushBoard();
         if (applied && why !== 'push') {
           var fl = 'mt-acc-reloaded';
           if (!window.MEXAM && !sessionStorage.getItem(fl)) { try { sessionStorage.setItem(fl, '1'); } catch (e) {} toast('check', 'Đã lấy tiến độ từ tài khoản', 'Trang sẽ tải lại để hiện dữ liệu mới.'); setTimeout(function () { location.reload(); }, 1200); }
@@ -118,6 +118,28 @@
     });
   }
 
+  // ---------- bảng xếp hạng tuần (chỉ khi học sinh bật) ----------
+  function dk(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  function week() { var d = new Date(), mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() + 6) % 7); return { mon: mon, wk: dk(mon) }; }
+  function weekPts() {
+    var a = J('mt.act', {}), w = week(), pts = 0, days = 0, per = [];
+    for (var i = 0; i < 7; i++) { var d = new Date(w.mon.getFullYear(), w.mon.getMonth(), w.mon.getDate() + i), n = a[dk(d)] || 0, p = n ? 20 + Math.min(40, n * 3) : 0; if (n) days++; pts += p; per.push(p); }
+    return { wk: w.wk, pts: pts, days: days, per: per };
+  }
+  function boardName() { var a = J('mt.acc', {}); return String((get('cam20.name') || '').trim() || a.name || 'Bạn học').slice(0, 40); }
+  function pushBoard(force) {
+    if (!USER || !FB || !FB.F) return Promise.resolve();
+    var F = FB.F, ref = F.doc(FB.db, 'board', USER.uid), on = get('mt.board.on') === '1';
+    if (!on) { if (get('mt.sync.board')) { del('mt.sync.board'); return F.deleteDoc(ref).catch(function () {}); } return Promise.resolve(); }
+    var w = weekPts(), lop = String(get('cam20.lop') || '').trim().slice(0, 40), sig = [w.wk, w.pts, w.days, boardName(), lop].join('|');
+    if (!force && get('mt.sync.board') === sig) return Promise.resolve();
+    return F.setDoc(ref, { name: boardName(), lop: lop, wk: w.wk, pts: w.pts, days: w.days, photo: (USER.photoURL || ''), at: F.serverTimestamp() }).then(function () { put('mt.sync.board', sig); }).catch(function (e) { console.error('board', e); });
+  }
+  function listBoard(wk) {
+    return loadDB().then(function () { var F = FB.F; return F.getDocs(F.query(F.collection(FB.db, 'board'), F.where('wk', '==', wk || week().wk))); })
+      .then(function (qs) { var L = []; qs.forEach(function (d) { var x = d.data(); x.me = USER && d.id === USER.uid; L.push(x); }); return L.sort(function (a, b) { return b.pts - a.pts || b.days - a.days; }); });
+  }
+
   // ---------- giao diện trong bảng ⚙ ----------
   var EL = null;
   function redraw() { if (EL && document.body.contains(EL)) render(EL); if (window.MACCPAINT) try { window.MACCPAINT(); } catch (e) {} }
@@ -128,6 +150,7 @@
       el.innerHTML = '<div class="ma-u">' + (a.photo ? '<img src="' + esc(a.photo) + '" alt="" referrerpolicy="no-referrer">' : '<span class="ma-av">' + esc((a.name || a.email || '?').charAt(0)) + '</span>') +
         '<span><b>' + esc(a.name || 'Tài khoản Google') + '</b><small>' + esc(a.email) + '</small></span></div>' +
         '<small class="ma-st">' + (lastErr ? '⚠ Chưa đồng bộ được (' + esc(lastErr) + ')' : last.at ? '☁ Đã đồng bộ lúc ' + fmt(last.at) : '☁ Đang đồng bộ…') + '</small>' +
+        '<div class="ma-l"><a href="/ho-so.html">👤 Hồ sơ của tôi</a><a href="/xep-hang.html">🏆 Xếp hạng tuần</a></div>' +
         '<div class="ma-b"><button type="button" data-a="sync">Đồng bộ ngay</button><button type="button" data-a="out">Đăng xuất</button></div>';
     } else if (inApp()) {
       var ios = /iPhone|iPad|iPod/i.test(navigator.userAgent), ext = extUrl();
@@ -187,6 +210,7 @@
     '.mp-acc .ma-u{display:flex;gap:9px;align-items:center}.mp-acc .ma-u img,.mp-acc .ma-av{width:34px;height:34px;border-radius:50%;flex:none;object-fit:cover}' +
     '.mp-acc .ma-av{display:flex;align-items:center;justify-content:center;background:#a8691a;color:#fff;font-weight:700}' +
     '.mp-acc .ma-u span{min-width:0}.mp-acc .ma-u b{display:block}.mp-acc .ma-u small{display:block;color:#7a7f88;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}' +
+    '.mp-acc .ma-l{display:flex;gap:6px;margin:0 0 6px}.mp-acc .ma-l a{flex:1;text-align:center;font:600 12.5px/1.2 "IBM Plex Sans",sans-serif;padding:8px 4px;border-radius:9px;background:#f6efe2;color:#6b4410;text-decoration:none}html[data-theme=dark] .mp-acc .ma-l a{background:#2a2e36;color:#f0c787}' +
     '.mp-acc .ma-b{display:flex;gap:6px}.mp-acc .ma-b.col{flex-direction:column}.mp-acc .ma-b button{flex:1;font:600 12.5px/1.2 "IBM Plex Sans",sans-serif;padding:8px;border:1.5px solid #ddd7c9;border-radius:9px;background:transparent;color:inherit;cursor:pointer}' +
     'html[data-theme=dark] .mp-acc{border-color:#373b44}html[data-theme=dark] .mp-acc .ma-st,html[data-theme=dark] .mp-acc .ma-u small{color:#9aa1ad}html[data-theme=dark] .mp-acc .ma-b button{border-color:#3a3f48}';
   document.head.appendChild(css);
@@ -196,6 +220,8 @@
     if (FB) return signIn();
     load().then(signIn, function () { toast('help', 'Chưa tải được đăng nhập', 'Kiểm tra mạng rồi thử lại nhé.'); });
   }
-  window.MACC = { render: render, load: load, preload: function () { load(); }, quick: quick, inApp: inApp, extUrl: extUrl, sync: function () { return sync('manual'); } };
+  window.MACC = { render: render, load: load, preload: function () { load(); }, quick: quick, inApp: inApp, extUrl: extUrl, sync: function () { return sync('manual'); },
+    user: function () { return USER; }, ready: function () { return load(); },
+    board: { week: week, pts: weekPts, push: function () { return (FB && FB.F ? Promise.resolve() : loadDB()).then(function () { return pushBoard(true); }); }, list: listBoard } };
   if (get('mt.acc')) load();
 })();

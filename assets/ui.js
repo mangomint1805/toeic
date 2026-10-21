@@ -6,6 +6,36 @@
   var TOEIC_URL = 'https://mangomint1805.github.io/toeic/';
   var EXAM = /\/(test\.html|test-\d+\.html|ws\.html)$/.test(location.pathname); window.MEXAM = EXAM;
   if (EXAM) document.documentElement.setAttribute('data-exam', '');
+  // đếm hoạt động học mỗi ngày (cho hồ sơ + bảng xếp hạng tuần): mt.act = { 'YYYY-MM-DD': số lần }
+  (function () {
+    if (Storage.prototype._mtAct) return; Storage.prototype._mtAct = 1;
+    var RE = /^(ets26\.hist|ets26\.mini\.days|cam\d+\.hist|cam\.ws\.hist|mt\.nen\.|vocab\.cards|mt\.marks\.|mt\.place\.|mt\.game\.)/, last = {}, set0 = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (k, v) {
+      set0.call(this, k, v);
+      try {
+        if (this !== window.localStorage || !RE.test(k)) return;
+        var now = Date.now(); if (last[k] && now - last[k] < 20000) return; last[k] = now;
+        var d = new Date(), key = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+        var a = JSON.parse(window.localStorage.getItem('mt.act') || '{}'); a[key] = (a[key] || 0) + 1;
+        var ks = Object.keys(a).sort(); while (ks.length > 400) delete a[ks.shift()];
+        set0.call(window.localStorage, 'mt.act', JSON.stringify(a));
+      } catch (e) {}
+    };
+  })();
+  // gắn email Google (nếu đã đăng nhập) vào mọi kết quả gửi về Google Sheet của thầy
+  if (window.fetch && !window.fetch._mt) {
+    var _f = window.fetch;
+    window.fetch = function (u, o) {
+      try {
+        if (o && o.method === 'POST' && typeof o.body === 'string' && /script\.google\.com\/macros/.test(String(u))) {
+          var acc = JSON.parse(localStorage.getItem('mt.acc') || 'null'), b = JSON.parse(o.body);
+          if (acc && acc.email && b && typeof b === 'object' && !b.email) { b.email = acc.email; o = Object.assign({}, o, { body: JSON.stringify(b) }); }
+        }
+      } catch (e) {}
+      return _f.call(this, u, o);
+    };
+    window.fetch._mt = 1;
+  }
   if (SITE === 'ielts' && /\/c\d+\/test-\d+\.html$/.test(location.pathname)) { var mks = document.createElement('script'); mks.src = ROOT + 'shared/marks-ielts.js?v=1'; document.head.appendChild(mks); }
   var P = {
     home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
@@ -320,7 +350,7 @@
 
 
   // ================= đăng nhập Google (acc.js, tải khi cần) =================
-  var ACC_SRC = ME.replace(/ui\.js.*$/, 'acc.js?v=3'), accQ = null;
+  var ACC_SRC = ME.replace(/ui\.js.*$/, 'acc.js?v=4'), accQ = null;
   function accLoad(cb) {
     if (window.MACC) return cb && cb();
     if (!accQ) { accQ = []; var sc = document.createElement('script'); sc.src = ACC_SRC; sc.onload = function () { accQ.splice(0).forEach(function (f) { f(); }); }; document.head.appendChild(sc); }
