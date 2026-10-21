@@ -46,7 +46,8 @@
     '.mlinks a:hover{background:#f6f1e7;color:#6b4410}' +
     '.mlinks a[aria-current=page]{background:#f2e2c4;color:#6b4410}' +
     '.mlinks a:focus-visible,.mbrand:focus-visible{outline:3px solid #f2c879;outline-offset:2px}' +
-    'body.has-nav .back{display:none}' +
+    'body.has-nav .back{display:none}.mbrand,.mlinks a{white-space:nowrap}' +
+    '@media (min-width:761px) and (max-width:1100px){.mnav .in{gap:10px;padding:10px 14px}.mlinks{gap:0}.mlinks a{padding:9px 8px;font-size:13.5px}.mlinks a .ic{display:none}}' +
     '@media (max-width:760px){.mlinks{position:fixed;left:0;right:0;bottom:0;margin:0;background:#fff;border-top:1px solid #e6e0d3;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom));gap:0;box-shadow:0 -6px 20px rgba(0,0,0,.05)}' +
     '.mlinks a{flex-direction:column;gap:3px;font-size:11px;padding:6px 4px;flex:1;text-align:center}.mlinks a .ic{width:22px;height:22px}' +
     'body.has-nav{padding-bottom:70px}.mnav .in{padding:9px 16px}.mnav{backdrop-filter:none;background:#fff}}';
@@ -121,7 +122,7 @@
     var m = document.querySelector('meta[name=color-scheme]'); if (m) m.setAttribute('content', t === 'dark' ? 'dark' : 'light only');
     [].forEach.call(document.querySelectorAll('.mtheme'), function (b) { b.innerHTML = icon(t === 'dark' ? 'sun' : 'moon'); b.setAttribute('aria-label', t === 'dark' ? 'Chuyển sang giao diện sáng' : 'Chuyển sang giao diện tối'); b.title = b.getAttribute('aria-label'); });
   }
-  function toggleTheme() { var t = theme() === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('mt.theme', t); } catch (e) {} applyTheme(t, true); }
+  function toggleTheme() { if (J('mt.skin', '') === 'scifi') { S('mt.skin', ''); document.documentElement.removeAttribute('data-skin'); try { localStorage.setItem('mt.theme', 'dark'); } catch (e) {} } var t = (document.documentElement.getAttribute('data-theme') || theme()) === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('mt.theme', t); } catch (e) {} applyTheme(t, true); }
   // ---------- góp ý / báo lỗi ----------
   function feedback() {
     var types = ['Lỗi đáp án', 'Lỗi audio', 'Lỗi hiển thị', 'Góp ý khác'], sel = types[0];
@@ -822,14 +823,17 @@
     'html[data-skin] .mlinks a[aria-current=page]{background:var(--brand-soft);color:var(--brand-ink)}html[data-skin] .mbrand b em,html[data-skin] .mbrand small{color:var(--brand-ink)}' +
     'html[data-skin] :is(.kicker,.hello .kicker,.mp-todo h4,.rp-total small,h2.sec + *){color:var(--brand)}' +
     // Idol
-    'html[data-skin=idol]{--paper:#f4fbfb;--brand:#12a4a3;--brand-soft:#d3f3f1;--brand-ink:#0a6766;--amber:#12a4a3;--amber-soft:#d3f3f1;--amber-ink:#0a6766;--line:#d8ecea}' +
+    'html[data-skin=idol]:not([data-theme=dark]){--paper:#f4fbfb;--brand:#12a4a3;--brand-soft:#d3f3f1;--brand-ink:#0a6766;--amber:#12a4a3;--amber-soft:#d3f3f1;--amber-ink:#0a6766;--line:#d8ecea}' +
     'html[data-skin=idol] .mdeco{background-image:' + pat('width="60" height="60" viewBox="0 0 60 60"><path d="M15 8l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#12a4a3" opacity=".22"/><path d="M45 38v-10l8-2v10M45 38a3 3 0 1 1-1-1M53 36a3 3 0 1 1-1-1" stroke="#ff5fa2" stroke-width="1.8" fill="none" opacity=".35"/>') + ';background-size:60px 60px}' +
     'html[data-skin=idol] .mnav{border-bottom:2px solid #ff9cc8}html[data-skin=idol] .mb-bub b,html[data-skin=idol] h1 em{color:#e0559a!important}' +
     // Y2K
-    'html[data-skin=y2k]{--paper:#fff5fb;--card:#fff;--brand:#e0559a;--brand-soft:#ffe0f0;--brand-ink:#9b2c66;--amber:#e0559a;--amber-soft:#ffe0f0;--amber-ink:#9b2c66;--line:#f0c9e6}' +
+    'html[data-skin=y2k]:not([data-theme=dark]){--paper:#fff5fb;--card:#fff;--brand:#e0559a;--brand-soft:#ffe0f0;--brand-ink:#9b2c66;--amber:#e0559a;--amber-soft:#ffe0f0;--amber-ink:#9b2c66;--line:#f0c9e6}' +
     'html[data-skin=y2k] .mdeco{background-image:' + pat('width="32" height="32" viewBox="0 0 32 32"><rect width="16" height="16" fill="#e0559a" opacity=".07"/><rect x="16" y="16" width="16" height="16" fill="#8b5cf6" opacity=".07"/><path d="M22 6h2v1h1v-1h2v1h1v3h-1v1h-1v1h-1v1h-1v-1h-1v-1h-1v-1h-1v-3h1z" fill="#e0559a" opacity=".35"/>') + ';background-size:32px 32px}' +
     'html[data-skin=y2k] :is(.panel,.test,.tool,.mplan,.lesson,.book,.stat,.report,.sec .card,.mb-bub,.doc,.box,.mode){border:2px solid #d9a6e6!important;box-shadow:4px 4px 0 #c7a6f0!important;border-radius:10px!important}' +
-    'html[data-skin=y2k] .mnav{background:linear-gradient(90deg,#ffd6ec,#e8dcff)!important;border-bottom:2px solid #c7a6f0}html[data-skin=y2k] h1,html[data-skin=y2k] .sec h2{text-shadow:2px 2px 0 #ffc2e2}' +
+    'html[data-skin=y2k]:not([data-theme=dark]) .mnav{background:linear-gradient(90deg,#ffd6ec,#e8dcff)!important}html[data-skin=y2k] .mnav{border-bottom:2px solid #c7a6f0}html[data-skin=y2k][data-theme=dark] .mnav{background:linear-gradient(90deg,#2a1830,#221a3a)!important;border-bottom-color:#6a4a8a}html[data-skin=y2k]:not([data-theme=dark]) h1,html[data-skin=y2k]:not([data-theme=dark]) .sec h2{text-shadow:2px 2px 0 #ffc2e2}html[data-skin=y2k][data-theme=dark] h1{text-shadow:2px 2px 0 #6a2a50}' +
+    'html[data-skin=idol][data-theme=dark]{--paper:#0e1718;--card:#152224;--panel2:#1b2c2e;--line:#24393b;--line2:#2c4649;--brand:#3fd0cc;--brand-soft:#123a3a;--brand-ink:#8af0ec;--amber:#3fd0cc;--amber-soft:#123a3a;--amber-ink:#8af0ec}' +
+    'html[data-skin=y2k][data-theme=dark]{--paper:#170f1c;--card:#221729;--panel2:#2b1d33;--line:#3a2846;--line2:#4a3358;--brand:#ff7eb6;--brand-soft:#3d1a30;--brand-ink:#ffb3d6;--amber:#ff7eb6;--amber-soft:#3d1a30;--amber-ink:#ffb3d6}' +
+    'html[data-skin=y2k][data-theme=dark] :is(.panel,.test,.tool,.mplan,.lesson,.book,.stat,.report,.mb-bub,.doc,.box,.mode){border-color:#6a4a8a!important;box-shadow:4px 4px 0 #4a2f6a!important}' +
     // Băng hoại
     'html[data-skin=scifi][data-theme=dark]{--paper:#0a1024;--card:#111a35;--panel2:#18234a;--line:#24345f;--line2:#2e4377;--ink:#e6ecff;--dim:#93a3cf;--brand:#ffd23f;--brand-soft:#2c2a4a;--brand-ink:#ffe27a;--amber:#ffd23f;--amber-soft:#2c2a4a;--amber-ink:#ffe27a;--ok:#4ad7ff;--ok-soft:#10324d;--bad:#ff5fa8;--bad-soft:#3d1838;--teal:#4ad7ff;--teal-soft:#10324d}' +
     'html[data-skin=scifi] body{background:radial-gradient(1200px 600px at 85% -10%,rgba(176,76,255,.22),transparent 60%),radial-gradient(900px 500px at -10% 10%,rgba(74,215,255,.16),transparent 60%)!important;background-attachment:fixed!important}' +
