@@ -152,7 +152,7 @@ html[data-theme=dark] .ex,html[data-theme=dark] .exp{background:var(--panel2)!im
     [].forEach.call(app.querySelectorAll('.q'),function(qd){
       var k=+qd.getAttribute('data-k'), q=l.quiz[k];
       [].forEach.call(qd.querySelectorAll('.opts button'),function(b){ b.onclick=function(){
-        var j=+b.getAttribute('data-j'); ans[k]=j===q.a;
+        var j=+b.getAttribute('data-j'); ans[k]=j===q.a; if(window.MCOMBO) MCOMBO(ans[k],b);
         [].forEach.call(qd.querySelectorAll('.opts button'),function(x){ x.disabled=true; var jj=+x.getAttribute('data-j'); if(jj===q.a) x.classList.add('right'); else if(jj===j) x.classList.add('wrong'); });
         var e=document.createElement('div'); e.className='exp'; e.innerHTML='<b style="color:'+(ans[k]?'var(--ok)':'var(--bad)')+'">'+(ans[k]?'Chính xác!':'Chưa đúng.')+'</b>'+esc(q.ex); qd.appendChild(e);
         if(Object.keys(ans).length===l.quiz.length) finish();
