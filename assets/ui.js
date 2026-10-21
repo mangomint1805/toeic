@@ -114,7 +114,8 @@
   P.moon = '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>';
   P.sun = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
   P.msg = '<path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/>';
-  function theme() { try { return localStorage.getItem('mt.theme') || 'light'; } catch (e) { return 'light'; } }
+  function theme() { return 'light'; }
+  try { if (localStorage.getItem('mt.theme') === 'dark') localStorage.setItem('mt.theme', 'light'); } catch (e) {}
   function applyTheme(t, anim) {
     var r = document.documentElement;
     if (anim) { r.classList.add('theme-anim'); setTimeout(function () { r.classList.remove('theme-anim'); }, 450); }
@@ -291,12 +292,11 @@
     function draw() {
       var v = fs(), dk = theme() === 'dark';
       p.innerHTML = '<div class="mp-row"><span>Cỡ chữ</span><div class="mp-fs"><button type="button" data-d="-1" aria-label="Chữ nhỏ hơn"' + (v === FS[0] ? ' disabled' : '') + '>A−</button><b>' + Math.round(v * 100) + '%</b><button type="button" data-d="1" aria-label="Chữ to hơn"' + (v === FS[FS.length - 1] ? ' disabled' : '') + '>A+</button></div></div>' +
-        '<div class="mp-row"><span>Giao diện tối</span><button type="button" class="mp-sw" role="switch" aria-checked="' + dk + '"><i></i></button></div>' +
+
         '<div class="mp-row"><span>Phong cách<small class="mp-skn">' + SKINS.filter(function (k) { return k[0] === skin(); })[0][1] + '</small></span><div class="mp-skins">' + SKINS.map(function (k) { return '<button type="button" data-k="' + k[0] + '" title="' + k[1] + '" aria-label="Phong cách ' + k[1] + '" aria-pressed="' + (skin() === k[0]) + '" style="background:' + k[2] + '"></button>'; }).join('') + '</div></div>' +
         '<button type="button" class="mp-tour">' + icon('help') + ' Xem lại hướng dẫn</button>';
       [].forEach.call(p.querySelectorAll('.mp-skins button'), function (b) { b.onclick = function () { S('mt.skin', b.getAttribute('data-k')); applySkin(skin()); draw(); }; });
       [].forEach.call(p.querySelectorAll('.mp-fs button'), function (b) { b.onclick = function () { var i = FS.indexOf(fs()) + (+b.getAttribute('data-d')); i = Math.max(0, Math.min(FS.length - 1, i)); S('mt.fs', FS[i]); applyFs(FS[i]); draw(); }; });
-      p.querySelector('.mp-sw').onclick = function () { toggleTheme(); draw(); };
       p.querySelector('.mp-tour').onclick = function () { p.remove(); tour(true); };
     }
     draw(); document.body.appendChild(p); p.addEventListener('click', function (e) { e.stopPropagation(); });
@@ -314,7 +314,7 @@
     ['.mlinks a[href$="mini.html"]', 'Đề mini 10 phút', 'Mỗi ngày làm một đề mini để giữ chuỗi ngày học và mở huy hiệu.'],
     ['#plan', 'Đếm ngược ngày thi', 'Nhập ngày thi, web sẽ đếm ngược và gợi ý hôm nay nên học gì.'],
     ['#tests', 'Bộ 10 đề thi thử', 'Làm cả đề có giờ như thi thật, hoặc luyện riêng từng Part.'],
-    ['.mset', 'Cỡ chữ và giao diện tối', 'Chữ nhỏ quá? Bấm vào đây để phóng to, bật giao diện tối hoặc xem lại hướng dẫn này.'],
+    ['.mset', 'Cỡ chữ và phong cách', 'Chữ nhỏ quá? Bấm vào đây để phóng to, đổi phong cách giao diện hoặc xem lại hướng dẫn này.'],
     ['.mfb', 'Thấy lỗi thì báo thầy', 'Đáp án sai, audio không chạy, trang bị lỗi... bấm vào đây gửi cho thầy nhé.']
   ] : [
     [null, 'Chào bạn 👋', 'Đây là web luyện IELTS Cambridge của lớp thầy Minto. Mình chỉ nhanh mấy chỗ quan trọng nhé, chưa tới 1 phút.'],
@@ -322,7 +322,7 @@
     ['.mlinks a[href$="nen.html"]', 'Mới học? Bắt đầu ở đây', 'Mục Nền tảng giải thích cách thi, mẹo từng kỹ năng và ngữ pháp cơ bản bằng tiếng Việt, có bài tập nhỏ.'],
     ['#plan', 'Đếm ngược ngày thi', 'Nhập ngày thi, web sẽ đếm ngược và gợi ý hôm nay nên học gì.'],
     ['#books', 'Chọn bộ đề', 'Mỗi bộ Cambridge có 4 test đủ Listening, Reading, Writing và Speaking.'],
-    ['.mset', 'Cỡ chữ và giao diện tối', 'Chữ nhỏ quá? Bấm vào đây để phóng to, bật giao diện tối hoặc xem lại hướng dẫn này.'],
+    ['.mset', 'Cỡ chữ và phong cách', 'Chữ nhỏ quá? Bấm vào đây để phóng to, đổi phong cách giao diện hoặc xem lại hướng dẫn này.'],
     ['.mfb', 'Thấy lỗi thì báo thầy', 'Đáp án sai, audio không chạy, trang bị lỗi... bấm vào đây gửi cho thầy nhé.']
   ];
   function vis(el) { if (!el) return false; var r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; }
@@ -474,13 +474,37 @@
   function buddy(text, mood, cls) { return '<div class="mbuddy ' + (cls || '') + '">' + mascot(mood) + '<div class="mb-bub">' + text + '</div></div>'; }
   window.MBUDDY = buddy;
   var SAYS = { happy: 'Hì hì 😊', cheer: 'Yeah! Cố lên nào!', love: 'Thương bạn ghê á 💛', wink: 'Bí mật nha 😉', party: 'Quẩy thôi! 🎉', fire: 'Học như chưa từng được học! 🔥', cool: 'Ngầu chưa? 😎', study: 'Đọc thêm một bài nữa nha 📖', sing: 'La la la~ 🎵', wow: 'Ồ wow!', think: 'Hmm… câu này khó nhỉ?', sleepy: 'Buồn ngủ quá… 💤', pout: 'Hứ! Đừng chọc mình nữa!', oops: 'Ui da…', cry: 'Huhu bị chọc hoài 😭' };
+
+  // ================= lời thoại bé Xoài theo phong cách =================
+  var PERSONAS = {
+    '': { me: 'Xoài Bạc Hà 🥭🌿', greet: 'Chào bạn! Mình là <b>Xoài Bạc Hà</b> 🥭🌿 Nhập tên ở khung bên cạnh để thầy nhận được kết quả nhé.', late: 'Khuya rồi đó {n}… học một xíu thôi rồi đi ngủ nha, ngủ đủ mới nhớ bài 💤', fire: '<b>{s} ngày liên tục</b>! {n} đang cháy quá trời, giữ lửa nha 🔥', streak: '<b>{s} ngày liên tục</b> rồi đó {n}! Hôm nay học tiếp để giữ chuỗi nha', mini: 'Đề mini hôm nay xong rồi, ngầu ghê! Làm thêm một Part nữa không {n}?', newbie: 'Chào {n}! Mới bắt đầu thì học một bài <b>Kiến thức nền</b> trước nha, chỉ 10 phút thôi.', lapsed: 'Hứ, mấy hôm nay {n} bỏ học đúng không? Vào làm đề mini 10 phút đi nè!', tip: 'Mẹo:', summary: 'Đọc tóm tắt <b>trước buổi học</b> để nắm ý chính, học xong thì ôn bảng từ vựng bằng flashcard nha!',
+      says: {} },
+    idol: { me: 'Xoài idol 🎤', greet: 'Chào fan mới~ ♪ Mình là <b>Xoài idol</b> 🎤 Ghi tên vào bên cạnh để thầy biết bạn đến xem show nha!', late: 'Khuya rồi {n} ơi~ idol cũng phải đi ngủ giữ giọng nè, học xíu rồi ngủ nha ♪', fire: '<b>{s} ngày liên tục</b>! {n} là fan cứng nhất của Xoài đó ✨🎤', streak: '<b>{s} ngày liên tục</b> ♪ {n} giữ nhịp đều như bài hát luôn, hôm nay tiếp tục nha!', mini: 'Màn "luyện thanh" hôm nay xong rồi, xuất sắc! Encore thêm một Part không {n}? 🎶', newbie: 'Chào {n}~ buổi tập đầu tiên thì khởi động bằng một bài <b>Kiến thức nền</b> nha ♪', lapsed: 'Mấy hôm nay {n} vắng mặt ở buổi tập đó nha~ quay lại sân khấu với Xoài đi! 🎤', tip: 'Bí kíp sân khấu:', summary: 'Ôn bài trước buổi học như tập trước khi lên sân khấu nha~ ♪ Học xong nhớ ôn từ vựng bằng flashcard!',
+      says: { happy: 'Cảm ơn đã đến xem show~ ♪', cheer: 'Cùng hát nào! ♪♪', love: 'Yêu fan nhất luôn 💖', wink: 'Fan service nè 😉✨', party: 'Concert bắt đầu! 🎉', cool: 'Idol ngầu nhất là ai? Là Xoài! 😎', sing: 'La la la~ nốt cao nè 🎶', wow: 'Ồ, khán giả đông quá!', think: 'Quên lời bài hát rồi… à không, quên từ vựng 😅', sleepy: 'Tập cả ngày mệt quá… 💤', pout: 'Hứ! Không được chọc idol!', oops: 'Lỡ nhịp mất rồi…', cry: 'Huhu fan bắt nạt Xoài 😭' } },
+    y2k: { me: 'Xoài thiên thần 👼', greet: 'Hellooo~ chào mừng đến kênh của <b>Xoài thiên thần</b> 👼💕 Gõ tên bên cạnh để thầy biết bạn đã ghé nha!', late: '{n} ơi khuya rồi á~ thiên thần cũng cần ngủ đẹp nè, học xíu rồi off nha 🌙💕', fire: '<b>{s} ngày liên tục</b> 💕 {n} là viewer chăm nhất kênh luôn, đỉnh quá trời!', streak: '<b>{s} ngày liên tục</b>~ {n} đáng yêu ghê, hôm nay mình học tiếp nha ✨', mini: 'Hoàn thành thử thách hôm nay rồi nè, cute quá đi 💕 Làm thêm một Part không {n}?', newbie: 'Hi {n}~ người mới thì xem một bài <b>Kiến thức nền</b> trước nha, chỉ 10 phút thôi 💕', lapsed: 'Hông thấy {n} ghé kênh mấy hôm nay luôn á 🥺 Vào làm đề mini với Xoài đi mà~', tip: 'Tip nhỏ xinh:', summary: 'Đọc tóm tắt trước buổi học nha~ 💕 Học xong thì lật flashcard ôn từ vựng là hết sảy!',
+      says: { happy: 'Hihi chào mừng nha~ 💕', cheer: 'Yay yay! ✨', love: 'Thương bạn nhiều lắm á 💖💖', wink: 'Bí mật của thiên thần nè 😉', party: 'Tiệc nhỏ xinh bắt đầu! 🎀', cool: 'Thiên thần cũng biết ngầu nha 😎', sing: 'Lalala~ 🎵💕', wow: 'OMG thật hả!?', think: 'Hmm… để thiên thần nghĩ xíu 💭', sleepy: 'Buồn ngủ ghê… nhưng vẫn cute 💤', pout: 'Hứ! Thiên thần dỗi rồi á 😤', oops: 'Ơ… lỡ tay rồi 🥺', cry: 'Huhu đừng chọc nữa mà 😭💕' } },
+    scifi: { me: 'Xoài chiến binh ⚔️', greet: 'Chiến binh mới đã kết nối! Mình là <b>Xoài chiến binh</b> ⚔️ Đăng ký tên bên cạnh để thầy nhận báo cáo nhiệm vụ.', late: 'Đã quá nửa đêm, chiến binh {n}. Nạp năng lượng bằng giấc ngủ rồi mai xuất kích tiếp 🌙', fire: '<b>Chuỗi {s} ngày</b>! Năng lượng của {n} đang ở mức tối đa, giữ vững phong độ! 🔥', streak: '<b>Chuỗi {s} ngày</b> chiến đấu liên tục. {n}, nhiệm vụ hôm nay đang chờ!', mini: 'Nhiệm vụ hằng ngày: <b>hoàn thành</b> ✓ Muốn khiêu chiến thêm một Part không, {n}?', newbie: 'Tân binh {n}, huấn luyện cơ bản trước nhé: một bài <b>Kiến thức nền</b>, 10 phút.', lapsed: 'Chiến binh {n} đã vắng mặt nhiều ngày. Quay lại chiến trường với đề mini ngay! ⚔️', tip: 'Dữ liệu chiến thuật:', summary: 'Nạp dữ liệu trước trận đánh: đọc tóm tắt trước buổi học, sau đó luyện từ vựng bằng flashcard!',
+      says: { happy: 'Sẵn sàng chiến đấu!', cheer: 'Xuất kích! ⚔️', love: 'Đồng đội tốt nhất là bạn 💛', wink: 'Chiến thuật bí mật 😉', party: 'Nhiệm vụ hoàn thành! 🎉', fire: 'Năng lượng 100%! 🔥', cool: 'Không gì cản nổi ta 😎', study: 'Đang phân tích dữ liệu… 📖', sing: 'Khúc ca chiến thắng~ 🎵', wow: 'Phát hiện mục tiêu!', think: 'Đang tính toán đường đánh…', sleepy: 'Năng lượng thấp… cần sạc 💤', pout: 'Đừng cản đường chiến binh!', oops: 'Trúng đòn rồi…', cry: 'Rút lui chiến thuật… 😭' } }
+  };
+  function PERSONA() { return PERSONAS[document.documentElement.getAttribute('data-skin') || ''] || PERSONAS['']; }
+  function homeLine(s, nm, first, tips) {
+    var P = PERSONA(), hr = new Date().getHours(), f = function (t) { return t.replace(/\{n\}/g, first).replace(/\{s\}/g, s.streak); };
+    if (!nm) return [P.greet, 'cheer'];
+    if (hr >= 23 || hr < 5) return [f(P.late), 'sleepy'];
+    if (s.streak >= 7) return [f(P.fire), 'fire'];
+    if (s.streak >= 2) return [f(P.streak), 'cheer'];
+    if (SITE === 'toeic' && s.miniToday) return [f(P.mini), 'cool'];
+    if (s.subs + s.nenAll === 0) return [f(P.newbie), 'study'];
+    if (s.streak === 0 && s.ndays > 0) return [f(P.lapsed), 'pout'];
+    return [tips[new Date().getDate() % tips.length].replace(/^Mẹo:/, P.tip), 'think'];
+  }
   var taps = 0;
   document.addEventListener('click', function (e) {
     var sv = e.target.closest && e.target.closest('.mbuddy .mmint'); if (!sv) return;
     taps++; var ms = window.MMOODS, m = taps >= 6 ? (taps >= 9 ? 'cry' : 'pout') : ms[Math.floor(Math.random() * 11)];
     if (taps >= 10) taps = 0;
     var wrap = sv.parentNode, bub = wrap.querySelector('.mb-bub'); if (!wrap.dataset.orig && bub) wrap.dataset.orig = bub.innerHTML;
-    sv.outerHTML = mascot(m, 'pop'); if (bub) bub.innerHTML = SAYS[m] || 'Hì';
+    sv.outerHTML = mascot(m, 'pop'); if (bub) bub.innerHTML = PERSONA().says[m] || SAYS[m] || 'Hì';
     clearTimeout(wrap._t); wrap._t = setTimeout(function () { if (bub && wrap.dataset.orig) bub.innerHTML = wrap.dataset.orig; }, 3500);
   });
 
@@ -546,19 +570,12 @@
       var first = nm ? nm.trim().split(/\s+/).pop() : '';
       var tips = SITE === 'toeic' ? ['Mẹo: Part 2 hay có bẫy <b>từ phát âm giống</b> câu hỏi. Nghe thấy lặp từ thì cẩn thận nha!', 'Mẹo: Part 5 nhìn đáp án trước, nếu <b>cùng gốc từ</b> thì là câu từ loại, làm nhanh lắm!', 'Mẹo: Part 7 đọc <b>câu hỏi trước</b> rồi mới tìm trong bài, đỡ mất giờ hơn nhiều.', 'Mẹo: nghe lại câu sai ở tốc độ <b>0.75x</b> rồi chép chính tả, nhớ lâu cực!']
         : ['Mẹo: Listening luôn đọc trước câu hỏi và <b>đoán loại từ</b> cần điền nha.', 'Mẹo: phân biệt <b>FALSE</b> (trái ngược) và <b>NOT GIVEN</b> (không nhắc tới) là ăn điểm Reading đó!', 'Mẹo: Writing Task 1 nhớ viết <b>overview</b>, thiếu là khó qua band 6 lắm.', 'Mẹo: Speaking Part 1 trả lời <b>2–3 câu</b>: ý chính + lý do + ví dụ.'];
-      var txt, md = 'happy', hr = new Date().getHours();
-      if (!nm) { txt = 'Chào bạn! Mình là <b>Xoài Bạc Hà</b> 🥭🌿 Nhập tên ở khung bên cạnh để thầy nhận được kết quả nhé.'; md = 'cheer'; }
-      else if (hr >= 23 || hr < 5) { txt = 'Khuya rồi đó ' + first + '… học một xíu thôi rồi đi ngủ nha, ngủ đủ mới nhớ bài 💤'; md = 'sleepy'; }
-      else if (s.streak >= 7) { txt = '<b>' + s.streak + ' ngày liên tục</b>! ' + first + ' đang cháy quá trời, giữ lửa nha 🔥'; md = 'fire'; }
-      else if (s.streak >= 2) { txt = '<b>' + s.streak + ' ngày liên tục</b> rồi đó ' + first + '! Hôm nay học tiếp để giữ chuỗi nha'; md = 'cheer'; }
-      else if (SITE === 'toeic' && s.miniToday) { txt = 'Đề mini hôm nay xong rồi, ngầu ghê! Làm thêm một Part nữa không ' + first + '?'; md = 'cool'; }
-      else if (s.subs + s.nenAll === 0) { txt = 'Chào ' + first + '! Mới bắt đầu thì học một bài <b>Kiến thức nền</b> trước nha, chỉ 10 phút thôi.'; md = 'study'; }
-      else if (s.streak === 0 && s.ndays > 0) { txt = 'Hứ, mấy hôm nay ' + first + ' bỏ học đúng không? Vào làm đề mini 10 phút đi nè!'; md = 'pout'; }
-      else { txt = tips[new Date().getDate() % tips.length]; md = 'think'; }
-      cta.insertAdjacentHTML('beforebegin', buddy(txt + '<small class="mb-tap">(bấm vào mình thử xem)</small>', md));
+      var hl = homeLine(s, nm, first, tips), txt = hl[0], md = hl[1];
+      cta.insertAdjacentHTML('beforebegin', buddy(txt + '<small class="mb-tap">(bấm vào mình thử xem)</small>', md, 'mb-home'));
+      window._mhome = function () { var b2 = document.querySelector('.mb-home'); if (!b2) return; var h2 = homeLine(stats(), nm, first, tips); var bub = b2.querySelector('.mb-bub'); bub.innerHTML = h2[0] + '<small class="mb-tap">(bấm vào mình thử xem)</small>'; b2.dataset.orig = bub.innerHTML; var sv = b2.querySelector('.mmint'); if (sv) sv.outerHTML = mascot(h2[1], 'pop'); };
     }
     var sh = document.querySelector('.hero');
-    if (SITE === 'summary' && sh && !sh.querySelector('.mbuddy')) sh.insertAdjacentHTML('beforeend', buddy('Đọc tóm tắt <b>trước buổi học</b> để nắm ý chính, học xong thì ôn bảng từ vựng bằng flashcard nha!', 'study'));
+    if (SITE === 'summary' && sh && !sh.querySelector('.mbuddy')) sh.insertAdjacentHTML('beforeend', buddy(PERSONA().summary, 'study'));
   }, 30);
 
   // ================= ảnh chia sẻ dạng story =================
@@ -729,7 +746,7 @@
   // ================= bộ giao diện theo phong cách =================
   var SKINS = [['', 'Xoài', '#a8691a'], ['idol', 'Hành baro', '#12a4a3'], ['y2k', 'Thiên thần', '#e0559a'], ['scifi', 'Băng hoại', 'linear-gradient(135deg,#4ad7ff,#b04cff)']];
   function skin() { var v = J('mt.skin', ''); return SKINS.some(function (k) { return k[0] === v; }) ? v : ''; }
-  function applySkin(v) { var r = document.documentElement; if (v) r.setAttribute('data-skin', v); else r.removeAttribute('data-skin'); [].forEach.call(document.querySelectorAll('.mbuddy .mmint'), function (m) { m.outerHTML = mascot('cheer', 'pop'); }); if (v === 'scifi') applyTheme('dark', false); else applyTheme(theme(), false); }
+  function applySkin(v) { var r = document.documentElement; if (v) r.setAttribute('data-skin', v); else r.removeAttribute('data-skin'); [].forEach.call(document.querySelectorAll('.mbuddy:not(.mb-home) .mmint'), function (m) { m.outerHTML = mascot('cheer', 'pop'); }); if (window._mhome) window._mhome(); if (v === 'scifi') applyTheme('dark', false); else applyTheme(theme(), false); }
 
   // ================= CSS cho các phần trên =================
   var st3 = document.createElement('style');
@@ -817,7 +834,7 @@
     '@keyframes mcb{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}15%{opacity:1;transform:translate(-50%,0) scale(1.15)}30%{transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-40px)}}' +
     '@media (prefers-reduced-motion:reduce){.mcombo{animation:none;opacity:1}}' +
     // phong cách
-    '.mp-skn{display:block;font-weight:500;font-size:12px;color:var(--dim,#8a8f98)}.mp-skins{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.mp-skins button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 3px #fff}.mp-skins button[aria-pressed=true]{border-color:var(--ink,#1e232b)}' +
+    '.mp-skn{display:block;font-weight:500;font-size:12px;color:var(--dim,#8a8f98)}.mp-skins{display:flex;gap:6px;flex-wrap:nowrap;justify-content:flex-end}.mp-skins button{width:30px;height:30px;border-radius:50%;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 3px #fff}.mp-skins button[aria-pressed=true]{border-color:var(--ink,#1e232b)}' +
     '.mp-gacha{margin-top:6px;width:100%;display:flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;padding:10px;font:700 13.5px/1 "IBM Plex Sans",sans-serif;color:#fff;background:linear-gradient(135deg,#ff8a3d,#e0559a);cursor:pointer}' +
     'html[data-skin] .mlogo .lg-bg{fill:var(--brand)}' +
     'html[data-skin] :is(.mt-next,.mp-f button,.fbk-row .ok,.fbk-types button[aria-pressed=true],.mp-sw[aria-checked=true],.btn:not(.alt),.big:not(.alt),.mark button:not(.on)){background:var(--brand)!important;border-color:var(--brand)!important}' +
@@ -855,10 +872,10 @@
   // ================= nút: trong thanh menu (nếu có) + nút nổi =================
   var fl = document.createElement('div'); fl.className = 'mfloat';
   var hasNav = !!document.querySelector('.mnav');
-  fl.innerHTML = '<button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button>' + (hasNav ? '' : '<button type="button" class="mbtn mset" aria-label="Cỡ chữ và giao diện" title="Cỡ chữ, giao diện tối">Aa</button>');
+  fl.innerHTML = '<button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button>' + (hasNav ? '' : '<button type="button" class="mbtn mset" aria-label="Cỡ chữ và phong cách" title="Cỡ chữ, phong cách">Aa</button>');
   document.body.appendChild(fl);
   var navIn = document.querySelector('.mnav .in');
-  if (navIn) { var tl = document.createElement('div'); tl.className = 'mtool'; tl.innerHTML = '<button type="button" class="mbtn mset" aria-label="Cỡ chữ và giao diện" title="Cỡ chữ, giao diện tối">Aa</button><button type="button" class="mbtn mtheme"></button>'; navIn.appendChild(tl); }
+  if (navIn) { var tl = document.createElement('div'); tl.className = 'mtool'; tl.innerHTML = '<button type="button" class="mbtn mset" aria-label="Cỡ chữ và phong cách" title="Cỡ chữ, phong cách">Aa</button>'; navIn.appendChild(tl); }
   [].forEach.call(document.querySelectorAll('.mtheme'), function (b) { b.onclick = toggleTheme; });
   [].forEach.call(document.querySelectorAll('.mset'), function (b) { b.onclick = function () { settings(b); }; });
   fl.querySelector('.mfb').onclick = feedback;
