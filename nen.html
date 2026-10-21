@@ -183,7 +183,7 @@ html[data-theme=dark] .ex,html[data-theme=dark] .exp{background:var(--panel2)!im
       var s=0; for(var k in ans) if(ans[k]) s++; var n=l.quiz.length, pp=get(), old=pp[l.id];
       pp[l.id]={s:Math.max(s,old?old.s:0),n:n,t:Date.now(),last:s}; put(pp);
       var msg=s===n?'Tuyệt vời, đúng hết!':s>=n*0.7?'Tốt lắm! Xem lại câu sai rồi học bài tiếp nhé.':'Chưa sao, đọc lại phần lý thuyết rồi làm lại cho chắc nhé.';
-      document.getElementById('sc').innerHTML='<div class="score"><b>'+s+'/'+n+'</b><span>'+msg+'<br><small style="color:var(--dim)">Đã lưu tiến độ bài này.</small></span><button type="button" class="btn alt" id="again">Làm lại</button>'+(i<L.length-1?'<a class="btn" href="#'+L[i+1].id+'">Bài tiếp theo →</a>':'')+'</div>';
+      document.getElementById('sc').innerHTML='<div class="score">'+(window.MMINT?MMINT(s===n?'cheer':s>=n*0.7?'happy':'think'):'')+'<b>'+s+'/'+n+'</b><span>'+msg+'<br><small style="color:var(--dim)">Đã lưu tiến độ bài này.</small></span><button type="button" class="btn alt" id="again">Làm lại</button>'+(i<L.length-1?'<a class="btn" href="#'+L[i+1].id+'">Bài tiếp theo →</a>':'')+'</div>';
       document.getElementById('again').onclick=function(){ lesson(i); setTimeout(function(){ document.getElementById('quiz').scrollIntoView(); },30); };
       if(s===n&&window.MCONFETTI) MCONFETTI();
     }

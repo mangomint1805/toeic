@@ -186,3 +186,5 @@ details.more.g{margin-left:0}
 .rp-note{font-size:12px;color:var(--dim);margin:10px 0 0}
 .report .filt .btn{display:inline-flex;align-items:center;gap:6px}
 @media (max-width:640px){.rp-body{grid-template-columns:1fr}.rp-meta{text-align:left}.rp-total b{font-size:54px}}
+
+.rp-buddy{margin:12px 0 4px}.rp-buddy .mmint{width:74px}.rp-buddy .mb-bub{max-width:none;flex:1}.rp-buddy .rp-cm{margin:6px 0 0}

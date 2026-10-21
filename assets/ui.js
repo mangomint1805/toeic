@@ -140,7 +140,7 @@
       var body = { kind: 'cam20', name: nm || '(ẩn danh)', lop: lop, test: document.title, part: 'Góp ý · ' + sel, mode: 'Góp ý', got: '', total: '', band: '', minutes: '',
         wrong: m + '\n— Trang: ' + location.href, auto: false, submittedAt: new Date().toISOString(), userAgent: navigator.userAgent.slice(0, 160) };
       if (url) { try { fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }).catch(function () {}); } catch (e) {} }
-      w.querySelector('.fbk-card').innerHTML = '<h3>Cảm ơn bạn!</h3><p>Thầy đã nhận được góp ý và sẽ sửa sớm.</p><div class="fbk-row"><button type="button" class="ok">Đóng</button></div>';
+      w.querySelector('.fbk-card').innerHTML = '<h3>Cảm ơn bạn!</h3>' + buddy('Thầy đã nhận được góp ý rồi nha, sẽ sửa sớm thôi. Cảm ơn bạn nhiều!', 'cheer') + '<div class="fbk-row"><button type="button" class="ok">Đóng</button></div>';
       w.querySelector('.ok').onclick = close;
     };
   }
@@ -395,6 +395,174 @@
       '<div class="mp-bar" title="Điểm cao nhất so với mục tiêu"><i style="width:' + pct + '%"></i></div><small>' + (best ? 'Cao nhất: ' + best + ' / ' + ex.target : 'Chưa có điểm ' + (T ? 'Full test' : 'band') + ' để so với mục tiêu') + '</small></div></div>' +
       (left >= 0 ? '<div class="mp-todo"><h4>Hôm nay nên làm</h4>' + tasks.map(function (t) { return '<a href="' + ROOT + t[2] + '" class="' + (t[3] ? 'done' : '') + '"><span class="mp-ck">' + icon(t[3] ? 'check' : t[0]) + '</span><span>' + esc(t[1]) + '</span>' + icon('arrow', 'mp-go') + '</a>'; }).join('') + '</div>' : '') + '</div>';
     el.querySelector('#mpE').onclick = function () { el.setAttribute('data-edit', '1'); window.MPLAN(el); };
+  };
+
+
+  // ================= linh vật bé Mint (lá bạc hà) =================
+  function mascot(mood, cls) {
+    mood = mood || 'happy';
+    var up = mood === 'think', ey = up ? 76 : 80;
+    var eye = function (x) { return '<ellipse cx="' + x + '" cy="' + ey + '" rx="5" ry="6.5" fill="#3a2410"/><circle cx="' + (x + 1.8) + '" cy="' + (ey - 2.5) + '" r="1.9" fill="#fff"/>'; };
+    var mouth = mood === 'cheer' ? '<path d="M50 92 Q60 107 70 92 Z" fill="#7a2f2a"/><path d="M54 96 Q60 101 66 96" fill="#e8837a"/>' :
+      mood === 'think' ? '<path d="M55 96 h9" stroke="#3a2410" stroke-width="2.6" stroke-linecap="round"/>' :
+      mood === 'oops' ? '<path d="M52 97 Q60 91 68 97" stroke="#3a2410" stroke-width="2.6" fill="none" stroke-linecap="round"/>' :
+      '<path d="M51 92 Q60 102 69 92" stroke="#3a2410" stroke-width="2.8" fill="none" stroke-linecap="round"/>';
+    var A = 'stroke="#e08a1e" stroke-width="5" fill="none" stroke-linecap="round"';
+    var arms = mood === 'cheer' ? '<path d="M20 96 Q10 84 9 70" ' + A + '/><path d="M101 96 Q111 84 112 70" ' + A + '/>' +
+      '<path d="M8 50l2 5 5 2-5 2-2 5-2-5-5-2 5-2z M110 44l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#7fd6a4"/>' :
+      mood === 'think' ? '<path d="M100 104 Q107 98 99 90" ' + A + '/><text x="104" y="52" font-family="Fraunces,Georgia,serif" font-size="22" font-weight="600" fill="#2f9a63">?</text>' :
+      mood === 'oops' ? '<path d="M88 60 q4 7 0 10 q-4 -3 0 -10z" fill="#8fd0f0"/><path d="M20 102 Q12 108 11 116" ' + A + '/><path d="M101 102 Q109 108 110 116" ' + A + '/>' :
+      '<path d="M20 102 Q11 106 9 114" ' + A + '/><path d="M101 98 Q111 92 113 82" ' + A + '/>';
+    return '<svg class="mmint ' + (cls || '') + '" viewBox="0 0 120 140" aria-hidden="true"><defs>' +
+      '<radialGradient id="mgo" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#ffe27a"/><stop offset=".55" stop-color="#ffbf3c"/><stop offset="1" stop-color="#f08a24"/></radialGradient>' +
+      '<linearGradient id="mlf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9be8b8"/><stop offset="1" stop-color="#2f9a63"/></linearGradient></defs>' + arms +
+      '<path d="M62 34 C 96 31 110 64 103 96 C 97 126 67 137 44 129 C 19 121 11 93 17 68 C 23 46 40 35 62 34 Z" fill="url(#mgo)" stroke="#d97a16" stroke-width="2.5"/>' +
+      '<ellipse cx="86" cy="52" rx="12" ry="8" fill="#ff7a4a" opacity=".28" transform="rotate(30 86 52)"/><path d="M34 58 Q30 70 31 80" stroke="#fff6cf" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".7"/>' +
+      '<path d="M62 35 Q62 28 65 22" stroke="#7a5320" stroke-width="3.5" fill="none" stroke-linecap="round"/>' +
+      '<path d="M65 23 C 74 8 93 7 100 13 C 92 24 78 29 65 23 Z" fill="url(#mlf)" stroke="#2f8f5f" stroke-width="2"/><path d="M68 22 Q82 16 95 13" stroke="#e9fbf0" stroke-width="1.6" fill="none" opacity=".8"/>' +
+      '<path d="M63 25 C 53 12 39 12 34 18 C 42 27 54 30 63 25 Z" fill="url(#mlf)" stroke="#2f8f5f" stroke-width="2"/><path d="M60 24 Q49 19 38 18" stroke="#e9fbf0" stroke-width="1.4" fill="none" opacity=".8"/>' +
+      eye(48) + eye(72) + '<ellipse cx="38" cy="93" rx="6.5" ry="4" fill="#ff6f61" opacity=".4"/><ellipse cx="82" cy="93" rx="6.5" ry="4" fill="#ff6f61" opacity=".4"/>' + mouth + '</svg>';
+  }
+  window.MMINT = mascot;
+  function buddy(text, mood, cls) { return '<div class="mbuddy ' + (cls || '') + '">' + mascot(mood) + '<div class="mb-bub">' + text + '</div></div>'; }
+  window.MBUDDY = buddy;
+
+  // ================= hoạ tiết sóng seigaiha + con dấu =================
+  function seigaiha(paper, ink, a) {
+    var arcs = function (cx, cy) { return '<path d="M' + (cx - 20) + ' ' + cy + 'a20 20 0 0 1 40 0z" fill="' + paper + '"/><path d="M' + (cx - 20) + ' ' + cy + 'a20 20 0 0 1 40 0M' + (cx - 14) + ' ' + cy + 'a14 14 0 0 1 28 0M' + (cx - 8) + ' ' + cy + 'a8 8 0 0 1 16 0" fill="none" stroke="' + ink + '" stroke-opacity="' + a + '" stroke-width="1.3"/>'; };
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="20" viewBox="0 0 40 20">' + arcs(0, 10) + arcs(40, 10) + arcs(20, 20) + arcs(0, 30) + arcs(40, 30) + '</svg>';
+    return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
+  }
+  var st4 = document.createElement('style');
+  st4.textContent =
+    'html{background:var(--paper,#faf8f4)!important}body{background:transparent!important;position:relative}' +
+    '.mdeco{position:absolute;left:0;right:0;top:0;height:460px;z-index:-1;pointer-events:none;background-image:' + seigaiha('#faf8f4', '#a8691a', '.22') + ';background-size:56px 28px;-webkit-mask-image:linear-gradient(#000,rgba(0,0,0,.35) 45%,transparent);mask-image:linear-gradient(#000,rgba(0,0,0,.35) 45%,transparent);opacity:.75}' +
+    'html[data-theme=dark] .mdeco{background-image:' + seigaiha('#14161a', '#d39a4a', '.20') + ';opacity:.6}' +
+    '.mseal{display:inline-flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:upright;font:700 10px/1 "Hiragino Mincho ProN","Noto Serif JP","Yu Mincho",serif;letter-spacing:.05em;color:#fff;background:#c4473a;border-radius:5px;padding:5px 3px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55),inset 0 0 0 3px #c4473a;transform:rotate(-6deg);margin-left:10px;vertical-align:middle;flex:none}' +
+    'html[data-theme=dark] .mseal{background:#b8483c;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4),inset 0 0 0 3px #b8483c}' +
+    '.mmint{width:64px;height:auto;flex:none;overflow:visible}' +
+    '@media (prefers-reduced-motion:no-preference){.mbuddy .mmint{animation:mbob 3.2s ease-in-out infinite;transform-origin:50% 95%}@keyframes mbob{0%,100%{transform:rotate(-3deg) translateY(0)}50%{transform:rotate(3deg) translateY(-3px)}}' +
+    '.mbuddy:hover .mmint{animation:mjump .5s ease}@keyframes mjump{40%{transform:translateY(-10px) rotate(-6deg)}}}' +
+    '.mbuddy{display:flex;align-items:flex-end;gap:10px;margin:16px 0 0}' +
+    '.mb-bub{position:relative;background:var(--card,#fff);border:1px solid #e6dcc8;border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:14.5px;line-height:1.45;color:var(--ink,#1e232b);box-shadow:0 6px 18px rgba(107,68,16,.08);max-width:440px;margin-bottom:22px}' +
+    '.mb-bub b{color:#2f8f5f}html[data-theme=dark] .mb-bub{background:#1c1f25;border-color:#373b44}html[data-theme=dark] .mb-bub b{color:#6fd39d}' +
+    '@media (prefers-reduced-motion:no-preference){.mb-bub{animation:mbub .5s .25s cubic-bezier(.2,.9,.3,1.3) both}@keyframes mbub{from{opacity:0;transform:scale(.85) translateY(6px);transform-origin:0 100%}}}' +
+    // chuyển trang mượt
+    '@view-transition{navigation:auto}::view-transition-old(root),::view-transition-new(root){animation-duration:.28s}.mnav{view-transition-name:mnav}' +
+    '@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}';
+  document.head.appendChild(st4);
+  var deco = document.createElement('div'); deco.className = 'mdeco'; deco.setAttribute('aria-hidden', 'true'); document.body.insertBefore(deco, document.body.firstChild);
+  function seal() { var s = document.createElement('span'); s.className = 'mseal'; s.setAttribute('lang', 'ja'); s.setAttribute('aria-hidden', 'true'); s.textContent = 'ミント'; return s; }
+  [].forEach.call(document.querySelectorAll('.hello .kicker, .top > .kicker'), function (k) { k.appendChild(seal()); });
+
+  // ================= số chạy + thanh, vòng tiến độ chạy dần =================
+  function anim(root) {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    root = root || document;
+    [].forEach.call(root.querySelectorAll('.stat b, .mp-cd b, .rp-total b'), function (el) {
+      if (el.children.length || el.dataset.cnt) return; var t = el.textContent.trim(); if (!/^\d{1,4}$/.test(t) || t === '0') return;
+      var n = +t, t0 = performance.now(), d = Math.min(1400, 500 + n * 2); el.dataset.cnt = 1;
+      (function f(now) { var k = Math.min(1, (now - t0) / d), e = 1 - Math.pow(1 - k, 3); el.textContent = Math.round(n * e); if (k < 1) requestAnimationFrame(f); else el.textContent = t; })(t0);
+    });
+    [].forEach.call(root.querySelectorAll('.ring svg circle:last-child, .pring svg circle:last-child'), function (c) {
+      var da = c.getAttribute('stroke-dasharray'); if (!da || c.dataset.an) return; c.dataset.an = 1;
+      c.style.transition = 'none'; c.setAttribute('stroke-dasharray', '0 999');
+      requestAnimationFrame(function () { requestAnimationFrame(function () { c.style.transition = 'stroke-dasharray 1.2s cubic-bezier(.2,.7,.2,1)'; c.setAttribute('stroke-dasharray', da); }); });
+    });
+    [].forEach.call(root.querySelectorAll('.mp-bar i, .lopbar .prog i, .rp-parts s, .skbar s, .fc-bar i'), function (b) {
+      var w = b.style.width; if (!w || b.dataset.an) return; b.dataset.an = 1;
+      b.style.transition = 'none'; b.style.width = '0';
+      requestAnimationFrame(function () { requestAnimationFrame(function () { b.style.transition = 'width 1.1s cubic-bezier(.2,.7,.2,1)'; b.style.width = w; }); });
+    });
+  }
+  window.MANIM = anim;
+  setTimeout(function () { anim(); }, 60);
+
+  // ================= bé Mint trên trang chủ =================
+  setTimeout(function () {
+    var hero = document.querySelector('.hello'), cta = hero && hero.querySelector('.cta');
+    if (hero && cta && !hero.querySelector('.mbuddy') && SITE !== 'summary') {
+      var s = stats(), nm = ''; try { nm = localStorage.getItem('cam20.name') || ''; } catch (e) {}
+      var first = nm ? nm.trim().split(/\s+/).pop() : '';
+      var tips = SITE === 'toeic' ? ['Mẹo: Part 2 hay có bẫy <b>từ phát âm giống</b> câu hỏi. Nghe thấy lặp từ thì cẩn thận nha!', 'Mẹo: Part 5 nhìn đáp án trước, nếu <b>cùng gốc từ</b> thì là câu từ loại, làm nhanh lắm!', 'Mẹo: Part 7 đọc <b>câu hỏi trước</b> rồi mới tìm trong bài, đỡ mất giờ hơn nhiều.', 'Mẹo: nghe lại câu sai ở tốc độ <b>0.75x</b> rồi chép chính tả, nhớ lâu cực!']
+        : ['Mẹo: Listening luôn đọc trước câu hỏi và <b>đoán loại từ</b> cần điền nha.', 'Mẹo: phân biệt <b>FALSE</b> (trái ngược) và <b>NOT GIVEN</b> (không nhắc tới) là ăn điểm Reading đó!', 'Mẹo: Writing Task 1 nhớ viết <b>overview</b>, thiếu là khó qua band 6 lắm.', 'Mẹo: Speaking Part 1 trả lời <b>2–3 câu</b>: ý chính + lý do + ví dụ.'];
+      var txt;
+      if (!nm) txt = 'Chào bạn! Mình là <b>Xoài Bạc Hà</b> 🥭🌿 Nhập tên ở khung bên cạnh để thầy nhận được kết quả nhé.';
+      else if (s.streak >= 2) txt = '<b>' + s.streak + ' ngày liên tục</b> rồi đó ' + first + '! Hôm nay học tiếp để giữ chuỗi nha 🔥';
+      else if (SITE === 'toeic' && s.miniToday) txt = 'Đề mini hôm nay xong rồi, giỏi quá! Làm thêm một Part nữa không ' + first + '?';
+      else if (s.subs + s.nenAll === 0) txt = 'Chào ' + first + '! Mới bắt đầu thì học một bài <b>Kiến thức nền</b> trước nha, chỉ 10 phút thôi.';
+      else txt = tips[new Date().getDate() % tips.length];
+      cta.insertAdjacentHTML('beforebegin', buddy(txt, nm ? 'happy' : 'cheer'));
+    }
+    var sh = document.querySelector('body:not(.gated) .hero');
+    if (SITE === 'summary' && sh && !sh.querySelector('.mbuddy')) sh.insertAdjacentHTML('beforeend', buddy('Đọc tóm tắt <b>trước buổi học</b> để nắm ý chính, học xong thì ôn bảng từ vựng bằng flashcard nha!', 'happy'));
+  }, 30);
+
+  // ================= ảnh chia sẻ dạng story =================
+  window.MSHARE = function (o) {
+    var W = 1080, H = 1920, cv = document.createElement('canvas'); cv.width = W; cv.height = H; var c = cv.getContext('2d');
+    var SER = '"Fraunces", Georgia, serif', SANS = '"IBM Plex Sans", Arial, sans-serif', JP = '"Hiragino Sans","Noto Sans JP","Noto Sans CJK JP","Yu Gothic",sans-serif';
+    function T(t, x, y, f, col, al) { c.font = f; c.fillStyle = col; c.textAlign = al || 'left'; c.fillText(t, x, y); }
+    function rr(x, y, w, h, r, col, st) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); if (col) { c.fillStyle = col; c.fill(); } if (st) { c.strokeStyle = st; c.lineWidth = 2; c.stroke(); } }
+    // nền + sóng
+    c.fillStyle = '#faf8f4'; c.fillRect(0, 0, W, H);
+    for (var row = 0; row < 26; row++) { var y = row * 30, a = Math.max(0, .26 - row * .011); if (a <= 0) break;
+      for (var x = (row % 2) * 40 - 40; x < W + 80; x += 80) { c.fillStyle = '#faf8f4'; c.beginPath(); c.arc(x, y + 30, 40, Math.PI, 0); c.fill(); c.strokeStyle = 'rgba(168,105,26,' + a + ')'; c.lineWidth = 2.2; [40, 28, 16].forEach(function (r) { c.beginPath(); c.arc(x, y + 30, r, Math.PI, 0); c.stroke(); }); } }
+    var g = c.createLinearGradient(0, 300, 0, 820); g.addColorStop(0, 'rgba(250,248,244,0)'); g.addColorStop(1, 'rgba(250,248,244,1)'); c.fillStyle = g; c.fillRect(0, 300, W, 520);
+    // đầu trang
+    rr(80, 90, 100, 100, 24, '#a8691a'); c.fillStyle = '#8a5512'; c.fillRect(80, 100, 12, 80); T('M', 136, 166, '600 62px ' + SER, '#fff', 'center');
+    T('Minto English', 210, 138, '600 52px ' + SER, '#1e232b'); T('ミント・イングリッシュ', 213, 180, '500 26px ' + JP, '#9a8f7d');
+    c.save(); c.translate(940, 140); c.rotate(-0.1); rr(-38, -62, 76, 124, 10, '#c4473a'); c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = 3; c.strokeRect(-30, -54, 60, 108);
+    ['ミ', 'ン', 'ト'].forEach(function (ch, i) { T(ch, 0, -22 + i * 34, '700 30px ' + JP, '#fff', 'center'); }); c.restore();
+    // thẻ chính (chiều cao theo nội dung)
+    var tiles = o.tiles || [], bars = o.bars || [], parts = o.parts || [], cols = 2;
+    var yT = 1000, yB = yT + (tiles.length ? 170 : 0), yP = yB + bars.length * 130 + (bars.length ? 10 : 0), endY = yP + Math.ceil(parts.length / cols) * 64 + 20;
+    var cardB = Math.max(endY + 40, 1180);
+    c.shadowColor = 'rgba(107,68,16,.12)'; c.shadowBlur = 40; c.shadowOffsetY = 12; rr(70, 270, W - 140, cardB - 270, 44, '#ffffff'); c.shadowColor = 'transparent';
+    T(o.kicker || 'PHIẾU KẾT QUẢ', W / 2, 350, '700 26px ' + SANS, '#a8691a', 'center');
+    T(o.name || 'Học viên', W / 2, 420, '600 54px ' + SER, '#1e232b', 'center');
+    T(o.line || '', W / 2, 468, '500 28px ' + SANS, '#666e7a', 'center');
+    var cx = W / 2, cy = 700, R = 190, pc = Math.max(0, Math.min(1, o.pct || 0));
+    c.lineCap = 'round'; c.lineWidth = 34; c.strokeStyle = '#f2ece0'; c.beginPath(); c.arc(cx, cy, R, Math.PI * .75, Math.PI * 2.25); c.stroke();
+    var gg = c.createLinearGradient(cx - R, cy, cx + R, cy); gg.addColorStop(0, '#f2c879'); gg.addColorStop(1, '#a8691a'); c.strokeStyle = gg;
+    c.beginPath(); c.arc(cx, cy, R, Math.PI * .75, Math.PI * (.75 + 1.5 * Math.max(.01, pc))); c.stroke();
+    T(o.bigLabel || '', cx, cy - 76, '700 24px ' + SANS, '#a8691a', 'center');
+    T(String(o.big), cx, cy + 42, '600 150px ' + SER, '#6b4410', 'center');
+    T(o.bigOf || '', cx, cy + 98, '500 32px ' + SANS, '#666e7a', 'center');
+    if (o.sub) T(o.sub, cx, cy + 236, '600 30px ' + SANS, '#1f8f6c', 'center');
+    if (tiles.length) { var tw = (W - 280 - 20 * (tiles.length - 1)) / tiles.length;
+      tiles.forEach(function (t, i) { var x = 140 + i * (tw + 20); rr(x, yT, tw, 130, 22, '#faf6ee'); T(t.k, x + tw / 2, yT + 46, '600 24px ' + SANS, '#8a8f98', 'center'); T(String(t.v), x + tw / 2, yT + 100, '600 42px ' + SER, '#6b4410', 'center'); }); }
+    var yy = yB + 36;
+    bars.forEach(function (b) { T(b.label, 140, yy, '700 32px ' + SANS, '#1e232b'); T(b.txt, W - 140, yy, '700 32px ' + SANS, '#6b4410', 'right');
+      rr(140, yy + 22, W - 280, 22, 11, '#f2ece0'); var gw = Math.max(22, (W - 280) * Math.max(0, Math.min(1, b.pct))); var g2 = c.createLinearGradient(140, 0, 140 + gw, 0); g2.addColorStop(0, '#e9b55b'); g2.addColorStop(1, '#a8691a'); rr(140, yy + 22, gw, 22, 11, g2);
+      if (b.tag) T(b.tag, 140, yy + 84, '600 26px ' + SANS, '#1f8f6c'); yy += 130; });
+    var cw = (W - 280 - 40) / cols, py = yP + 40;
+    parts.forEach(function (p, i) { var col = i % cols, rowi = Math.floor(i / cols), x = 140 + col * (cw + 40), y = py + rowi * 64;
+      T(p.label, x, y, '600 26px ' + SANS, '#1e232b'); T(p.txt, x + cw, y, '700 24px ' + SANS, '#666e7a', 'right');
+      rr(x, y + 14, cw, 12, 6, '#f2ece0'); rr(x, y + 14, Math.max(12, cw * p.pct), 12, 6, p.pct >= .8 ? '#1f8f6c' : p.pct >= .6 ? '#d9a63c' : '#c14636'); });
+    T(o.foot || 'Điểm ước tính từ bài luyện tập, không phải điểm thi chính thức.', W / 2, H - 120, '500 24px ' + SANS, '#9aa0a8', 'center');
+    T(o.url || 'mangomint1805.github.io', W / 2, H - 76, '600 26px ' + SANS, '#a8691a', 'center');
+    var my = Math.min(cardB + 60, H - 420);
+    var img = new Image();
+    img.onload = function () {
+      c.drawImage(img, 90, my, 210, 245);
+      c.font = '500 32px ' + SANS; var lines = [], words = (o.msg || 'Cố lên nha!').split(' '), cur = '';
+      words.forEach(function (w) { var t = cur ? cur + ' ' + w : w; if (c.measureText(t).width > 600) { lines.push(cur); cur = w; } else cur = t; }); lines.push(cur);
+      var bh = 50 + lines.length * 44, by = my + 100; rr(330, by - bh / 2, 670, bh, 30, '#ffffff', '#ecd3a6');
+      c.fillStyle = '#ffffff'; c.beginPath(); c.moveTo(334, by + 20); c.lineTo(300, by + 60); c.lineTo(360, by + 36); c.fill();
+      lines.forEach(function (l, i) { T(l, 365, by - bh / 2 + 58 + i * 44, '500 32px ' + SANS, '#1e232b'); });
+      done();
+    };
+    img.onerror = done;
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(mascot(o.mood || 'cheer').replace('<svg class="mmint ', '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="280" class="'));
+    function done() {
+      cv.toBlob(function (blob) {
+        var name = (o.file || 'minto-english') + '.png';
+        try { var f = new File([blob], name, { type: 'image/png' }); if (navigator.canShare && navigator.canShare({ files: [f] }) && /Android|iPhone|iPad/i.test(navigator.userAgent)) { navigator.share({ files: [f], title: 'Minto English' }).catch(function () {}); return; } } catch (e) {}
+        var a = document.createElement('a'); a.download = name; a.href = URL.createObjectURL(blob); document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+        mtoast('check', 'Đã lưu ảnh', 'Mở thư viện ảnh để đăng story khoe bạn bè nha!');
+      }, 'image/png');
+    }
   };
 
   // ================= CSS cho các phần trên =================

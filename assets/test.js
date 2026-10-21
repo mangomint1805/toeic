@@ -407,14 +407,29 @@
       h += '<div class="rp-body"><div class="rp-total"><small>Kết quả</small><b>' + got + '</b><span>/ ' + tot + '</span><em>' + Math.round(got / tot * 100) + '% câu đúng</em></div><div class="rp-skills"><p class="rp-scale">Làm "Chỉ Listening", "Chỉ Reading" hoặc "Full test" để có điểm quy đổi thang 990.</p></div></div>';
     }
     h += '<div class="rp-parts">' + Object.keys(r.parts).map(function (p) { var a = r.parts[p], pc = Math.round(a[0] / a[1] * 100); return '<div><span>' + PART_INFO[p][0] + '</span><i><s style="width:' + pc + '%;background:' + (pc >= 80 ? '#1f8f6c' : pc >= 60 ? '#d9a63c' : '#c14636') + '"></s></i><b>' + a[0] + '/' + a[1] + '</b></div>'; }).join('') + '</div>';
-    var cm = comments(r);
-    if (cm.length) h += '<ul class="rp-cm">' + cm.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>';
+    var cm = comments(r), pcAll = got / tot, mood = pcAll >= .8 ? 'cheer' : pcAll >= .55 ? 'happy' : pcAll >= .35 ? 'think' : 'oops';
+    var say = pcAll >= .8 ? 'Đỉnh quá! Giữ phong độ này nha!' : pcAll >= .55 ? 'Làm tốt lắm! Xem lại câu sai là lên điểm tiếp.' : pcAll >= .35 ? 'Ổn rồi đó, luyện thêm Part yếu nhất nhé!' : 'Không sao đâu, ai cũng bắt đầu từ đây. Xem kỹ giải thích từng câu nha!';
+    if (window.MBUDDY) h += window.MBUDDY('<b>' + say + '</b>' + (cm.length ? '<ul class="rp-cm">' + cm.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>' : ''), mood, 'rp-buddy');
+    else if (cm.length) h += '<ul class="rp-cm">' + cm.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>';
     h += '<p class="rp-note">Điểm ước tính dựa trên số câu đúng của bài luyện tập, không phải điểm thi chính thức.</p>' +
-      '<div class="filt"><button class="btn sm" id="rpSave" type="button">' + window.MICON('check') + ' Lưu ảnh phiếu điểm</button><button class="btn alt sm" id="hideOk" type="button">' + (ST.hideOk ? 'Hiện tất cả câu' : 'Chỉ xem câu sai') + '</button><a class="btn alt sm" href="phan-tich.html">Xem điểm yếu</a><a class="btn alt sm" href="?t=' + T + '">Làm lại</a></div></div>' +
+      '<div class="filt"><button class="btn sm" id="rpSave" type="button">' + window.MICON('check') + ' Lưu ảnh khoe story</button><button class="btn alt sm" id="hideOk" type="button">' + (ST.hideOk ? 'Hiện tất cả câu' : 'Chỉ xem câu sai') + '</button><a class="btn alt sm" href="phan-tich.html">Xem điểm yếu</a><a class="btn alt sm" href="?t=' + T + '">Làm lại</a></div></div>' +
       '<p class="hint">Câu xanh là đúng, đỏ là sai. Mở Dịch nghĩa, Lời thoại, Giải thích dưới mỗi câu; phần nghe có nút audio riêng để nghe lại.</p>';
     top.innerHTML = h;
     $('#hideOk').onclick = function () { ST.hideOk = !ST.hideOk; save(); show(CUR); };
-    $('#rpSave').onclick = function () { saveImage(r, nm); };
+    $('#rpSave').onclick = function () { if (window.MSHARE) shareImage(r, nm); else saveImage(r, nm); };
+    if (window.MANIM) window.MANIM(top);
+  }
+  function shareImage(r, nm) {
+    var tot = r.lcT + r.rcT, got = r.lc + r.rc, has = r.lcS || r.rcS, total = (r.lcS || 0) + (r.rcS || 0), max = r.lcS && r.rcS ? 990 : 495, pc = got / tot;
+    window.MSHARE({ kicker: 'PHIẾU KẾT QUẢ LUYỆN TẬP TOEIC', name: nm || 'Học viên', line: 'ETS 2026 · Test ' + T + ' · ' + M.name + ' · ' + new Date(r.at).toLocaleDateString('vi-VN'),
+      bigLabel: has ? (r.lcS && r.rcS ? 'TỔNG ĐIỂM ƯỚC TÍNH' : 'ĐIỂM ƯỚC TÍNH') : 'SỐ CÂU ĐÚNG', big: has ? total : got, bigOf: '/ ' + (has ? max : tot), pct: has ? total / max : pc,
+      sub: has ? got + '/' + tot + ' câu đúng' : Math.round(pc * 100) + '% câu đúng',
+      tiles: [{ k: 'Câu đúng', v: got + '/' + tot }, { k: 'Tỉ lệ đúng', v: Math.round(pc * 100) + '%' }, { k: 'Thời gian', v: (r.mins || 0) + ' phút' }],
+      bars: [[r.lcS, 'Listening', CEFR_L], [r.rcS, 'Reading', CEFR_R]].filter(function (k) { return k[0]; }).map(function (k) { return { label: k[1], txt: k[0] + ' / 495', pct: (k[0] - 5) / 490, tag: 'CEFR ' + cefr(k[2], k[0]) }; }),
+      parts: Object.keys(r.parts).map(function (p) { var a = r.parts[p]; return { label: PART_INFO[p][0], txt: a[0] + '/' + a[1], pct: a[0] / a[1] }; }),
+      mood: pc >= .8 ? 'cheer' : 'happy',
+      msg: pc >= .8 ? 'Đỉnh của chóp! Ai luyện cùng mình không?' : pc >= .55 ? 'Tiến bộ từng ngày, cố lên nào!' : 'Mới bắt đầu thôi, lần sau sẽ cao hơn!',
+      url: 'mangomint1805.github.io/toeic', file: 'minto-toeic-test' + T });
   }
   function saveImage(r, nm) {
     var W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H; var c = cv.getContext('2d');
