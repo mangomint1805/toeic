@@ -103,7 +103,6 @@ html[data-theme=dark] .ex,html[data-theme=dark] .exp{background:var(--panel2)!im
 <body data-nav="nen">
 <div class="wrap" id="app"></div>
 <script src="data/nen.js"></script>
-<script src="data/mshoa.js"></script>
 <script src="assets/ui.js"></script>
 <script>
 (function(){
@@ -116,33 +115,13 @@ html[data-theme=dark] .ex,html[data-theme=dark] .exp{background:var(--panel2)!im
   try{ filter=sessionStorage.getItem('nen.f')||''; }catch(e){}
   function lv(n){ var s='<span class="lv" title="'+LV[n]+'">'; for(var i=1;i<=3;i++) s+='<i class="'+(i<=n?'on':'')+'"></i>'; return s+' '+LV[n]+'</span>'; }
   function nextIdx(p){ for(var i=0;i<L.length;i++) if(!p[L[i].id]) return i; return -1; }
-  var MH=window.MSHOA;
-  function tabs(cur){ return MH?'<nav class="tabs" aria-label="Chọn loại bài"><a href="#"'+(cur==='g'?' aria-current="page"':'')+'>Kiến thức nền chung</a><a href="#mshoa"'+(cur==='m'?' aria-current="page"':'')+'>Học viên TOEIC giáo trình lớp</a></nav>':''; }
-  function mshoa(prog){
-    if(!prog){ try{ prog=localStorage.getItem('mt.mshoa.prog')||'new'; }catch(e){ prog='new'; } }
-    try{ localStorage.setItem('mt.mshoa.prog',prog); }catch(e){}
-    var P=MH[prog], p=get(), its=P.items, done=its.filter(function(x){return p[x.id];}).length, C=2*Math.PI*28, nx=-1;
-    its.forEach(function(x,i){ if(nx<0&&!p[x.id]) nx=i; });
-    document.title='Học viên TOEIC giáo trình lớp · Kiến thức nền';
-    var h='<div class="top"><p class="kicker">'+I('layers')+'Kiến thức nền · TOEIC</p><h1>Dành cho học viên TOEIC giáo trình lớp</h1><p class="lead">Nếu bạn đang học TOEIC giáo trình lớp, đây là toàn bộ bài tóm tắt kiến thức theo đúng giáo trình trên lớp: ngữ pháp, mẹo nghe từng Part và bảng từ vựng có flashcard, phát âm.</p>'+tabs('m')+
-      '<div class="seg" role="group" aria-label="Chọn chương trình">'+Object.keys(MH).map(function(k){ return '<a href="#mshoa-'+k+'"'+(k===prog?' aria-current="page"':'')+'><b>'+esc(MH[k].name)+'</b><small>'+MH[k].items.length+' bài'+(k==='new'?' · đang dạy':'')+'</small></a>'; }).join('')+'</div>'+
-      '<div class="mh-note">'+I('help')+'<span>Không chắc lớp mình học chương trình nào? Xem tên bài trên slide hoặc hỏi thầy nhé. Chương trình mới có 7 bài Reading, 8 bài Listening và bài ôn tập hằng tuần.</span></div>'+
-      '<div class="progress"><span class="pring"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="none" stroke="var(--panel2)" stroke-width="6"/><circle cx="32" cy="32" r="28" fill="none" stroke="var(--brand)" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+(C*done/its.length).toFixed(1)+' '+C.toFixed(1)+'"/></svg><b>'+done+'/'+its.length+'</b></span><span class="pinfo"><b>'+esc(P.name)+'</b><span>'+(nx>=0?'Bài tiếp theo: '+esc(its[nx].title):'Bạn đã học hết chương trình này, giỏi lắm!')+'</span></span>'+(nx>=0?'<a class="btn" href="'+its[nx].href+'">'+I('play')+(done?'Học tiếp':'Bắt đầu')+'</a>':'')+'</div></div>';
-    var gs=[]; its.forEach(function(x){ if(gs.indexOf(x.g)<0) gs.push(x.g); });
-    gs.forEach(function(g){
-      var gi=its.filter(function(x){return x.g===g;}), k=0;
-      h+='<h2 class="grp">'+esc(g)+'<small>'+gi.filter(function(x){return p[x.id];}).length+'/'+gi.length+' bài</small></h2><ol class="path">'+gi.map(function(x){ k++; var d=p[x.id];
-        return '<li class="'+(d?'done':'')+'"><a href="'+x.href+'"><span class="dot">'+(d?I('check'):k)+'</span><span class="card"><span><b>'+esc(x.title)+'</b>'+(x.sub?'<small>'+esc(x.sub)+'</small>':'')+'</span>'+I('arrow')+'</span></a></li>'; }).join('')+'</ol>';
-    });
-    app.innerHTML=h; window.scrollTo(0,0); if(window.MFX) MFX(app);
-  }
   function list(){
     var p=get(), done=L.filter(function(l){return p[l.id];}).length, nx=nextIdx(p), C=2*Math.PI*28;
     document.title='Kiến thức nền · Minto English TOEIC';
     var h='<div class="top"><p class="kicker">'+I('layers')+'Kiến thức nền · TOEIC</p><h1>Học chắc nền, làm đề nhẹ hơn</h1><p class="lead">Dành cho bạn mới học hoặc mất gốc: ngữ pháp hay gặp ở Part 5–6, mẹo làm từng Part, từ vựng theo chủ đề. Mỗi bài khoảng 10 phút, giải thích tiếng Việt và có bài tập nhỏ để kiểm tra lại.</p>'+
       '<div class="progress"><span class="pring"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" fill="none" stroke="var(--panel2)" stroke-width="6"/><circle cx="32" cy="32" r="28" fill="none" stroke="var(--brand)" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+(C*done/L.length).toFixed(1)+' '+C.toFixed(1)+'"/></svg><b>'+done+'/'+L.length+'</b></span>'+
       '<span class="pinfo"><b>'+(done===L.length?'Bạn đã học hết các bài, giỏi lắm!':done?'Đã học '+done+' bài, tiếp tục nhé':'Chưa học bài nào, bắt đầu từ bài 1 nhé')+'</b><span>'+(nx>=0?'Bài tiếp theo: '+esc(L[nx].title):'Có thể làm lại bài tập bất kỳ lúc nào để ôn.')+'</span></span>'+
-      (nx>=0?'<a class="btn" href="#'+L[nx].id+'">'+I('play')+(done?'Học tiếp':'Bắt đầu học')+'</a>':'')+'</div>'+tabs('g')+
+      (nx>=0?'<a class="btn" href="#'+L[nx].id+'">'+I('play')+(done?'Học tiếp':'Bắt đầu học')+'</a>':'')+'</div>'+
       '<div class="chips" role="group" aria-label="Lọc theo nhóm"><button type="button" data-g="" aria-pressed="'+(!filter)+'">Tất cả</button>'+groups.map(function(g){ return '<button type="button" data-g="'+esc(g)+'" aria-pressed="'+(filter===g)+'">'+esc(g)+'</button>'; }).join('')+'</div></div>';
     groups.forEach(function(g){
       if(filter&&filter!==g) return;
@@ -188,7 +167,7 @@ html[data-theme=dark] .ex,html[data-theme=dark] .exp{background:var(--panel2)!im
       if(s===n&&window.MCONFETTI) MCONFETTI();
     }
   }
-  function route(){ var id=decodeURIComponent(location.hash.slice(1)), i=-1; if(MH&&/^mshoa/.test(id)){ mshoa(id.split('-')[1]); return; } L.forEach(function(l,k){ if(l.id===id) i=k; }); if(i>=0) lesson(i); else list(); }
+  function route(){ var id=decodeURIComponent(location.hash.slice(1)), i=-1; L.forEach(function(l,k){ if(l.id===id) i=k; }); if(i>=0) lesson(i); else list(); }
   addEventListener('hashchange',route); route();
 })();
 </script>
