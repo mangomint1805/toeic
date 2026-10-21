@@ -639,9 +639,12 @@
     function done() {
       cv.toBlob(function (blob) {
         var name = (o.file || 'minto-english') + '.png';
-        try { var f = new File([blob], name, { type: 'image/png' }); if (navigator.canShare && navigator.canShare({ files: [f] }) && /Android|iPhone|iPad/i.test(navigator.userAgent)) { navigator.share({ files: [f], title: 'Minto English' }).catch(function () {}); return; } } catch (e) {}
+        try { var f = new File([blob], name, { type: 'image/png' }); if (navigator.canShare && navigator.canShare({ files: [f] }) && /Android|iPhone|iPad/i.test(navigator.userAgent)) { navigator.share({ files: [f], title: 'Minto English' }).catch(function (er) { if (!er || er.name !== 'AbortError') dl(); }); return; } } catch (e) {}
+        dl(); return;
+        function dl() {
         var a = document.createElement('a'); a.download = name; a.href = URL.createObjectURL(blob); document.body.appendChild(a); a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
         mtoast('check', 'Đã lưu ảnh', 'Mở thư viện ảnh để đăng story khoe bạn bè nha!');
+        }
       }, 'image/png');
     }
   };
