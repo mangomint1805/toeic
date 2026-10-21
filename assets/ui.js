@@ -350,7 +350,7 @@
 
 
   // ================= đăng nhập Google (acc.js, tải khi cần) =================
-  var ACC_SRC = ME.replace(/ui\.js.*$/, 'acc.js?v=4'), accQ = null;
+  var ACC_SRC = ME.replace(/ui\.js.*$/, 'acc.js?v=5'), accQ = null;
   function accLoad(cb) {
     if (window.MACC) return cb && cb();
     if (!accQ) { accQ = []; var sc = document.createElement('script'); sc.src = ACC_SRC; sc.onload = function () { accQ.splice(0).forEach(function (f) { f(); }); }; document.head.appendChild(sc); }

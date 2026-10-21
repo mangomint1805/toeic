@@ -74,6 +74,14 @@
     if (!MODES[MODE]) return startScreen();
     M = MODES[MODE]; KEY = 'ets26.t' + T + '.' + MODE;
     ST = get(KEY) || { ans: {}, t0: Date.now(), done: false };
+    var XEM = Q.get('xem');
+    if (XEM) {
+      var hr = (get('ets26.hist') || []).filter(function (h) { return String(h.at) === XEM && h.test === T && h.ans; })[0];
+      if (hr) {
+        KEY = 'ets26.review'; ST = { ans: hr.ans, t0: hr.at, done: true, res: hr.res || null, review: hr.at };
+        setTimeout(function () { var b = document.createElement('div'); b.className = 'resume'; b.style.margin = '0 0 12px'; b.innerHTML = '👀 Đang <b>xem lại bài đã nộp</b> ngày ' + new Date(hr.at).toLocaleString('vi-VN') + ' · ' + esc(hr.name) + ' · ' + hr.got + '/' + hr.total + (hr.score ? ' · ' + esc(hr.score) : '') + ' — <a href="?t=' + T + '">Về danh sách</a>'; var mn = $('#main'); if (mn) mn.insertBefore(b, mn.firstChild); }, 0);
+      }
+    }
     if (!ST.ans) ST.ans = {};
     $('#modeLabel').textContent = M.name; $('#modeLabel').hidden = false;
     $('#sub').textContent = M.parts.length > 1 ? M.parts.length + ' part · ' + nsOf(M.parts).length + ' câu' : PART_INFO[M.parts[0]][1] + ' · ' + nsOf(M.parts).length + ' câu';
@@ -101,9 +109,9 @@
     for (var p = 1; p <= 7; p++) h += '<button data-m="p' + p + '"><b>' + PART_INFO[p][0] + '</b><span>' + PART_INFO[p][1] + '</span></button>';
     h += '</div></div>';
     if (hist.length) {
-      h += '<div class="box"><h3>Kết quả đã nộp</h3><table class="hist"><tr><th>Ngày</th><th>Cách làm</th><th>Đúng</th><th>Điểm ước tính</th></tr>';
+      h += '<div class="box"><h3>Kết quả đã nộp</h3><table class="hist"><tr><th>Ngày</th><th>Cách làm</th><th>Đúng</th><th>Điểm ước tính</th><th></th></tr>';
       hist.slice(-12).reverse().forEach(function (r) {
-        h += '<tr><td>' + new Date(r.at).toLocaleDateString('vi-VN') + '</td><td>' + esc(r.name) + '</td><td>' + r.got + '/' + r.total + '</td><td>' + (r.score ? r.score : '–') + '</td></tr>';
+        h += '<tr><td>' + new Date(r.at).toLocaleDateString('vi-VN') + '</td><td>' + esc(r.name) + '</td><td>' + r.got + '/' + r.total + '</td><td>' + (r.score ? r.score : '–') + '</td><td>' + (r.ans && r.mode ? '<a href="?t=' + T + '&m=' + r.mode + '&xem=' + r.at + '">👀 Xem lại</a>' : (function () { var st = r.mode && get('ets26.t' + T + '.' + r.mode); return st && st.done && st.res && st.res.at === r.at ? '<a href="?t=' + T + '&m=' + r.mode + '">👀 Xem lại</a>' : ''; })()) + '</td></tr>';
       });
       h += '</table></div>';
     }
@@ -381,8 +389,10 @@
     var name = MODE === 'full' ? 'Full test' : M.name;
     var score = res.lcS && res.rcS ? (res.lcS + res.rcS) + ' (LC ' + res.lcS + ' · RC ' + res.rcS + ')' : res.lcS ? 'LC ' + res.lcS : res.rcS ? 'RC ' + res.rcS : '';
     var hist = get('ets26.hist') || [];
-    hist.push({ test: T, mode: MODE, name: name, got: lc + rc, total: lcT + rcT, score: score, parts: parts, at: res.at, wrong: wrong, r: rq, lcS: res.lcS || 0, rcS: res.rcS || 0 });
-    put('ets26.hist', hist.slice(-300));
+    hist.push({ test: T, mode: MODE, name: name, got: lc + rc, total: lcT + rcT, score: score, parts: parts, at: res.at, wrong: wrong, r: rq, lcS: res.lcS || 0, rcS: res.rcS || 0, ans: ST.ans, res: res });
+    hist = hist.slice(-300); var withAns = 0;
+    for (var hi = hist.length - 1; hi >= 0; hi--) { if (hist[hi] && hist[hi].ans) { withAns++; if (withAns > 40) { delete hist[hi].ans; delete hist[hi].res; } } }
+    put('ets26.hist', hist);
     $('#player').hidden = true; $('#timer').textContent = '';
     send(res, name, score);
     show(M.parts[0]); window.scrollTo(0, 0);
