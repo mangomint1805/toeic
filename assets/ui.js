@@ -272,7 +272,6 @@
     if (!first) fresh.forEach(function (b) { mtoast(b[3], 'Huy hiệu mới: ' + b[1], b[2], home); party = true; });
     if (party) confetti();
     prev = s;
-    try { award(s); } catch (e) {}
   }
   var chkT;
   try {
@@ -293,9 +292,8 @@
       p.innerHTML = '<div class="mp-row"><span>Cỡ chữ</span><div class="mp-fs"><button type="button" data-d="-1" aria-label="Chữ nhỏ hơn"' + (v === FS[0] ? ' disabled' : '') + '>A−</button><b>' + Math.round(v * 100) + '%</b><button type="button" data-d="1" aria-label="Chữ to hơn"' + (v === FS[FS.length - 1] ? ' disabled' : '') + '>A+</button></div></div>' +
         '<div class="mp-row"><span>Giao diện tối</span><button type="button" class="mp-sw" role="switch" aria-checked="' + dk + '"><i></i></button></div>' +
         '<div class="mp-row"><span>Phong cách<small class="mp-skn">' + SKINS.filter(function (k) { return k[0] === skin(); })[0][1] + '</small></span><div class="mp-skins">' + SKINS.map(function (k) { return '<button type="button" data-k="' + k[0] + '" title="' + k[1] + '" aria-label="Phong cách ' + k[1] + '" aria-pressed="' + (skin() === k[0]) + '" style="background:' + k[2] + '"></button>'; }).join('') + '</div></div>' +
-        '<button type="button" class="mp-tour">' + icon('help') + ' Xem lại hướng dẫn</button>' + (SITE !== 'summary' ? '<button type="button" class="mp-gacha">🎁 Tủ đồ bé Xoài · 💎 ' + bag().g + '</button>' : '');
+        '<button type="button" class="mp-tour">' + icon('help') + ' Xem lại hướng dẫn</button>';
       [].forEach.call(p.querySelectorAll('.mp-skins button'), function (b) { b.onclick = function () { S('mt.skin', b.getAttribute('data-k')); applySkin(skin()); draw(); }; });
-      var gb = p.querySelector('.mp-gacha'); if (gb) gb.onclick = function () { p.remove(); window.MGACHA(); };
       [].forEach.call(p.querySelectorAll('.mp-fs button'), function (b) { b.onclick = function () { var i = FS.indexOf(fs()) + (+b.getAttribute('data-d')); i = Math.max(0, Math.min(FS.length - 1, i)); S('mt.fs', FS[i]); applyFs(FS[i]); draw(); }; });
       p.querySelector('.mp-sw').onclick = function () { toggleTheme(); draw(); };
       p.querySelector('.mp-tour').onclick = function () { p.remove(); tour(true); };
@@ -654,7 +652,7 @@
     { id: 'canhsang', n: 'Đôi cánh cầu vồng', r: 'SSS', b: '<defs><linearGradient id="rbw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff6b8b"/><stop offset=".3" stop-color="#ffd54a"/><stop offset=".6" stop-color="#5ee0a0"/><stop offset="1" stop-color="#6aa8ff"/></linearGradient></defs><path d="M22 84 q-34 -10 -18 -54 q12 26 26 30 q-22 6 -8 24 z M98 84 q34 -10 18 -54 q-12 26 -26 30 q22 6 8 24 z" fill="url(#rbw)" opacity=".9" ' + GL + '/>', f: '<path d="M14 26 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z M106 22 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z M8 92 l1.5 3.5 3.5 1.5 -3.5 1.5 -1.5 3.5 -1.5 -3.5 -3.5 -1.5 3.5 -1.5z" fill="#ffd54a" stroke="' + GK + '" stroke-width="1.4"/>' }
   ];
   var RCOL = { B: '#6b8bb5', A: '#8b5cf6', S: '#e0a21b', SSS: 'linear-gradient(90deg,#ff6b8b,#ffd54a,#5ee0a0,#6aa8ff)' };
-  function wearItem() { var w = window.MWEAR; if (w === undefined) { w = J('mt.wear', ''); window.MWEAR = w; } for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].id === w) return ITEMS[i]; return null; }
+  function wearItem() { var w = { idol: 'idol', y2k: 'thienthan', scifi: 'chienbinh' }[document.documentElement.getAttribute('data-skin') || ''] || ''; for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].id === w) return ITEMS[i]; return null; }
   function bag() { var b = J('mt.gems', null); if (!b) b = { g: 0, pity: 0, own: {}, base: {}, pulls: 0 }; b.own = b.own || {}; b.base = b.base || {}; return b; }
   function saveBag(b) { S('mt.gems', b); [].forEach.call(document.querySelectorAll('.mgem b'), function (x) { x.textContent = b.g; }); }
   window.MGEMS = function () { return bag().g; };
@@ -728,7 +726,7 @@
   // ================= bộ giao diện theo phong cách =================
   var SKINS = [['', 'Xoài', '#a8691a'], ['idol', 'Hành baro', '#12a4a3'], ['y2k', 'Thiên thần', '#e0559a'], ['scifi', 'Băng hoại', 'linear-gradient(135deg,#4ad7ff,#b04cff)']];
   function skin() { var v = J('mt.skin', ''); return SKINS.some(function (k) { return k[0] === v; }) ? v : ''; }
-  function applySkin(v) { var r = document.documentElement; if (v) r.setAttribute('data-skin', v); else r.removeAttribute('data-skin'); if (v === 'scifi') applyTheme('dark', false); else applyTheme(theme(), false); }
+  function applySkin(v) { var r = document.documentElement; if (v) r.setAttribute('data-skin', v); else r.removeAttribute('data-skin'); [].forEach.call(document.querySelectorAll('.mbuddy .mmint'), function (m) { m.outerHTML = mascot('cheer', 'pop'); }); if (v === 'scifi') applyTheme('dark', false); else applyTheme(theme(), false); }
 
   // ================= CSS cho các phần trên =================
   var st3 = document.createElement('style');
@@ -852,7 +850,7 @@
   fl.innerHTML = '<button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button>' + (hasNav ? '' : '<button type="button" class="mbtn mset" aria-label="Cỡ chữ và giao diện" title="Cỡ chữ, giao diện tối">Aa</button>');
   document.body.appendChild(fl);
   var navIn = document.querySelector('.mnav .in');
-  if (navIn) { var tl = document.createElement('div'); tl.className = 'mtool'; tl.innerHTML = (SITE !== 'summary' ? '<button type="button" class="mbtn mgem" aria-label="Tủ đồ bé Xoài" title="Tủ đồ bé Xoài">💎 <b>' + bag().g + '</b></button>' : '') + '<button type="button" class="mbtn mset" aria-label="Cỡ chữ và giao diện" title="Cỡ chữ, giao diện tối">Aa</button><button type="button" class="mbtn mtheme"></button>'; navIn.appendChild(tl); }
+  if (navIn) { var tl = document.createElement('div'); tl.className = 'mtool'; tl.innerHTML = '<button type="button" class="mbtn mset" aria-label="Cỡ chữ và giao diện" title="Cỡ chữ, giao diện tối">Aa</button><button type="button" class="mbtn mtheme"></button>'; navIn.appendChild(tl); }
   [].forEach.call(document.querySelectorAll('.mtheme'), function (b) { b.onclick = toggleTheme; });
   [].forEach.call(document.querySelectorAll('.mset'), function (b) { b.onclick = function () { settings(b); }; });
   fl.querySelector('.mfb').onclick = feedback;
