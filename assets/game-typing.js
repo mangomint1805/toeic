@@ -44,7 +44,7 @@
 
   function play() {
     main.innerHTML = '<div class="hud"><span class="hp" id="hp"></span><span>⭐ <span id="sc">0</span></span><span>Cấp <span id="lv">1</span></span><span class="sp" id="sp"></span></div>' +
-      '<div class="field" id="field"></div><div class="typ"><input id="in" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Gõ từ ở đây…" aria-label="Gõ từ"><button class="btn alt" id="pause" type="button" aria-label="Tạm dừng">⏸</button></div>';
+      '<div class="field" id="field"></div><div class="typ"><input id="in" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Gõ từ ở đây…" aria-label="Gõ từ"><button class="btn alt" id="pause" type="button" aria-label="Tạm dừng">Dừng</button></div>';
     var field = document.getElementById('field'), inp = document.getElementById('in');
     var bag = [], live = [], hp = 5, score = 0, lv = 1, cleared = 0, missed = [], hits = 0, streakN = 0;
     var speed = 38, gap = 2600, last = 0, spawnT = 0, run = true, paused = false, raf = 0;
@@ -121,7 +121,7 @@
       raf = requestAnimationFrame(frame);
     }
     function togglePause() {
-      paused = !paused; document.getElementById('pause').textContent = paused ? '▶' : '⏸';
+      paused = !paused; document.getElementById('pause').textContent = paused ? 'Tiếp' : 'Dừng';
       field.style.opacity = paused ? .35 : 1; if (!paused) { last = 0; inp.focus(); }
     }
     document.getElementById('pause').onclick = togglePause;
