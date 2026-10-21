@@ -850,6 +850,8 @@
   document.head.appendChild(st5);
   applySkin(skin());
 
+  if (!EXAM) { var slo = document.createElement('div'); slo.className = 'mslogan'; slo.innerHTML = '<span aria-hidden="true">✦</span><p>Cứ đi là mình sẽ tới, tin là mình sẽ có, sáng như viên cà rá, 22 karat</p><small>Minto English · ミント英語</small>'; document.body.appendChild(slo); }
+  var st6 = document.createElement('style'); st6.textContent = '.mslogan{max-width:760px;margin:-10px auto 0;padding:0 20px 40px;text-align:center;color:var(--dim,#666e7a)}.mslogan span{color:var(--brand,#a8691a);font-size:14px}.mslogan p{font:italic 500 17px/1.5 Fraunces,Georgia,serif;color:var(--brand-ink,#6b4410);margin:6px 0 4px}.mslogan small{font-size:12px;letter-spacing:.08em}body.has-nav .mslogan{padding-bottom:20px}@media (max-width:760px){body.has-nav .mslogan{padding-bottom:10px}}'; document.head.appendChild(st6);
   // ================= nút: trong thanh menu (nếu có) + nút nổi =================
   var fl = document.createElement('div'); fl.className = 'mfloat';
   var hasNav = !!document.querySelector('.mnav');
