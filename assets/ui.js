@@ -2,7 +2,8 @@
 (function () {
   'use strict';
   var ME = document.currentScript && document.currentScript.src || '', ROOT = ME.replace(/(assets|shared)\/ui\.js.*$/, '');
-  var SITE = /\/shared\/ui\.js/.test(ME) ? 'ielts' : 'toeic';
+  var SITE = (document.currentScript && document.currentScript.getAttribute('data-site')) || (/\/shared\/ui\.js/.test(ME) ? 'ielts' : 'toeic');
+  var TOEIC_URL = 'https://mangomint1805.github.io/toeic/';
   var P = {
     home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
     test: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
@@ -48,9 +49,9 @@
   document.head.appendChild(css);
   var cur = document.body.getAttribute('data-nav');
   if (cur !== null) {
-    var L = (window.MNAV_LINKS || (SITE === 'ielts' ? [['home', '', 'Bộ đề', 'book'], ['nen', 'nen.html', 'Nền tảng', 'layers'], ['stats', 'phan-tich.html', 'Điểm yếu', 'chart'], ['dict', 'chinh-ta.html', 'Chính tả', 'pen'], ['cards', 'flashcards.html', 'Flashcard', 'cards'], ['help', 'huong-dan.html', 'Hướng dẫn', 'help']] : [['home', '', 'Đề thi', 'test'], ['mini', 'mini.html', 'Đề mini', 'flame'], ['nen', 'nen.html', 'Nền tảng', 'layers'], ['stats', 'phan-tich.html', 'Điểm yếu', 'chart'], ['dict', 'chinh-ta.html', 'Chính tả', 'pen'], ['cards', 'flashcards.html', 'Flashcard', 'cards']])).map(function (l) { return [l[0], ROOT + l[1], l[2], l[3]]; });
+    var L = (window.MNAV_LINKS || (SITE === 'summary' ? [['home', '', 'Bài học', 'book'], ['nen', TOEIC_URL + 'nen.html#mshoa', 'Kiến thức nền', 'layers'], ['toeic', TOEIC_URL, 'Luyện đề TOEIC', 'test'], ['mini', TOEIC_URL + 'mini.html', 'Đề mini', 'flame']] : SITE === 'ielts' ? [['home', '', 'Bộ đề', 'book'], ['nen', 'nen.html', 'Nền tảng', 'layers'], ['stats', 'phan-tich.html', 'Điểm yếu', 'chart'], ['dict', 'chinh-ta.html', 'Chính tả', 'pen'], ['cards', 'flashcards.html', 'Flashcard', 'cards'], ['help', 'huong-dan.html', 'Hướng dẫn', 'help']] : [['home', '', 'Đề thi', 'test'], ['mini', 'mini.html', 'Đề mini', 'flame'], ['nen', 'nen.html', 'Nền tảng', 'layers'], ['stats', 'phan-tich.html', 'Điểm yếu', 'chart'], ['dict', 'chinh-ta.html', 'Chính tả', 'pen'], ['cards', 'flashcards.html', 'Flashcard', 'cards']])).map(function (l) { return [l[0], /^https?:/.test(l[1]) ? l[1] : ROOT + l[1], l[2], l[3]]; });
     var nav = document.createElement('header'); nav.className = 'mnav';
-    nav.innerHTML = '<div class="in"><a class="mbrand" href="' + L[0][1] + '" aria-label="Minto English — trang chủ">' + LOGO + '<span><b>Minto English</b><small>' + (window.MNAV_LABEL || (SITE === 'ielts' ? 'IELTS' : 'TOEIC')) + '</small></span></a><nav class="mlinks" aria-label="Menu">' +
+    nav.innerHTML = '<div class="in"><a class="mbrand" href="' + L[0][1] + '" aria-label="Minto English — trang chủ">' + LOGO + '<span><b>Minto English</b><small>' + (window.MNAV_LABEL || (SITE === 'ielts' ? 'IELTS' : SITE === 'summary' ? 'TOEIC PRE' : 'TOEIC')) + '</small></span></a><nav class="mlinks" aria-label="Menu">' +
       L.map(function (l) { return '<a href="' + l[1] + '"' + (l[0] === cur ? ' aria-current="page"' : '') + '>' + icon(l[3]) + '<span>' + l[2] + '</span></a>'; }).join('') + '</nav></div>';
     document.body.insertBefore(nav, document.body.firstChild);
     document.body.classList.add('has-nav');
@@ -151,7 +152,7 @@
   var BOOKS = [17, 18, 19, 20, 21];
   function stats() {
     var days = {}, o = { site: SITE, today: dkey(new Date()) };
-    var nen = J('mt.nen.' + SITE, {}); o.nenMap = nen; o.nen = Object.keys(nen).length; o.nenToday = 0;
+    var nen = J('mt.nen.' + SITE, {}); o.nenMap = nen; o.nenAll = Object.keys(nen).length; o.nen = Object.keys(nen).filter(function (k) { return k.indexOf('mh-') !== 0; }).length; o.nenToday = 0;
     Object.keys(nen).forEach(function (k) { if (nen[k] && nen[k].t) { days[dkey(nen[k].t)] = 1; if (dkey(nen[k].t) === o.today) o.nenToday++; } });
     var cards = J('vocab.cards', {}); o.cards = Array.isArray(cards) ? cards.length : Object.keys(cards || {}).length;
     if (SITE === 'toeic') {
@@ -187,10 +188,10 @@
   P.pen2 = '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>';
   P.cal = '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>';
   P.gear = '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>';
-  var BADGES = SITE === 'toeic' ? [
+  var BADGES = SITE === 'summary' ? [] : SITE === 'toeic' ? [
     ['first', 'Khởi động', 'Nộp bài hoặc làm đề mini đầu tiên', 'play', function (s) { return s.subs + s.mini >= 1; }],
-    ['nen1', 'Chịu khó học nền', 'Hoàn thành 1 bài Kiến thức nền', 'book', function (s) { return s.nen >= 1; }],
-    ['nen10', 'Nền vững', 'Hoàn thành 10 bài Kiến thức nền', 'layers', function (s) { return s.nen >= 10; }],
+    ['nen1', 'Chịu khó học nền', 'Học xong 1 bài Kiến thức nền', 'book', function (s) { return s.nenAll >= 1; }],
+    ['nen10', 'Nền vững', 'Học xong 10 bài Kiến thức nền', 'layers', function (s) { return s.nenAll >= 10; }],
     ['streak3', 'Chuỗi 3 ngày', 'Học 3 ngày liên tục', 'flame', function (s) { return s.streak >= 3; }],
     ['streak7', 'Chuỗi 7 ngày', 'Học 7 ngày liên tục', 'flame', function (s) { return s.streak >= 7; }],
     ['streak30', 'Chuỗi 30 ngày', 'Học 30 ngày liên tục', 'flame', function (s) { return s.streak >= 30; }],
@@ -204,8 +205,8 @@
     ['cards20', 'Sưu tầm 20 từ', 'Lưu 20 từ vào flashcard', 'cards', function (s) { return s.cards >= 20; }]
   ] : [
     ['first', 'Khởi động', 'Nộp bài đầu tiên', 'play', function (s) { return s.subs + s.ws >= 1; }],
-    ['nen1', 'Chịu khó học nền', 'Hoàn thành 1 bài Kiến thức nền', 'book', function (s) { return s.nen >= 1; }],
-    ['nen10', 'Nền vững', 'Hoàn thành 10 bài Kiến thức nền', 'layers', function (s) { return s.nen >= 10; }],
+    ['nen1', 'Chịu khó học nền', 'Học xong 1 bài Kiến thức nền', 'book', function (s) { return s.nenAll >= 1; }],
+    ['nen10', 'Nền vững', 'Học xong 10 bài Kiến thức nền', 'layers', function (s) { return s.nenAll >= 10; }],
     ['streak3', 'Chuỗi 3 ngày', 'Học 3 ngày liên tục', 'flame', function (s) { return s.streak >= 3; }],
     ['streak7', 'Chuỗi 7 ngày', 'Học 7 ngày liên tục', 'flame', function (s) { return s.streak >= 7; }],
     ['streak30', 'Chuỗi 30 ngày', 'Học 30 ngày liên tục', 'flame', function (s) { return s.streak >= 30; }],
@@ -296,7 +297,7 @@
   }
 
   // ================= hướng dẫn lần đầu =================
-  var TOUR = SITE === 'toeic' ? [
+  var TOUR = SITE === 'summary' ? [] : SITE === 'toeic' ? [
     [null, 'Chào bạn 👋', 'Đây là web luyện TOEIC của lớp thầy Minto. Mình chỉ nhanh mấy chỗ quan trọng nhé, chưa tới 1 phút.'],
     ['#me', 'Nhập tên một lần', 'Gõ họ tên và lớp ở đây để thầy nhận được kết quả mỗi lần bạn nộp bài.'],
     ['.mlinks a[href$="nen.html"]', 'Mới học? Bắt đầu ở đây', 'Mục Nền tảng ôn ngữ pháp, từ vựng và mẹo nghe cơ bản, giải thích tiếng Việt, có bài tập nhỏ.'],
@@ -319,6 +320,7 @@
     var TK = 'mt.tour.' + SITE;
     if (!force && (J(TK, 0) || location.href.split(/[?#]/)[0].replace(/index\.html$/, '') !== ROOT || navigator.webdriver)) return;
     S(TK, 1);
+    if (!TOUR.length) return;
     var steps = TOUR.filter(function (t) { return !t[0] || vis(document.querySelector(t[0])); }), i = 0;
     var ov = document.createElement('div'); ov.className = 'mtour'; ov.innerHTML = '<div class="mt-hole"></div><div class="mt-tip" role="dialog" aria-live="polite"></div>';
     document.body.appendChild(ov);
