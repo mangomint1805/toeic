@@ -4,6 +4,8 @@
   var ME = document.currentScript && document.currentScript.src || '', ROOT = ME.replace(/(assets|shared)\/ui\.js.*$/, '');
   var SITE = (document.currentScript && document.currentScript.getAttribute('data-site')) || (/\/shared\/ui\.js/.test(ME) ? 'ielts' : 'toeic');
   var TOEIC_URL = 'https://mangomint1805.github.io/toeic/';
+  var EXAM = /\/(test\.html|test-\d+\.html|ws\.html)$/.test(location.pathname); window.MEXAM = EXAM;
+  if (EXAM) document.documentElement.setAttribute('data-exam', '');
   var P = {
     home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
     test: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
@@ -230,6 +232,7 @@
 
   // ================= pháo giấy + thông báo =================
   function confetti() {
+    if (EXAM) return;
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var c = document.createElement('canvas'), x = c.getContext('2d'), W = c.width = innerWidth, H = c.height = innerHeight, cols = ['#a8691a', '#f2c879', '#1f8f6c', '#d9573f', '#5b7fd6', '#e9a23b', '#fff4dc'], ps = [];
     c.className = 'mconf'; document.body.appendChild(c);
@@ -244,6 +247,7 @@
   window.MCONFETTI = confetti;
   var toastQ = [], toastOn = false;
   function mtoast(ic, title, sub, href, fn) {
+    if (EXAM && ic !== 'check') return;
     toastQ.push([ic, title, sub, href, fn]); if (toastOn) return;
     (function next() {
       var a = toastQ.shift(); if (!a) { toastOn = false; return; } toastOn = true;
@@ -504,7 +508,8 @@
     '@media (prefers-reduced-motion:no-preference){.mb-bub{animation:mbub .5s .25s cubic-bezier(.2,.9,.3,1.3) both}@keyframes mbub{from{opacity:0;transform:scale(.85) translateY(6px);transform-origin:0 100%}}}' +
     // chuyển trang mượt
     '@view-transition{navigation:auto}::view-transition-old(root),::view-transition-new(root){animation-duration:.28s}.mnav{view-transition-name:mnav}' +
-    '@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}';
+    '@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}' +
+    'html[data-exam] .mdeco{display:none}html[data-exam] *{animation:none!important}html[data-exam] .btn:active,html[data-exam] .opt:active{transform:none}';
   document.head.appendChild(st4);
   var deco = document.createElement('div'); deco.className = 'mdeco'; deco.setAttribute('aria-hidden', 'true'); document.body.insertBefore(deco, document.body.firstChild);
   function seal() { var s = document.createElement('span'); s.className = 'mseal'; s.setAttribute('lang', 'ja'); s.setAttribute('aria-hidden', 'true'); s.textContent = 'ミント'; return s; }
@@ -512,6 +517,7 @@
 
   // ================= số chạy + thanh, vòng tiến độ chạy dần =================
   function anim(root) {
+    if (EXAM) return;
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     root = root || document;
     [].forEach.call(root.querySelectorAll('.stat b, .mp-cd b, .rp-total b'), function (el) {
@@ -708,6 +714,7 @@
   // ================= combo kiểu game nhịp điệu =================
   var combo = 0;
   window.MCOMBO = function (ok, el) {
+    if (EXAM) return;
     combo = ok ? combo + 1 : 0;
     var r = el && el.getBoundingClientRect ? el.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight / 2, width: 0 };
     var d = document.createElement('div'); d.className = 'mcombo ' + (ok ? (combo >= 5 ? 'pf' : 'gr') : 'ms');
@@ -719,7 +726,7 @@
   window.MCOMBO.reset = function () { combo = 0; };
 
   // ================= bộ giao diện theo phong cách =================
-  var SKINS = [['', 'Xoài', '#a8691a'], ['idol', 'Hành baro', '#12a4a3'], ['y2k', 'Thiên thần', '#e0559a'], ['scifi', 'Băng hoại', '#38d6ff']];
+  var SKINS = [['', 'Xoài', '#a8691a'], ['idol', 'Hành baro', '#12a4a3'], ['y2k', 'Thiên thần', '#e0559a'], ['scifi', 'Băng hoại', 'linear-gradient(135deg,#4ad7ff,#b04cff)']];
   function skin() { var v = J('mt.skin', ''); return SKINS.some(function (k) { return k[0] === v; }) ? v : ''; }
   function applySkin(v) { var r = document.documentElement; if (v) r.setAttribute('data-skin', v); else r.removeAttribute('data-skin'); if (v === 'scifi') applyTheme('dark', false); else applyTheme(theme(), false); }
 
@@ -825,11 +832,17 @@
     'html[data-skin=y2k] .mdeco{background-image:' + pat('width="32" height="32" viewBox="0 0 32 32"><rect width="16" height="16" fill="#e0559a" opacity=".07"/><rect x="16" y="16" width="16" height="16" fill="#8b5cf6" opacity=".07"/><path d="M22 6h2v1h1v-1h2v1h1v3h-1v1h-1v1h-1v1h-1v-1h-1v-1h-1v-1h-1v-3h1z" fill="#e0559a" opacity=".35"/>') + ';background-size:32px 32px}' +
     'html[data-skin=y2k] :is(.panel,.test,.tool,.mplan,.lesson,.book,.stat,.report,.sec .card,.mb-bub,.doc,.box,.mode){border:2px solid #d9a6e6!important;box-shadow:4px 4px 0 #c7a6f0!important;border-radius:10px!important}' +
     'html[data-skin=y2k] .mnav{background:linear-gradient(90deg,#ffd6ec,#e8dcff)!important;border-bottom:2px solid #c7a6f0}html[data-skin=y2k] h1,html[data-skin=y2k] .sec h2{text-shadow:2px 2px 0 #ffc2e2}' +
-    // Sci-fi
-    'html[data-skin=scifi][data-theme=dark]{--paper:#0a1120;--card:#0f1a2e;--panel2:#13223b;--line:#1d3152;--line2:#25406a;--ink:#dbe7ff;--dim:#8ea6c9;--brand:#38d6ff;--brand-soft:#0d3454;--brand-ink:#86e8ff;--amber:#38d6ff;--amber-soft:#0d3454;--amber-ink:#86e8ff;--ok:#3ff0a8}' +
-    'html[data-skin=scifi] .mdeco{background-image:' + pat('width="40" height="40" viewBox="0 0 40 40"><path d="M40 0H0v40" fill="none" stroke="#38d6ff" stroke-width=".6" opacity=".35"/><circle cx="0" cy="0" r="1.4" fill="#38d6ff" opacity=".6"/>') + ';background-size:40px 40px;opacity:.9}' +
-    'html[data-skin=scifi] :is(.panel,.test,.tool,.mplan,.lesson,.book,.report,.doc,.box,.mode){border:1px solid #25406a!important;box-shadow:0 0 0 1px rgba(56,214,255,.12),0 0 24px rgba(56,214,255,.08)!important;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}' +
-    'html[data-skin=scifi] .mnav{background:rgba(10,17,32,.9)!important;border-bottom:1px solid #38d6ff55}html[data-skin=scifi] :is(h1,.sec h2){text-shadow:0 0 18px rgba(56,214,255,.35)}html[data-skin=scifi] :is(.btn:not(.alt),.big:not(.alt),.mt-next){color:#06121f!important}';
+    // Băng hoại
+    'html[data-skin=scifi][data-theme=dark]{--paper:#0a1024;--card:#111a35;--panel2:#18234a;--line:#24345f;--line2:#2e4377;--ink:#e6ecff;--dim:#93a3cf;--brand:#ffd23f;--brand-soft:#2c2a4a;--brand-ink:#ffe27a;--amber:#ffd23f;--amber-soft:#2c2a4a;--amber-ink:#ffe27a;--ok:#4ad7ff;--ok-soft:#10324d;--bad:#ff5fa8;--bad-soft:#3d1838;--teal:#4ad7ff;--teal-soft:#10324d}' +
+    'html[data-skin=scifi] body{background:radial-gradient(1200px 600px at 85% -10%,rgba(176,76,255,.22),transparent 60%),radial-gradient(900px 500px at -10% 10%,rgba(74,215,255,.16),transparent 60%)!important;background-attachment:fixed!important}' +
+    'html[data-skin=scifi] .mdeco{background-image:' + pat('width="44" height="44" viewBox="0 0 44 44"><path d="M44 0H0v44" fill="none" stroke="#4ad7ff" stroke-width=".6" opacity=".35"/><path d="M22 18l4 4-4 4-4-4z" fill="#b04cff" opacity=".35"/>') + ';background-size:44px 44px;opacity:.9}' +
+    'html[data-skin=scifi] :is(.panel,.test,.tool,.mplan,.lesson,.book,.report,.doc,.box,.mode){border:1px solid #2e4377!important;box-shadow:inset 0 1px 0 rgba(74,215,255,.25),0 0 0 1px rgba(176,76,255,.10),0 10px 30px rgba(5,8,20,.5)!important;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}' +
+    'html[data-skin=scifi] .mnav{background:linear-gradient(90deg,rgba(10,16,36,.95),rgba(26,17,64,.95))!important;border-bottom:1px solid rgba(74,215,255,.35)}' +
+    'html[data-skin=scifi] :is(h1,.sec h2){text-shadow:0 0 18px rgba(74,215,255,.35)}html[data-skin=scifi] h1 em,html[data-skin=scifi] .mb-bub b{color:#4ad7ff!important}' +
+    'html[data-skin=scifi] :is(.btn:not(.alt),.big:not(.alt),.mt-next,.mark button:not(.on)){color:#1a1240!important;background:linear-gradient(180deg,#ffe36b,#ffc21a)!important;border-color:#ffc21a!important;box-shadow:0 0 14px rgba(255,210,63,.35)}' +
+    'html[data-skin=scifi] :is(.mp-cd,.mt-i,.mbadge.on .mb-i,.num,.stop.open .dot){background:linear-gradient(150deg,#4ad7ff,#b04cff)!important;border-color:#4ad7ff!important}' +
+    'html[data-skin=scifi] .mlinks a[aria-current=page]{background:rgba(74,215,255,.14);color:#7fe6ff;box-shadow:inset 0 -2px 0 #4ad7ff}html[data-skin=scifi] .kicker,html[data-skin=scifi] .hello .kicker{color:#4ad7ff}' +
+    'html[data-skin=scifi] .mp-bar i,html[data-skin=scifi] .skbar s{background:linear-gradient(90deg,#4ad7ff,#b04cff)!important}';
   document.head.appendChild(st5);
   applySkin(skin());
 
@@ -846,7 +859,7 @@
   [].forEach.call(document.querySelectorAll('.mgem'), function (b) { b.onclick = function () { window.MGACHA(); }; });
   applySkin(skin());
   // hiệu ứng xuất hiện
-  if (window.IntersectionObserver && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+  if (!EXAM && window.IntersectionObserver && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('fx-on'); io.unobserve(e.target); } }); }, { rootMargin: '0px 0px -30px 0px' });
     window.MFX = function (root) { [].forEach.call((root || document).querySelectorAll('.test,.tool,.stat,.panel,.mode,.box,.card,.report,.big,.stop,.book,.cat,.prog-card,.mplan,.lesson'), function (el, i) { if (el.classList.contains('fx-in')) return; el.classList.add('fx-in'); el.style.transitionDelay = Math.min(i % 12, 8) * 40 + 'ms'; io.observe(el); }); };
     setTimeout(function () { window.MFX(); }, 30);
