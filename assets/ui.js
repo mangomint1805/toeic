@@ -903,6 +903,7 @@
     '.mp-gacha{margin-top:6px;width:100%;display:flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;padding:10px;font:700 13.5px/1 "IBM Plex Sans",sans-serif;color:#fff;background:linear-gradient(135deg,#ff8a3d,#e0559a);cursor:pointer}' +
     'html[data-skin] .mlogo .lg-bg{fill:var(--brand)}' +
     'html[data-skin] :is(.mt-next,.mp-f button,.fbk-row .ok,.fbk-types button[aria-pressed=true],.mp-sw[aria-checked=true],.btn:not(.alt),.big:not(.alt),.mark button:not(.on)){background:var(--brand)!important;border-color:var(--brand)!important}' +
+    'html[data-theme=dark] :is(.chip[aria-pressed=true],.tg[aria-pressed=true],.topics button[aria-pressed=true],.types button[aria-pressed=true],.gtabs button[aria-selected=true],.tabs button[aria-selected=true]){background:var(--brand)!important;border-color:var(--brand)!important;color:var(--paper)!important}html[data-theme=dark] :is(.chip,.topics button,.types button)[aria-pressed=true] small{color:inherit!important;opacity:.75}' +
     'html[data-skin] :is(.mp-cd,.mt-i,.mbadge.on .mb-i,.num,.stop.open .dot){background:linear-gradient(150deg,var(--brand-soft),var(--brand))!important;border-color:var(--brand)!important}' +
     'html[data-skin] .mlinks a[aria-current=page]{background:var(--brand-soft);color:var(--brand-ink)}html[data-skin] .mbrand b em,html[data-skin] .mbrand small{color:var(--brand-ink)}' +
     'html[data-skin] :is(.kicker,.hello .kicker,.mp-todo h4,.rp-total small,h2.sec + *){color:var(--brand)}' +

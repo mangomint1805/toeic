@@ -37,7 +37,7 @@
   }
 
   function play() {
-    var deck = ITEMS.slice().sort(function () { return Math.random() - .5; });
+    var deck = ITEMS.filter(function (x) { return mode === 'read' || x.s != null; }).sort(function () { return Math.random() - .5; });
     var hp = 3, score = 0, streak = 0, bestStreak = 0, win = 6, ok3 = 0, idx = 0, wrong = [], timer = 0, t0 = 0, running = true, answered = false;
     main.innerHTML = '<div class="hud"><span id="hp"></span><span>⭐ <span id="sc">0</span></span><span>🔥 <span id="st">0</span></span><span class="sp">⚡ <span id="wn">6.00</span>s / câu</span></div>' +
       '<div class="stage"><div class="ring"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="52"/><circle class="fg" id="fg" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="0"/></svg><b id="tm">–</b></div>' +
