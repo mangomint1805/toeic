@@ -1353,15 +1353,15 @@
   }
   window.MNEWS_SEEN = function () { var U = window.MT_UPDATES; if (U && U[0]) seen(U[0].id); };
 })();
-/* Đang online: đếm số bạn đang mở web (Firebase Realtime Database, online/<web>/<mã tab>) + Google Analytics 4. Dùng chung 4 web; khối này giống hệt nhau ở cả 4 file ui.js. */
+/* Đang online: đếm số bạn đang mở web (Firebase Realtime Database, online/<web>/<mã tab>) + Google Analytics 4. Dùng chung web TOEIC và IELTS. */
 (function () {
   'use strict';
   var GA_ID = 'G-WTQLYLYL0G'; // mã đo lường GA4 (G-XXXXXXXXXX); còn bắt đầu bằng '__' thì không chạy GA
   try {
     if (window.__mlive) return; window.__mlive = 1;
-    var me0 = document.currentScript && document.currentScript.src || '', mm = /\/(toeic|cam|summary-new|summary-old)\/(?:docs\/)?(?:assets|shared)\/ui\.js/.exec(me0.split('?')[0]);
+    var me0 = document.currentScript && document.currentScript.src || '', mm = /\/(toeic|cam)\/(?:assets|shared)\/ui\.js/.exec(me0.split('?')[0]);
     if (!mm) return;
-    var SITE = mm[1], SITES = ['toeic', 'cam', 'summary-new', 'summary-old'], NAME = { toeic: 'TOEIC ETS', cam: 'IELTS Cam', 'summary-new': 'TOEIC Pre (mới)', 'summary-old': 'TOEIC Pre (cũ)' };
+    var SITE = mm[1], SITES = ['toeic', 'cam'], NAME = { toeic: 'TOEIC ETS', cam: 'IELTS Cam' };
     var SDK = 'https://www.gstatic.com/firebasejs/10.12.2/', DBURL = 'https://minto-english-default-rtdb.asia-southeast1.firebasedatabase.app';
     var CFG = { apiKey: 'AIzaSyA7LEweMPy4tSjjR_An_KZaGXSzGI2nQv4', authDomain: 'minto-english.firebaseapp.com', databaseURL: DBURL, projectId: 'minto-english', messagingSenderId: '160119750089', appId: '1:160119750089:web:aac59cf8b1f577c035bc18' };
     var FRESH = 180000, STALE = 900000, PATH = location.pathname;
@@ -1369,7 +1369,7 @@
     var base = (PATH.split('/').pop() || '').replace(/\.html$/, '');
     var KIND = EXAM ? 'test' : (!base || base === 'index') ? 'home' : /^summary/.test(SITE) ? 'lesson' : (base.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 20) || 'page');
     var TEACHER = false;
-    try { TEACHER = /[?&]gv(=|&|$)/.test(location.search) || localStorage.getItem('summaryNew.gv') === '1' || localStorage.getItem('summaryOld.gv') === '1'; } catch (e) {}
+    try { TEACHER = /[?&]gv(=|&|$)/.test(location.search); if (TEACHER) localStorage.setItem('mt.gv', '1'); TEACHER = TEACHER || localStorage.getItem('mt.gv') === '1'; } catch (e) {}
     var ID = '';
     try { ID = sessionStorage.getItem('mlive.id') || ''; } catch (e) {}
     if (!/^[A-Za-z0-9_-]{16}$/.test(ID)) {
@@ -1461,7 +1461,7 @@
       b.textContent = n; t.textContent = ' bạn đang học';
       tip = n > 1 ? txt + ' trên web này (tính cả bạn)' : 'Lúc này chỉ có bạn đang học trên web này';
       pill.setAttribute('aria-label', txt);
-      pill.title = tip + (all ? '\n— Cả 4 web —\n' + SITES.map(function (s) { return NAME[s] + ': ' + (all[s] == null ? '?' : all[s]); }).join('\n') : '');
+      pill.title = tip + (all ? '\n— Cả 2 web —\n' + SITES.map(function (s) { return NAME[s] + ': ' + (all[s] == null ? '?' : all[s]); }).join('\n') : '');
       if (changed) fit();
     }
     function teach() { window.MLIVE_ALL().then(function (o) { all = o; paint(); }, function () {}); }
