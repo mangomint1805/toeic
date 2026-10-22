@@ -36,7 +36,7 @@
     };
     window.fetch._mt = 1;
   }
-  if (SITE === 'ielts' && /\/c\d+\/test-\d+\.html$/.test(location.pathname)) { var mks = document.createElement('script'); mks.src = ROOT + 'shared/marks-ielts.js?v=1'; document.head.appendChild(mks); }
+  if (SITE === 'ielts' && /\/(c|v)\d+\/test-\d+\.html$/.test(location.pathname)) { var mks = document.createElement('script'); mks.src = ROOT + 'shared/marks-ielts.js?v=1'; document.head.appendChild(mks); }
   var P = {
     home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
     test: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
@@ -209,7 +209,7 @@
       var md = J('ets26.mini.days', {}); Object.keys(md).forEach(function (k) { days[k] = 1; }); o.mini = Object.keys(md).length; o.miniToday = !!md[o.today];
     } else {
       var pairs = {}, bp = {}; o.subs = 0; o.bestL = 0; o.bestR = 0; o.books = {}; o.full = 0; o.lastFull = 0; o.done = {};
-      BOOKS.forEach(function (b) {
+      BOOKS.concat(['v7']).forEach(function (b) {
         J('cam' + b + '.hist', []).forEach(function (r) {
           if (!r) return; o.subs++; if (r.t) days[dkey(r.t)] = 1; o.books[b] = 1; o.done[b + '-' + r.test] = 1;
           if (r.total === 40) { var bd = +r.band || 0; if (r.sec === 'L') o.bestL = Math.max(o.bestL, bd); else o.bestR = Math.max(o.bestR, bd); pairs[b + '-' + r.test + r.sec] = r.t || 1; }
