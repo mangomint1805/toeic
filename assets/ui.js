@@ -1406,6 +1406,64 @@
       dbP.catch(function () {});
       return dbP;
     }
+    // ---------- lịch sử xem trang (log/<web>) + học viên đã đăng nhập đang online (who/<web>, chỉ thầy đọc được) ----------
+    // Đã đăng nhập Google (acc.js): ghi bằng app mặc định của acc.js (có auth) để luật kiểm tra e == email đăng nhập.
+    // Chưa đăng nhập: ghi log bằng app 'live', không có e/n, không ghi who. online/<web> không bao giờ chứa email/tên.
+    var aDb = null, aUser = null, who = null, aLive = false, aOff = false, logged = false;
+    function clip(s, n) { return String(s == null ? '' : s).slice(0, n); }
+    function authUser(wait) {
+      // wait: máy đã từng đăng nhập (mt.acc) lúc mở trang — đợi acc.js xác định xong (tối đa ~12 giây)
+      return new Promise(function (ok) {
+        var t0 = Date.now(), done = false;
+        function fin(u) { if (!done) { done = true; ok(u || null); } }
+        setTimeout(fin, 15000);
+        (function poll() {
+          var M = window.MACC;
+          if (!M || !M.ready) return wait && Date.now() - t0 < 12000 ? setTimeout(poll, 400) : fin(null);
+          if (!wait && !(M.user && M.user())) return fin(null);
+          M.ready().then(function (fb) {
+            var au = fb && fb.auth;
+            if (!au) return fin(null);
+            return (au.authStateReady ? au.authStateReady() : Promise.resolve()).then(function () {
+              var u = au.currentUser;
+              if (!u || !u.email || u.email.length > 120) return fin(null);
+              if (!aDb) {
+                aDb = D.getDatabase(fb.app, DBURL);
+                D.onValue(D.ref(aDb, '.info/connected'), function (s) { aLive = s.val() === true; if (aLive && who) D.onDisconnect(who).remove().then(whoW, function () {}); }, function () {});
+              }
+              fin(u);
+            });
+          }).catch(function () { fin(null); });
+        })();
+      });
+    }
+    function whoW() {
+      if (!who || !aUser || !aLive || aOff || offline || document.hidden) return;
+      D.set(who, { e: aUser.email, n: clip(aUser.displayName, 60), t: D.serverTimestamp(), u: clip(PATH, 120) }).catch(function () {});
+    }
+    function acct(wait) {
+      return authUser(wait).then(function (u) {
+        if (u && (!aUser || aUser.uid !== u.uid)) {
+          aUser = u; who = D.ref(aDb, 'who/' + SITE + '/' + ID);
+          if (aOff) { aOff = false; if (!offline) D.goOnline(aDb); }
+          else if (aLive) D.onDisconnect(who).remove().then(whoW, function () {});
+        } else if (!u && aUser) {
+          // vừa đăng xuất: ngắt kết nối có auth, máy chủ tự xoá who (onDisconnect)
+          aUser = null; who = null;
+          if (!aOff) { aOff = true; if (!offline) D.goOffline(aDb); }
+        }
+        return u;
+      }).catch(function () { return null; });
+    }
+    function logOnce() {
+      if (logged) return; logged = true;
+      var had = false; try { had = !!localStorage.getItem('mt.acc'); } catch (e) {}
+      (had ? acct(true) : Promise.resolve(null)).then(function (u) {
+        var v = { t: D.serverTimestamp(), k: KIND, u: clip(PATH, 120), i: ID };
+        if (u) { v.e = u.email; v.n = clip(u.displayName, 60); }
+        return D.push(D.ref(u ? aDb : db, 'log/' + SITE), v);
+      }).catch(function () {});
+    }
     function count(val, now, skip) {
       var n = 0, k, v;
       if (val && typeof val === 'object') for (k in val) { v = val[k]; if (k !== skip && v && typeof v.t === 'number' && v.t >= now - FRESH) n++; }
@@ -1471,6 +1529,7 @@
     function write() {
       if (!me || !live || offline || document.hidden) return;
       D.set(me, { t: D.serverTimestamp(), p: KIND }).catch(function () {});
+      whoW();
     }
     function seen(val) {
       last = val; var now = Date.now() + off;
@@ -1485,8 +1544,8 @@
       }
       paint();
     }
-    function sleep() { try { offline = true; if (me && live) D.remove(me).catch(function () {}); D.goOffline(db); } catch (e) {} }
-    function wake() { try { if (offline) { offline = false; D.goOnline(db); } else write(); } catch (e) {} }
+    function sleep() { try { offline = true; if (me && live) D.remove(me).catch(function () {}); D.goOffline(db); if (aDb && !aOff) D.goOffline(aDb); } catch (e) {} }
+    function wake() { try { if (offline) { offline = false; D.goOnline(db); if (aDb && !aOff) D.goOnline(aDb); } else write(); } catch (e) {} }
     function start() {
       load().then(function () {
         me = D.ref(db, 'online/' + SITE + '/' + ID);
@@ -1494,9 +1553,13 @@
         D.onValue(D.ref(db, '.info/connected'), function (s) {
           live = s.val() === true; if (!live) return; ever = true;
           D.onDisconnect(me).remove().then(write, function () {});
+          logOnce();
         }, function () {});
         D.onValue(D.ref(db, 'online/' + SITE), function (s) { seen(s.val()); }, function () {});
-        beat = setInterval(write, 60000);
+        beat = setInterval(function () { write(); acct(false); }, 60000);
+        // đăng nhập / đăng xuất ngay trên trang này: acc.js gọi MACCPAINT mỗi lần đổi trạng thái
+        var mp = window.MACCPAINT;
+        if (typeof mp === 'function' && !mp.mlive) { window.MACCPAINT = function () { var r = mp.apply(this, arguments); try { acct(false); } catch (e) {} return r; }; window.MACCPAINT.mlive = 1; }
         tick = setInterval(function () { if (last !== null && !document.hidden) seen(last); }, 30000);
         // không kết nối được (mạng chặn…) sau 45 giây: thôi thử, đợi lần quay lại tab sau
         setTimeout(function () { if (!ever && !offline) sleep(); }, 45000);
