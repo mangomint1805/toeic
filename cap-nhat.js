@@ -1,0 +1,38 @@
+/* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
+window.MT_UPDATES = [
+  {
+    id: '2026-10-22', date: '22/10/2026',
+    title: 'Thêm 10 đề ETS 2024, tô sáng và ghi chú khi làm bài',
+    items: [
+      'Thêm 10 đề ETS 2024 (Test 11–20), mỗi đề đủ 200 câu, chấm điểm ngay như các đề ETS 2026.',
+      'Khi làm Listening và Reading, bôi đen chữ trong câu hỏi, lời thoại hoặc bài đọc rồi bấm 🖍 Tô vàng hoặc 📝 Ghi chú, giống gạch chân trên giấy.',
+      'Dùng được trên cả máy tính lẫn điện thoại: trên điện thoại, giữ ngón tay vào chữ để chọn, thanh nút sẽ hiện ra ngay cạnh.',
+      'Bấm vào chữ đã tô để xem hoặc sửa ghi chú, bấm ✕ Bỏ tô để xoá. Phần tô và ghi chú tự lưu, mở lại đề vẫn còn.',
+      'Giao diện Băng hoại (nền tối) dễ đọc hơn: chữ, ô đáp án và nút bấm rõ ràng hơn.'
+    ]
+  },
+  {
+    id: '2026-10-21', date: '21/10/2026',
+    title: 'Đăng nhập Google, luyện thêm và giao diện mới',
+    items: [
+      'Đăng nhập Google ngay trên thanh menu để tiến độ tự lưu vào tài khoản, đổi máy vẫn còn. Mở web trong Zalo/Messenger sẽ có nhắc mở bằng Chrome hoặc Safari.',
+      'Xem lại bài đã nộp, trang Hồ sơ của tôi và Bảng xếp hạng tuần của lớp.',
+      'Luyện thêm: game Gõ từ rơi, Phản xạ Part 2 (nghe rồi chọn nhanh), danh sách từ vựng khó của từng đề.',
+      'Đánh dấu ★ và ghi chú câu hỏi để xem lại sau; Kiểm tra xếp lớp 15 phút để biết nên học gì trước.',
+      'Flashcard ôn lặp ngắt quãng (từ sắp quên sẽ hiện lại đúng lúc); sao lưu và khôi phục tiến độ sang máy khác.',
+      'Giao diện mới với linh vật bé Xoài và 3 phong cách Hành baro, Thiên thần, Băng hoại (nền tối); trang chủ gọn hơn với 3 bước cho bạn mới; mục Kiến thức nền thêm bài theo giáo trình lớp.'
+    ]
+  },
+  {
+    id: '2026-10-20', date: '20/10/2026',
+    title: 'Ra mắt web luyện đề TOEIC ETS 2026',
+    items: [
+      '10 đề ETS 2026, mỗi đề đủ 200 câu: audio, hình, lời thoại, bản dịch và giải thích tiếng Việt, chấm điểm ngay.',
+      'Đề mini 10 phút mỗi ngày để giữ chuỗi ngày học; huy hiệu, đếm ngược ngày thi kèm gợi ý hôm nay nên học gì.',
+      'Bấm vào từ để tra nghĩa và lưu flashcard (dùng chung với web IELTS); chép chính tả Part 1–2; chỉnh tốc độ audio.',
+      'Trang Điểm yếu: biết mình hay sai Part nào, dạng câu nào, kèm biểu đồ điểm qua các lần làm.',
+      'Cài web như app trên điện thoại, chỉnh cỡ chữ, nút Góp ý để báo lỗi cho thầy; mục Kiến thức nền cho bạn mới học.',
+      'Đã sửa đáp án Reading Test 4 câu 138, 3 câu Listening Test 6 và bổ sung lời thoại còn thiếu ở Test 2, Test 3.'
+    ]
+  }
+];
