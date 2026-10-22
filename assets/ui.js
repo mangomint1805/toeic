@@ -1047,3 +1047,213 @@
   setTimeout(check, 400);
   if (document.readyState === 'complete') setTimeout(tour, 900); else addEventListener('load', function () { setTimeout(tour, 900); });
 })();
+/* Tô sáng + ghi chú khi làm bài (Listening & Reading, máy tính & điện thoại) + sửa độ tương phản giao diện tối / Băng hoại. Dùng chung web TOEIC và IELTS. */
+(function () {
+  'use strict';
+  var st = document.createElement('style');
+  st.textContent =
+    'mark.hl{background:#ffe58a;color:inherit;border-radius:2px;cursor:pointer;padding:0}mark.hl.has-note{border-bottom:2px dotted var(--brand,#a8691a)}mark.hl.has-note::after{content:"📝";font-size:11px;margin-left:1px}' +
+    '.mhl-bar{position:absolute;z-index:95;display:flex;gap:4px;background:#1e232b;border-radius:8px;padding:4px;box-shadow:0 6px 18px rgba(0,0,0,.3);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}' +
+    '.mhl-bar[hidden],.mhl-note[hidden]{display:none}.mhl-bar button{font:600 13px/1.2 "IBM Plex Sans",system-ui,sans-serif;color:#fff;background:none;border:0;border-radius:5px;padding:7px 10px;cursor:pointer;white-space:nowrap}.mhl-bar button:hover{background:rgba(255,255,255,.15)}' +
+    '.mhl-bar.touch button{font-size:14.5px;padding:11px 12px}' +
+    '.mhl-note{position:absolute;z-index:95;width:280px;max-width:calc(100vw - 16px);background:var(--card,#fff);color:var(--ink,#1e232b);border:1px solid var(--line,#ddd7c9);border-radius:8px;padding:10px;box-shadow:0 10px 26px rgba(0,0,0,.22)}' +
+    '.mhl-note textarea{display:block;width:100%;box-sizing:border-box;font:14px/1.5 "IBM Plex Sans",system-ui,sans-serif;border:1px solid var(--line,#ddd7c9);border-radius:5px;padding:6px 8px;margin:0 0 8px;resize:vertical;background:var(--card,#fff);color:inherit}' +
+    '.mhl-note .btn{padding:6px 12px;font-size:13px;margin-right:6px}' +
+    '.mhl-hint{font-size:12.5px;font-weight:500;color:var(--dim,#666e7a)}' +
+    'html[data-theme=dark] mark.hl,html[data-theme=dark] :is(mark.ev,.evhl,.script-body span.kara){color:#1e232b}' +
+    'html[data-theme=dark] :is(.dir,.vi-psg,.vhint,.karaopt,.mhl-hint){color:var(--dim)!important}' +
+    'html[data-theme=dark] :is(.part,.passage,.ocard) em{color:var(--dim)}' +
+    'html[data-theme=dark] .loc{background:var(--brand-soft);border-color:var(--brand);color:var(--brand-ink)}' +
+    'html[data-theme=dark] .grid a:not(.done):not(.g-ok):not(.g-bad){background:var(--card)}' +
+    'html[data-theme=dark] :is(.grid a.g-ok,.grid a.g-bad,.score .band,.psg .blank.filled,.psg .blank.ok,.psg .blank.bad,.evtag,.sgrid button.g-ok,.sgrid button.g-bad),html[data-theme=dark] .evhl::before{color:#10131a!important}' +
+    'html[data-theme=dark] .exambar:not(.over){background:var(--brand-soft);border-color:var(--brand)}' +
+    'html[data-theme=dark] #xpSheet :is(.xp-a b,.xp-ok){color:var(--ok)}html[data-theme=dark] #xpSheet .xp-no{color:var(--bad)}' +
+    'html[data-theme=dark] ::highlight(cam-vocab){background-color:rgba(242,200,121,.16);text-decoration-color:#d9a24a}';
+  document.head.appendChild(st);
+
+  var P = location.pathname, isT = /\/test\.html$/.test(P), mc = /\/c(\d+)\/test-(\d+)\.html$/.exec(P);
+  if (!isT && !mc) return;
+  var KEY = isT ? 'mt.hl.toeic.t' + Math.max(1, Math.min(10, parseInt(new URLSearchParams(location.search).get('t'), 10) || 1)) : 'mt.hl.cam' + mc[1] + '.t' + mc[2];
+  var OLD = mc ? 'cam' + mc[1] + '.hl.t' + mc[2] : '';
+  var ZONE = '#partBody,.sect';
+  var NOZ = '.panel,.ptools,.qmk,.qnote,.vpop,.audio,audio,.exambar,.mhl-bar,.mhl-note,#xpSheet,.karaopt,summary,.overlay';
+  var SKIP = 'button,input,select,textarea,script,style,audio,.mark,.fix,.evtag,.loc,.blank,.qmk,.qnote,.vi,summary';
+  var BLK = 'p,li,td,th,h1,h2,h3,h4,h5,h6,dt,dd,figcaption,pre,label,.qtext,.blank-q,.psg,.ghead,.qt,.in';
+  var NOWRAP = /^(TABLE|TBODY|THEAD|TFOOT|TR|COLGROUP|UL|OL|DL|SELECT)$/;
+  function get() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
+  function put(o) { try { if (Object.keys(o).length) localStorage.setItem(KEY, JSON.stringify(o)); else localStorage.removeItem(KEY); if (OLD) localStorage.removeItem(OLD); } catch (e) {} }
+  function el(t) { return t && (t.nodeType === 1 ? t : t.parentElement); }
+  function inZone(n) { var e = el(n); return !!(e && e.closest(ZONE) && !e.closest(NOZ)); }
+  function texts(root) {
+    var out = [], w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), t;
+    while ((t = w.nextNode())) { var sk = t.parentElement && t.parentElement.closest(SKIP); if (sk && sk !== root && root.contains(sk)) continue; out.push(t); }
+    return out;
+  }
+  function blockOf(n) { var e = el(n); return e && (e.closest(BLK) || e.closest('[id]')); }
+  function keyOf(b) {
+    var a = b.id ? b : b.parentElement && b.parentElement.closest('[id]'); if (!a) return null;
+    return a === b ? a.id : a.id + '/' + [].indexOf.call(a.querySelectorAll(BLK), b);
+  }
+  function findBlock(k) {
+    var i = k.lastIndexOf('/'), a = document.getElementById(i < 0 ? k : k.slice(0, i)); if (!a) return null;
+    return i < 0 ? a : a.querySelectorAll(BLK)[+k.slice(i + 1)] || null;
+  }
+  var gid = 0;
+  function newG() { return Date.now().toString(36) + (gid++); }
+  function wrapText(t, s, e, g) {
+    if (e <= s || NOWRAP.test(t.parentNode.nodeName) || el(t).closest('mark.hl') || el(t).closest(SKIP)) return null;
+    if (!t.nodeValue.slice(s, e).trim()) return null;
+    if (e < t.length) t.splitText(e);
+    if (s > 0) t = t.splitText(s);
+    var mk = document.createElement('mark'); mk.className = 'hl'; mk.setAttribute('data-g', g);
+    t.parentNode.insertBefore(mk, t); mk.appendChild(t); return mk;
+  }
+  function wrapRange(r, g) {
+    var root = r.commonAncestorContainer, list = [], marks = [];
+    if (root.nodeType === 3) list = [root];
+    else { var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), t; while ((t = w.nextNode())) if (r.intersectsNode(t)) list.push(t); }
+    list.forEach(function (t) {
+      if (!inZone(t)) return;
+      var s = t === r.startContainer ? r.startOffset : 0, e = t === r.endContainer ? r.endOffset : t.length;
+      var mk = wrapText(t, s, e, g); if (mk) marks.push(mk);
+    });
+    return marks;
+  }
+  function setNote(g, v) {
+    var ms = [].slice.call(document.querySelectorAll('mark.hl[data-g="' + g + '"]'));
+    ms.forEach(function (m, i) { var last = i === ms.length - 1; m.classList.toggle('has-note', !!v && last); if (v && last) { m.setAttribute('data-note', v); m.title = v; } else { m.removeAttribute('data-note'); m.removeAttribute('title'); } });
+  }
+  function unwrap(m) { var p = m.parentNode; if (!p) return; while (m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); p.normalize(); }
+  function save() {
+    var o = get();
+    Object.keys(o).forEach(function (k) { var b = findBlock(k); if (b && inZone(b)) delete o[k]; });
+    [].forEach.call(document.querySelectorAll('mark.hl'), function (m) {
+      var b = blockOf(m), k = b && inZone(b) && keyOf(b); if (!k) return;
+      var pos = 0, ts = texts(b), g = m.getAttribute('data-g') || newG(); m.setAttribute('data-g', g);
+      for (var i = 0; i < ts.length; i++) {
+        var t = ts[i];
+        if (m.contains(t)) { var a = o[k] = o[k] || [], last = a[a.length - 1];
+          if (last && last[2] === g && last[1] === pos) { last[1] += t.length; last[3] += t.nodeValue; } else a.push([pos, pos + t.length, g, t.nodeValue, '']);
+          if (m.getAttribute('data-note')) a[a.length - 1][4] = m.getAttribute('data-note');
+        }
+        pos += t.length;
+      }
+    });
+    put(o);
+  }
+  var done = window.WeakSet ? new WeakSet() : null;
+  function restore() {
+    if (!done) return;
+    var o = get();
+    Object.keys(o).forEach(function (k) {
+      var b = findBlock(k); if (!b || done.has(b) || !inZone(b)) return; done.add(b);
+      var had = {}; [].forEach.call(b.querySelectorAll('mark.hl[data-g]'), function (m) { had[m.getAttribute('data-g')] = 1; });
+      o[k].forEach(function (x) {
+        if (had[x[2]]) return;
+        var ts = texts(b), pos = 0, full = ts.map(function (t) { return t.nodeValue; }).join('');
+        if (full.slice(x[0], x[1]) !== x[3]) return;
+        var segs = [];
+        ts.forEach(function (t) { var a = pos, z = pos + t.length; pos = z; var s = Math.max(a, x[0]), e = Math.min(z, x[1]); if (e > s) segs.push([t, s - a, e - a]); });
+        segs.forEach(function (sg) { wrapText(sg[0], sg[1], sg[2], x[2]); });
+        if (x[4]) setNote(x[2], x[4]);
+      });
+    });
+  }
+
+  // ---------- giao diện ----------
+  var bar = document.createElement('div'); bar.className = 'mhl-bar'; bar.hidden = true;
+  bar.innerHTML = '<button type="button" data-h="y">🖍 Tô vàng</button><button type="button" data-h="n">📝 Ghi chú</button><button type="button" data-h="x">✕ Bỏ tô</button>';
+  var nb = document.createElement('div'); nb.className = 'mhl-note'; nb.hidden = true;
+  nb.innerHTML = '<textarea rows="3" placeholder="Ghi chú của bạn…"></textarea><div><button type="button" data-n="save" class="btn">Lưu</button><button type="button" data-n="del" class="btn alt">Bỏ tô</button></div>';
+  var range = null, curG = null, busy = 0, mouseDown = false, lastPT = '', tmr = 0;
+  function isTouch() { return lastPT ? lastPT !== 'mouse' : !!(window.matchMedia && matchMedia('(pointer:coarse)').matches); }
+  function place(box, x, y) { box.style.left = Math.max(8, Math.min(document.documentElement.clientWidth - box.offsetWidth - 8, x)) + 'px'; box.style.top = Math.max(0, y + window.scrollY) + 'px'; }
+  function hits(r) { return [].filter.call(document.querySelectorAll('mark.hl'), function (m) { try { return r.intersectsNode(m); } catch (e) { return false; } }); }
+  function hideBar() { bar.hidden = true; range = null; }
+  function onSel() {
+    var sel = window.getSelection(); if (!sel || !sel.rangeCount || sel.isCollapsed) { if (Date.now() > busy) hideBar(); return; }
+    var r = sel.getRangeAt(0);
+    if (!inZone(r.startContainer) || !inZone(r.endContainer) || !r.toString().trim()) { hideBar(); return; }
+    range = r.cloneRange();
+    var touch = isTouch(); bar.classList.toggle('touch', touch);
+    bar.querySelector('[data-h=x]').hidden = !hits(range).length;
+    bar.hidden = false; nb.hidden = true;
+    var rs = r.getClientRects(), rc = r.getBoundingClientRect(), f = rs[0] || rc, l = rs[rs.length - 1] || rc, h = bar.offsetHeight, vh = window.innerHeight;
+    if (touch) {
+      // điện thoại: đặt DƯỚI vùng chọn để không bị menu Copy/Paste của máy che
+      var y = l.bottom + 30;
+      if (y + h > vh - 8) y = f.top - h - 64 > 8 ? f.top - h - 64 : Math.max(8, vh - h - 12);
+      place(bar, l.left + l.width / 2 - bar.offsetWidth / 2, y);
+    } else {
+      var top = f.top - h - 8;
+      place(bar, f.left + f.width / 2 - bar.offsetWidth / 2, top < 70 ? l.bottom + 8 : top);
+    }
+  }
+  function later(ms) { clearTimeout(tmr); tmr = setTimeout(onSel, ms); }
+  function openNote(m) {
+    curG = m.getAttribute('data-g'); if (!curG) { curG = newG(); m.setAttribute('data-g', curG); }
+    var ms = document.querySelectorAll('mark.hl[data-g="' + curG + '"]'), lastM = ms[ms.length - 1] || m;
+    nb.hidden = false; bar.hidden = true; nb.querySelector('textarea').value = lastM.getAttribute('data-note') || '';
+    var rc = m.getBoundingClientRect(); place(nb, rc.left, rc.bottom + (isTouch() ? 30 : 6));
+    if (!isTouch()) nb.querySelector('textarea').focus();
+  }
+  function act(h) {
+    var r = range; if (!r) return;
+    if (h === 'x') { var gs = {}; hits(r).forEach(function (m) { gs[m.getAttribute('data-g')] = 1; }); Object.keys(gs).forEach(function (g) { [].forEach.call(document.querySelectorAll('mark.hl[data-g="' + g + '"]'), unwrap); }); }
+    var ms = h === 'x' ? [] : wrapRange(r, newG());
+    try { window.getSelection().removeAllRanges(); } catch (e) {}
+    hideBar(); save();
+    if (h === 'n' && ms.length) openNote(ms[0]);
+  }
+  function guard(e) { busy = Date.now() + 700; if (e.type !== 'touchstart') e.preventDefault(); }
+  ['pointerdown', 'mousedown', 'touchstart'].forEach(function (t) { bar.addEventListener(t, guard, t === 'touchstart' ? { passive: true } : false); });
+  bar.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { e.stopPropagation(); act(b.dataset.h); } });
+  nb.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b || !curG) return;
+    var ms = [].slice.call(document.querySelectorAll('mark.hl[data-g="' + curG + '"]'));
+    if (b.dataset.n === 'save') setNote(curG, nb.querySelector('textarea').value.trim()); else ms.forEach(unwrap);
+    nb.hidden = true; curG = null; save();
+  });
+
+  function init() {
+    if (!document.body) return;
+    // bỏ thanh tô sáng cũ (chỉ chạy được bằng chuột) của trang IELTS để dùng bản chung này
+    [].forEach.call(document.querySelectorAll('body>.hltool,body>.notebox'), function (x) { x.remove(); });
+    document.body.appendChild(bar); document.body.appendChild(nb);
+    restore();
+    if (OLD) { try { if (localStorage.getItem(OLD) != null) save(); } catch (e) {} }
+    hints();
+    document.addEventListener('pointerdown', function (e) { lastPT = e.pointerType || lastPT; if (e.pointerType === 'mouse') mouseDown = true; if (!nb.contains(e.target) && !bar.contains(e.target)) nb.hidden = true; }, true);
+    document.addEventListener('mousedown', function () { if (!lastPT) mouseDown = true; }, true);
+    document.addEventListener('mouseup', function (e) { mouseDown = false; if (!bar.contains(e.target) && !nb.contains(e.target)) later(10); });
+    document.addEventListener('touchstart', function () { lastPT = 'touch'; }, { passive: true, capture: true });
+    document.addEventListener('touchend', function (e) { if (!bar.contains(e.target) && !nb.contains(e.target)) later(350); }, { passive: true });
+    document.addEventListener('selectionchange', function () { if (!mouseDown) later(isTouch() ? 350 : 250); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { hideBar(); nb.hidden = true; } });
+    window.addEventListener('resize', function () { if (!bar.hidden) later(100); });
+    document.addEventListener('click', function (e) {
+      var t = e.target, sel = window.getSelection(), lab = t.closest && t.closest('label');
+      // bôi đen chữ trong một đáp án không được tự chọn đáp án đó
+      if (lab && !isTouch() && sel && !sel.isCollapsed && lab.contains(sel.anchorNode)) { e.preventDefault(); return; }
+      var m = t.closest && t.closest('mark.hl');
+      if (m && !m.closest('label,a,button,.opt') && !(sel && String(sel).trim())) { e.stopPropagation(); openNote(m); }
+    }, true);
+    // nút "Xoá tô sáng" của từng passage (IELTS)
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('[data-clear]'); if (!b) return;
+      var ps = b.closest('.passage'), c0 = window.confirm;
+      window.confirm = function (msg) { window.confirm = c0; var ok = c0.call(window, msg); if (ok && ps) setTimeout(function () { [].forEach.call(ps.querySelectorAll('mark.hl'), unwrap); save(); }, 0); return ok; };
+      setTimeout(function () { window.confirm = c0; save(); }, 0);
+    }, true);
+    if (window.MutationObserver) new MutationObserver(function () { clearTimeout(init.t); init.t = setTimeout(function () { restore(); hints(); }, 60); }).observe(document.body, { childList: true, subtree: true });
+  }
+  function hints() {
+    var h = document.querySelector('#main .pt-head');
+    if (h && !h.querySelector('.mhl-hint')) { var s = document.createElement('span'), k = h.querySelector('.lkhint'); s.className = 'mhl-hint'; s.textContent = (k ? ' · ' : '') + '🖍 Bôi đen chữ để tô vàng / ghi chú'; (k || h).appendChild(s); }
+    [].forEach.call(document.querySelectorAll('.sect .part'), function (p) {
+      var t = p.querySelector('.part-title'); if (!t || p.querySelector('.ptools')) return;
+      var d = document.createElement('div'); d.className = 'ptools'; d.innerHTML = '<span>Bôi đen chữ trong câu hỏi hoặc lời thoại để tô vàng hoặc ghi chú.</span>'; t.insertAdjacentElement('afterend', d);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
