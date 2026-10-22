@@ -1,6 +1,14 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-22b', date: '22/10/2026',
+    title: 'Xem có bao nhiêu bạn đang học cùng',
+    items: [
+      'Dưới logo có thêm dòng "● N bạn đang học": số bạn đang mở web cùng lúc với bạn, tự cập nhật liên tục.',
+      'Lúc làm đề thi thử, đề mini hay kiểm tra xếp lớp thì dòng này tự ẩn để bạn tập trung làm bài.'
+    ]
+  },
+  {
     id: '2026-10-22', date: '22/10/2026',
     title: 'Thêm 10 đề ETS 2024, tô sáng và ghi chú khi làm bài',
     items: [
