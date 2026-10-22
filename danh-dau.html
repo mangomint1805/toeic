@@ -80,7 +80,7 @@ html[data-theme=dark] .mk textarea{background:rgba(255,255,255,.04)}
     if(!L.length){ main.innerHTML='<div class="card empty"><b class="et">Chưa có câu nào '+(F==='n'?'có ghi chú':'được đánh dấu')+'</b>Khi làm đề, bấm <b>☆</b> cạnh số câu để đánh dấu câu khó, hoặc <b>📝</b> để ghi chú bẫy/mẹo. Tất cả sẽ hiện ở đây để ôn lại.<p style="margin:14px 0 0"><a class="btn" href="./#de-thi" style="text-decoration:none">Chọn đề để làm</a></p></div>'; return; }
     var h='', cur=0;
     L.forEach(function(x){
-      if(x.t!==cur){ cur=x.t; h+='<div class="grp">ETS 2026 · Test '+x.t+'</div>'; }
+      if(x.t!==cur){ cur=x.t; h+='<div class="grp">'+(x.t>10?'ETS 2024 · Test '+(x.t-10):'ETS 2026 · Test '+x.t)+'</div>'; }
       h+='<div class="mk" data-k="'+esc(x.k)+'"><button class="st" title="Bỏ/đánh dấu" aria-pressed="'+!!x.s+'">'+(x.s?'★':'☆')+'</button><div><div class="meta">Câu '+x.n+' · Part '+x.p+' · '+PN[x.p]+'</div><div class="tx">'+esc(x.q)+'</div></div>'+
         '<a href="test.html?t='+x.t+'&m=p'+x.p+'#q'+x.n+'">Mở câu →</a><textarea placeholder="Ghi chú…">'+esc(x.note||'')+'</textarea><button class="del">Xoá khỏi danh sách</button></div>';
     });

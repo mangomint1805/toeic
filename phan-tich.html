@@ -107,10 +107,10 @@ svg text{font-family:'IBM Plex Sans',sans-serif}
     if(!ks.length){ el.innerHTML='<div class="empty">Chưa có dữ liệu. Nộp vài bài phần '+(SEC==='L'?'Listening':'Reading')+' để xem mình hay sai dạng nào.</div>'; return; }
     el.innerHTML=ks.map(function(c){ var o=s[c], pc=Math.round(o.ok/o.n*100), col=pc>=80?'var(--ok)':pc>=60?'var(--mid)':'var(--bad)';
       // gợi ý luyện: test & part có nhiều câu dạng này mà chưa làm / làm sai
-      var sug=[]; for(var t=1;t<=10;t++){ var cnt={}; Object.keys(C[t]||{}).forEach(function(n){ if(C[t][n]===c&&last[t+'|'+n]!==1){ var p=partOf(+n); cnt[p]=(cnt[p]||0)+1; } }); Object.keys(cnt).forEach(function(p){ sug.push([cnt[p],t,p]); }); }
+      var sug=[]; for(var t=1;t<=20;t++){ var cnt={}; Object.keys(C[t]||{}).forEach(function(n){ if(C[t][n]===c&&last[t+'|'+n]!==1){ var p=partOf(+n); cnt[p]=(cnt[p]||0)+1; } }); Object.keys(cnt).forEach(function(p){ sug.push([cnt[p],t,p]); }); }
       sug.sort(function(a,b){ return b[0]-a[0]; });
       return '<div class="cat"><span class="nm">'+esc(NM[c]||c)+'<small>'+o.ok+'/'+o.n+' câu đúng</small></span><span class="bar"><s style="width:'+pc+'%;background:'+col+'"></s></span><span class="pct" style="color:'+col+'">'+pc+'%</span>'+
-        (pc<80&&sug.length?'<span class="go">Luyện thêm: '+sug.slice(0,3).map(function(x){ return '<a href="test.html?t='+x[1]+'&m=p'+x[2]+'">Test '+x[1]+' · Part '+x[2]+'</a>'; }).join('')+'</span>':'')+'</div>'; }).join('');
+        (pc<80&&sug.length?'<span class="go">Luyện thêm: '+sug.slice(0,3).map(function(x){ return '<a href="test.html?t='+x[1]+'&m=p'+x[2]+'">'+(x[1]>10?'ETS 2024 · Test '+(x[1]-10):'Test '+x[1])+' · Part '+x[2]+'</a>'; }).join('')+'</span>':'')+'</div>'; }).join('');
   }
   [].forEach.call(document.querySelectorAll('.tabs button'),function(b){ b.onclick=function(){ SEC=b.dataset.s; [].forEach.call(document.querySelectorAll('.tabs button'),function(x){ x.setAttribute('aria-selected',String(x===b)); }); cats(); }; });
   chart(); parts(); cats();

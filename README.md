@@ -1,6 +1,6 @@
 # ETS 2026 · Luyện đề TOEIC
 
-Trang luyện đề TOEIC Listening & Reading tự chấm cho học viên: 10 đề ETS 2026, mỗi đề 200 câu.
+Trang luyện đề TOEIC Listening & Reading tự chấm cho học viên: 10 đề ETS 2026 và 10 đề ETS 2024, mỗi đề 200 câu.
 
 **Link cho học viên:** https://mangomint1805.github.io/toeic/
 

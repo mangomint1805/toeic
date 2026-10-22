@@ -87,12 +87,12 @@ window.GAME_CFG = {
     var mine = Object.keys(C).map(function (k) { return { w: C[k].w || k, m: C[k].m || '', ipa: C[k].ipa || '' }; }).filter(function (x) { return /^[a-z][a-z' -]{1,24}$/i.test(x.w); });
     P.push({ id: 'mine', name: 'Flashcard của tôi', n: mine.length, words: mine });
     var V = window.TESTVOCAB || {}, all = [];
-    for (var t = 1; t <= 10; t++) { if (V[t]) all = all.concat(V[t]); }
-    P.push({ id: 'all', name: 'Từ khó cả 10 đề', n: all.length, words: all });
-    for (var t2 = 1; t2 <= 10; t2++) if (V[t2]) P.push({ id: 't' + t2, name: 'Test ' + t2, n: V[t2].length, words: V[t2] });
+    for (var t = 1; t <= 20; t++) { if (V[t]) all = all.concat(V[t]); }
+    P.push({ id: 'all', name: 'Từ khó cả 20 đề', n: all.length, words: all });
+    for (var t2 = 1; t2 <= 20; t2++) if (V[t2]) P.push({ id: 't' + t2, name: (t2 > 10 ? 'ETS 2024 · Test ' + (t2 - 10) : 'Test ' + t2), n: V[t2].length, words: V[t2] });
     return P;
   },
-  scripts: ['data/tuvung.js?v=1']
+  scripts: ['data/tuvung.js?v=2']
 };
 </script>
 <script src="assets/game-typing.js?v=2"></script>

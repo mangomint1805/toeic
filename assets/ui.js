@@ -482,7 +482,7 @@
     if (T) {
       tasks.push(['flame', 'Đề mini hôm nay (10 phút)', 'mini.html', s.miniToday]);
       if (s.nen < nL || s.nenToday) tasks.push(['book', 'Học 1 bài Kiến thức nền' + (s.nen ? ' (' + s.nen + '/' + nL + ')' : ''), 'nen.html', s.nenToday > 0]);
-      var tn = 1, mn = 99; for (var t = 1; t <= 10; t++) { var c = s.tests[t] || 0; if (c < mn) { mn = c; tn = t; } }
+      var tn = 1, mn = 99; for (var t = 1; t <= 20; t++) { var c = s.tests[t] || 0; if (c < mn) { mn = c; tn = t; } }
       if (weak) tasks.push(['target', 'Luyện Part ' + weak[0] + ' (đang đúng ' + Math.round(weak[1] * 100) + '%)', 'test.html?t=' + tn + '&m=p' + weak[0], false]);
       else tasks.push(['headphones', 'Làm thử Part 1 và Part 2 của Test ' + tn, 'test.html?t=' + tn + '&m=p1', false]);
       if (left >= 0 && left <= 60 && s.lastFull < wk) tasks.push(['test', 'Thi thử Full test có giờ (tuần này chưa làm)', 'test.html?t=' + tn + '&m=full', false]);

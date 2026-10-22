@@ -6,12 +6,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light only">
-<title>Minto English · Luyện đề TOEIC ETS 2026</title>
-<meta name="description" content="10 đề TOEIC ETS 2026 đủ 200 câu: chấm điểm ngay, quy đổi thang 990, lời thoại, dịch và giải thích tiếng Việt, đề mini mỗi ngày.">
+<title>Minto English · Luyện đề TOEIC ETS 2026 & 2024</title>
+<meta name="description" content="20 đề TOEIC ETS 2026 và ETS 2024 đủ 200 câu: chấm điểm ngay, quy đổi thang 990, lời thoại, dịch và giải thích tiếng Việt, đề mini mỗi ngày.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Minto English">
-<meta property="og:title" content="Minto English · Luyện đề TOEIC ETS 2026">
-<meta property="og:description" content="10 đề thi thử 200 câu, chấm điểm ngay, giải thích tiếng Việt, đề mini 10 phút mỗi ngày.">
+<meta property="og:title" content="Minto English · Luyện đề TOEIC ETS 2026 & 2024">
+<meta property="og:description" content="20 đề thi thử 200 câu (ETS 2026 + ETS 2024), chấm điểm ngay, giải thích tiếng Việt, đề mini 10 phút mỗi ngày.">
 <meta property="og:image" content="https://mangomint1805.github.io/toeic/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:url" content="https://mangomint1805.github.io/toeic/">
@@ -106,7 +106,7 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
     <div class="hello">
       <p class="kicker"><span data-ic="target"></span>TOEIC Listening &amp; Reading</p>
       <h1 id="hi">Luyện đề TOEIC <em>ETS 2026</em></h1>
-      <p>10 đề thi thử đủ 200 câu. Chấm điểm và quy đổi thang 990 ngay khi nộp, kèm lời thoại, dịch và giải thích tiếng Việt từng câu.</p>
+      <p>20 đề thi thử đủ 200 câu (ETS 2026 và ETS 2024). Chấm điểm và quy đổi thang 990 ngay khi nộp, kèm lời thoại, dịch và giải thích tiếng Việt từng câu.</p>
       <div class="cta"><a class="btn" href="mini.html"><span data-ic="flame"></span>Đề mini hôm nay</a><a class="btn alt" href="#de-thi"><span data-ic="test"></span>Chọn đề thi thử</a></div>
     </div>
     <div class="panel">
@@ -121,8 +121,10 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
 
   <a class="nenbar" href="nen.html"><span class="ico" data-ic="layers"></span><span><b>Mới học TOEIC? Bắt đầu với Kiến thức nền</b><small id="nenSub">Ngữ pháp Part 5–6, mẹo nghe từng Part, từ vựng theo chủ đề. Giải thích tiếng Việt, có bài tập nhỏ.</small></span><span class="go" data-ic="arrow"></span></a>
 
-  <div class="sec" id="de-thi"><h2>10 đề thi thử</h2><span>Mỗi đề: Listening 100 câu · Reading 100 câu</span></div>
+  <div class="sec" id="de-thi"><h2>ETS 2026 · 10 đề thi thử</h2><span>Mỗi đề: Listening 100 câu · Reading 100 câu</span></div>
   <ul class="tests" id="tests"></ul>
+  <div class="sec" id="de-thi-24"><h2>ETS 2024 · 10 đề thi thử</h2><span>Bộ đề cũ hơn — thêm 2000 câu để luyện</span></div>
+  <ul class="tests" id="tests24"></ul>
 
   <div class="sec"><h2>Công cụ ôn tập</h2></div>
   <div class="tools">
@@ -171,12 +173,12 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
     '<div class="stat"><span class="lab">'+I('flame')+'Chuỗi ngày học</span><b>'+(window.MSTATS?MSTATS().streak:streak())+'</b><small>ngày liên tục</small></div>'+
     '<div class="stat"><span class="lab">'+I('trophy')+'Điểm cao nhất</span><b>'+(best||'–')+'</b><small>'+(best?'Full test, thang 990':'chưa làm Full test')+'</small></div>'+
     '<div class="stat"><span class="lab">'+I('check')+'Bài đã nộp</span><b>'+hist.length+'</b><small>'+qs+' câu đã làm</small></div>'+
-    '<div class="stat"><span class="lab">'+I('clock')+'Lần gần nhất</span><b style="font-size:20px">'+(last?'Test '+last.test:'–')+'</b><small>'+(last?esc(last.name)+' · '+last.got+'/'+last.total:'chưa có')+'</small></div>';
+    '<div class="stat"><span class="lab">'+I('clock')+'Lần gần nhất</span><b style="font-size:20px">'+(last?(last.test>10?'ETS24 · T'+(last.test-10):'Test '+last.test):'–')+'</b><small>'+(last?esc(last.name)+' · '+last.got+'/'+last.total:'chưa có')+'</small></div>';
   if(window.MSTART) MSTART(document.getElementById('stats'));
   // bài làm dở
   var MN={full:'Full test',lc:'Listening',rc:'Reading'}, cur=null;
-  for(var t=1;t<=10;t++) ['full','lc','rc','p1','p2','p3','p4','p5','p6','p7'].forEach(function(m){ var s=get('ets26.t'+t+'.'+m); if(s&&!s.done&&s.ans){ var n=Object.keys(s.ans).length; if(n&&(!cur||s.t0>cur.t0)) cur={t:t,m:m,n:n,t0:s.t0}; } });
-  if(cur) document.getElementById('resume').innerHTML='<a class="resume" href="test.html?t='+cur.t+'&m='+cur.m+'">'+I('play')+'<span><b>Làm tiếp: Test '+cur.t+' · '+(MN[cur.m]||'Part '+cur.m.slice(1))+'</b><small>Đã chọn '+cur.n+' câu</small></span><span class="go">'+I('arrow')+'</span></a>';
+  for(var t=1;t<=20;t++) ['full','lc','rc','p1','p2','p3','p4','p5','p6','p7'].forEach(function(m){ var s=get('ets26.t'+t+'.'+m); if(s&&!s.done&&s.ans){ var n=Object.keys(s.ans).length; if(n&&(!cur||s.t0>cur.t0)) cur={t:t,m:m,n:n,t0:s.t0}; } });
+  if(cur) document.getElementById('resume').innerHTML='<a class="resume" href="test.html?t='+cur.t+'&m='+cur.m+'">'+I('play')+'<span><b>Làm tiếp: '+(cur.t>10?'ETS 2024 · Test '+(cur.t-10):'Test '+cur.t)+' · '+(MN[cur.m]||'Part '+cur.m.slice(1))+'</b><small>Đã chọn '+cur.n+' câu</small></span><span class="go">'+I('arrow')+'</span></a>';
   // tên
   var me=document.getElementById('me');
   function drawMe(edit){
@@ -187,16 +189,17 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
   }
   drawMe(false);
   // danh sách đề
-  var h='', C=2*Math.PI*26;
-  for(var k=1;k<=10;k++){
+  var h='', h24='', C=2*Math.PI*26;
+  for(var k=1;k<=20;k++){
     var mine=hist.filter(function(r){ return r.test===k; });
     var full=mine.filter(function(r){ return r.lcS&&r.rcS; }).map(function(r){ return r.lcS+r.rcS; }).sort(function(a,b){ return b-a; })[0];
     var done={}; mine.forEach(function(r){ Object.keys(r.parts||{}).forEach(function(p){ done[p]=1; }); });
     var np=Object.keys(done).length, frac=full?full/990:np/7;
     var badge=full?'<span class="badge ok">Cao nhất '+full+'</span>':np?'<span class="badge mid">Đã làm '+np+'/7 part</span>':'<span class="badge">Chưa làm</span>';
-    h+='<li><a class="test" href="test.html?t='+k+'"><span class="ring" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#f0eadf" stroke-width="5"/><circle cx="30" cy="30" r="26" fill="none" stroke="'+(full?'#1f8f6c':'#a8691a')+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+(C*frac).toFixed(1)+' '+C.toFixed(1)+'"/></svg><span class="n"><small>TEST</small><b>'+k+'</b></span></span><span class="tinfo"><b>ETS 2026 · Test '+k+'</b><span>200 câu · 7 part</span>'+badge+'</span></a></li>';
+    var li='<li><a class="test" href="test.html?t='+k+'"><span class="ring" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#f0eadf" stroke-width="5"/><circle cx="30" cy="30" r="26" fill="none" stroke="'+(full?'#1f8f6c':'#a8691a')+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+(C*frac).toFixed(1)+' '+C.toFixed(1)+'"/></svg><span class="n"><small>TEST</small><b>'+(k>10?k-10:k)+'</b></span></span><span class="tinfo"><b>'+(k>10?'ETS 2024 · Test '+(k-10):'ETS 2026 · Test '+k)+'</b><span>200 câu · 7 part</span>'+badge+'</span></a></li>';
+    if(k>10) h24+=li; else h+=li;
   }
-  document.getElementById('tests').innerHTML=h;
+  document.getElementById('tests').innerHTML=h; document.getElementById('tests24').innerHTML=h24;
   // kế hoạch + huy hiệu
   if(window.MPLAN) MPLAN(document.getElementById('plan'));
   if(window.MBADGEHTML){ document.getElementById('badges').innerHTML=MBADGEHTML(); var bb=MBADGES(); document.getElementById('bdgN').textContent='Đã mở '+bb.filter(function(x){return x.at;}).length+'/'+bb.length; }

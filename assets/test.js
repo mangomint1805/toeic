@@ -2,7 +2,8 @@
 (function () {
   'use strict';
   var Q = new URLSearchParams(location.search);
-  var T = Math.max(1, Math.min(10, parseInt(Q.get('t'), 10) || 1));
+  var T = Math.max(1, Math.min(20, parseInt(Q.get('t'), 10) || 1));
+  var NAME = T > 10 ? 'ETS 2024 · Test ' + (T - 10) : 'ETS 2026 · Test ' + T;
   var MODE = Q.get('m') || '';
   var L4 = ['A', 'B', 'C', 'D'];
   var PART_INFO = {
@@ -61,8 +62,8 @@
   function save() { put(KEY, ST); }
 
   // ---------- boot ----------
-  document.title = 'ETS 2026 · Test ' + T;
-  $('#ttl').firstChild.nodeValue = 'ETS 2026 · Test ' + T;
+  document.title = NAME;
+  $('#ttl').firstChild.nodeValue = NAME;
   var sc = document.createElement('script');
   sc.src = 'data/t' + T + '.js';
   sc.onload = function () { D = window.ETSDATA && window.ETSDATA[T]; if (!D) return fail(); index(); route(); };
@@ -99,7 +100,7 @@
   function startScreen() {
     var hist = (get('ets26.hist') || []).filter(function (h) { return h.test === T; });
     var resume = Object.keys(MODES).filter(function (m) { var s = get('ets26.t' + T + '.' + m); return s && !s.done && s.ans && Object.keys(s.ans).length; });
-    var h = '<div class="start"><h2>ETS 2026 · Test ' + T + '</h2><p class="lead">200 câu · Listening 100 câu (~46 phút) · Reading 100 câu (75 phút). Chọn cách làm bài:</p>';
+    var h = '<div class="start"><h2>' + NAME + '</h2><p class="lead">200 câu · Listening 100 câu (~46 phút) · Reading 100 câu (75 phút). Chọn cách làm bài:</p>';
     if (resume.length) h += '<div class="resume">' + window.MICON('play') + ' Bạn đang làm dở: ' + resume.map(function (m) { var n = Object.keys(get('ets26.t' + T + '.' + m).ans).length; return '<a href="?t=' + T + '&m=' + m + '"><b>' + MODES[m].name + '</b> (' + n + ' câu đã chọn)</a>'; }).join(' · ') + '</div>';
     h += '<div class="modes">' +
       '<button class="mode" data-m="full"><span class="mico">' + window.MICON('target') + '</span><b>Thi thử Full test</b><span>200 câu · 120 phút · audio phát liền như thi thật</span></button>' +
@@ -136,13 +137,13 @@
       });
       h += '</div><div class="tvact"><button type="button" class="btn sm" id="tvAll">☆ Lưu cả ' + L.length + ' từ vào flashcard</button> <a class="btn alt sm" href="go-tu.html?t=' + T + '">🎮 Chơi gõ từ rơi với bộ này</a></div>';
       $('#tvBody').innerHTML = h;
-      function add(w, C2) { if (!C2[w.w]) C2[w.w] = { w: w.w, ipa: w.ipa, m: w.m, ex: w.ex, src: 'ETS 2026 · Test ' + T, at: Date.now(), box: 0 }; }
+      function add(w, C2) { if (!C2[w.w]) C2[w.w] = { w: w.w, ipa: w.ipa, m: w.m, ex: w.ex, src: NAME, at: Date.now(), box: 0 }; }
       $$('#tvBody .tvsv').forEach(function (b) { b.onclick = function () { var C2 = get('vocab.cards') || {}, w = L[+b.dataset.i]; if (C2[w.w]) delete C2[w.w]; else add(w, C2); put('vocab.cards', C2); b.classList.toggle('on', !!C2[w.w]); b.textContent = C2[w.w] ? '★ Đã lưu' : '☆ Lưu'; }; });
       $('#tvAll').onclick = function () { var C2 = get('vocab.cards') || {}; L.forEach(function (w) { add(w, C2); }); put('vocab.cards', C2); $$('#tvBody .tvsv').forEach(function (b) { b.classList.add('on'); b.textContent = '★ Đã lưu'; }); toast('Đã lưu ' + L.length + ' từ vào flashcard ✓'); };
       $$('#tvBody [data-say]').forEach(function (b) { b.onclick = function () { try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(b.dataset.say); u.lang = 'en-US'; u.rate = .9; speechSynthesis.speak(u); } catch (e) {} }; });
     }
     if (window.TESTVOCAB) return render();
-    var s = document.createElement('script'); s.src = 'data/tuvung.js?v=1'; s.onload = render; s.onerror = function () { box.hidden = true; }; document.head.appendChild(s);
+    var s = document.createElement('script'); s.src = 'data/tuvung.js?v=2'; s.onload = render; s.onerror = function () { box.hidden = true; }; document.head.appendChild(s);
   }
 
 
@@ -165,7 +166,7 @@
   }
   function show(p) {
     CUR = p; ST.cur = p; if (!ST.done) save();
-    window.ETS_LOOKUP = !!(ST.done || !M.exam); window.LOOKUP_SRC = 'ETS 2026 · Test ' + T;
+    window.ETS_LOOKUP = !!(ST.done || !M.exam); window.LOOKUP_SRC = NAME;
     $$('#ptabs button').forEach(function (b) { b.setAttribute('aria-selected', String(+b.dataset.p === p)); });
     var h = (ST.done ? '' : '') + '<div id="resTop"></div><div class="pt-head"><h2>' + PART_INFO[p][0] + '</h2><span>' + PART_INFO[p][1] + ' · ' + nsOf([p]).length + ' câu</span>' + (p <= 4 && practiceAudio() ? speedHTML() : '') + (window.ETS_LOOKUP ? '<span class="lkhint">💡 Bấm vào từ tiếng Anh bất kỳ để tra nghĩa</span>' : '') + '</div>';
     if (!ST.done) h += '<p class="dir">' + DIRS[p] + '</p>';
@@ -401,7 +402,7 @@
     var nm = ''; try { nm = localStorage.getItem('cam20.name') || ''; } catch (e) {}
     function go() {
       var url = window.ETSCFG && window.ETSCFG.SCRIPT_URL; if (!url) return;
-      var body = { kind: 'cam20', name: localStorage.getItem('cam20.name') || '', lop: localStorage.getItem('cam20.lop') || '', test: 'ETS 2026 · Test ' + T, part: name,
+      var body = { kind: 'cam20', name: localStorage.getItem('cam20.name') || '', lop: localStorage.getItem('cam20.lop') || '', test: NAME, part: name,
         mode: M.exam ? 'Thi thử' : 'Luyện tập', got: res.lc + res.rc, total: res.lcT + res.rcT, band: score ? 'TOEIC ~' + score : '', minutes: res.mins,
         wrong: res.wrong.join(', '), auto: res.auto, submittedAt: new Date(res.at).toISOString(), userAgent: navigator.userAgent.slice(0, 120) };
       try { fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }).catch(function () {}); } catch (e) {}
@@ -435,7 +436,7 @@
     var top = $('#resTop'); if (!top) return;
     var tot = r.lcT + r.rcT, got = r.lc + r.rc, nm = stuName(), d = new Date(r.at);
     var h = '<div class="report"><div class="rp-head"><div class="rp-brand">' + window.MLOGO + '<span><b>Minto English</b><small>Phiếu kết quả luyện tập TOEIC</small></span></div><div class="rp-meta">' +
-      (nm ? '<b>' + esc(nm) + '</b>' : '') + '<span>ETS 2026 · Test ' + T + ' · ' + esc(M.name) + '</span><span>' + d.toLocaleDateString('vi-VN') + ' · ' + r.mins + ' phút</span></div></div>';
+      (nm ? '<b>' + esc(nm) + '</b>' : '') + '<span>' + NAME + ' · ' + esc(M.name) + '</span><span>' + d.toLocaleDateString('vi-VN') + ' · ' + r.mins + ' phút</span></div></div>';
     if (r.lcS || r.rcS) {
       h += '<div class="rp-body"><div class="rp-total"><small>' + (r.lcS && r.rcS ? 'Tổng điểm ước tính' : (r.lcS ? 'Listening' : 'Reading') + ' ước tính') + '</small><b>' + ((r.lcS || 0) + (r.rcS || 0)) + '</b><span>/ ' + (r.lcS && r.rcS ? 990 : 495) + '</span><em>' + got + '/' + tot + ' câu đúng</em></div><div class="rp-skills">' +
         (r.lcS ? skillRow('Listening', r.lcS, CEFR_L, 'headphones') : '') + (r.rcS ? skillRow('Reading', r.rcS, CEFR_R, 'book') : '') + '<p class="rp-scale">Vạch mốc trên thanh: A2 · B1 · B2 (khung tham chiếu châu Âu)</p></div></div>';
@@ -457,7 +458,7 @@
   }
   function shareImage(r, nm) {
     var tot = r.lcT + r.rcT, got = r.lc + r.rc, has = r.lcS || r.rcS, total = (r.lcS || 0) + (r.rcS || 0), max = r.lcS && r.rcS ? 990 : 495, pc = got / tot;
-    window.MSHARE({ kicker: 'PHIẾU KẾT QUẢ LUYỆN TẬP TOEIC', name: nm || 'Học viên', line: 'ETS 2026 · Test ' + T + ' · ' + M.name + ' · ' + new Date(r.at).toLocaleDateString('vi-VN'),
+    window.MSHARE({ kicker: 'PHIẾU KẾT QUẢ LUYỆN TẬP TOEIC', name: nm || 'Học viên', line: NAME + ' · ' + M.name + ' · ' + new Date(r.at).toLocaleDateString('vi-VN'),
       bigLabel: has ? (r.lcS && r.rcS ? 'TỔNG ĐIỂM ƯỚC TÍNH' : 'ĐIỂM ƯỚC TÍNH') : 'SỐ CÂU ĐÚNG', big: has ? total : got, bigOf: '/ ' + (has ? max : tot), pct: has ? total / max : pc,
       sub: has ? got + '/' + tot + ' câu đúng' : Math.round(pc * 100) + '% câu đúng',
       tiles: [{ k: 'Câu đúng', v: got + '/' + tot }, { k: 'Tỉ lệ đúng', v: Math.round(pc * 100) + '%' }, { k: 'Thời gian', v: (r.mins || 0) + ' phút' }],
@@ -476,7 +477,7 @@
     rr(70, 70, 90, 90, 20, '#a8691a'); c.fillStyle = '#8a5512'; c.fillRect(70, 78, 11, 74); txt('M', 120, 140, '600 56px ' + SER, '#fff', 'center');
     txt('Minto English', 185, 112, '600 44px ' + SER, '#6b4410'); txt('Phiếu kết quả luyện tập TOEIC', 187, 150, '500 26px ' + SANS, '#666e7a');
     txt(nm || 'Học viên', 70, 250, '600 48px ' + SER, '#1e232b');
-    txt('ETS 2026 · Test ' + T + ' · ' + M.name + ' · ' + new Date(r.at).toLocaleDateString('vi-VN'), 70, 296, '500 26px ' + SANS, '#666e7a');
+    txt(NAME + ' · ' + M.name + ' · ' + new Date(r.at).toLocaleDateString('vi-VN'), 70, 296, '500 26px ' + SANS, '#666e7a');
     rr(70, 340, W - 140, 300, 28, '#ffffff');
     var total = (r.lcS || 0) + (r.rcS || 0), tot = r.lcT + r.rcT, got = r.lc + r.rc;
     txt(r.lcS || r.rcS ? (r.lcS && r.rcS ? 'TỔNG ĐIỂM ƯỚC TÍNH' : 'ĐIỂM ƯỚC TÍNH') : 'KẾT QUẢ', 110, 400, '700 22px ' + SANS, '#a8691a');
