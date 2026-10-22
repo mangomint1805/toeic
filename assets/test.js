@@ -77,7 +77,8 @@
     ST = get(KEY) || { ans: {}, t0: Date.now(), done: false };
     var XEM = Q.get('xem');
     if (XEM) {
-      var hr = (get('ets26.hist') || []).filter(function (h) { return String(h.at) === XEM && h.test === T && h.ans; })[0];
+      var PEEK = null; if (Q.get('peek')) { try { PEEK = JSON.parse(sessionStorage.getItem('mt.peek')); } catch (e) {} }
+      var hr = (PEEK || get('ets26.hist') || []).filter(function (h) { return String(h.at) === XEM && h.test === T && h.ans; })[0];
       if (hr) {
         KEY = 'ets26.review'; ST = { ans: hr.ans, t0: hr.at, done: true, res: hr.res || null, review: hr.at };
         setTimeout(function () { var b = document.createElement('div'); b.className = 'resume'; b.style.margin = '0 0 12px'; b.innerHTML = '👀 Đang <b>xem lại bài đã nộp</b> ngày ' + new Date(hr.at).toLocaleString('vi-VN') + ' · ' + esc(hr.name) + ' · ' + hr.got + '/' + hr.total + (hr.score ? ' · ' + esc(hr.score) : '') + ' — <a href="?t=' + T + '">Về danh sách</a>'; var mn = $('#main'); if (mn) mn.insertBefore(b, mn.firstChild); }, 0);
