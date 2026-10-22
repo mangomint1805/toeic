@@ -1353,3 +1353,160 @@
   }
   window.MNEWS_SEEN = function () { var U = window.MT_UPDATES; if (U && U[0]) seen(U[0].id); };
 })();
+/* Đang online: đếm số bạn đang mở web (Firebase Realtime Database, online/<web>/<mã tab>) + Google Analytics 4. Dùng chung 4 web; khối này giống hệt nhau ở cả 4 file ui.js. */
+(function () {
+  'use strict';
+  var GA_ID = 'G-WTQLYLYL0G'; // mã đo lường GA4 (G-XXXXXXXXXX); còn bắt đầu bằng '__' thì không chạy GA
+  try {
+    if (window.__mlive) return; window.__mlive = 1;
+    var me0 = document.currentScript && document.currentScript.src || '', mm = /\/(toeic|cam|summary-new|summary-old)\/(?:docs\/)?(?:assets|shared)\/ui\.js/.exec(me0.split('?')[0]);
+    if (!mm) return;
+    var SITE = mm[1], SITES = ['toeic', 'cam', 'summary-new', 'summary-old'], NAME = { toeic: 'TOEIC ETS', cam: 'IELTS Cam', 'summary-new': 'TOEIC Pre (mới)', 'summary-old': 'TOEIC Pre (cũ)' };
+    var SDK = 'https://www.gstatic.com/firebasejs/10.12.2/', DBURL = 'https://minto-english-default-rtdb.asia-southeast1.firebasedatabase.app';
+    var CFG = { apiKey: 'AIzaSyA7LEweMPy4tSjjR_An_KZaGXSzGI2nQv4', authDomain: 'minto-english.firebaseapp.com', databaseURL: DBURL, projectId: 'minto-english', messagingSenderId: '160119750089', appId: '1:160119750089:web:aac59cf8b1f577c035bc18' };
+    var FRESH = 180000, STALE = 900000, PATH = location.pathname;
+    var EXAM = !!window.MEXAM || document.documentElement.hasAttribute('data-exam') || /\/(test|test-\d+|mini|xep-lop|ws|chinh-ta|go-tu|phan-xa)\.html$/.test(PATH);
+    var base = (PATH.split('/').pop() || '').replace(/\.html$/, '');
+    var KIND = EXAM ? 'test' : (!base || base === 'index') ? 'home' : /^summary/.test(SITE) ? 'lesson' : (base.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 20) || 'page');
+    var TEACHER = false;
+    try { TEACHER = /[?&]gv(=|&|$)/.test(location.search) || localStorage.getItem('summaryNew.gv') === '1' || localStorage.getItem('summaryOld.gv') === '1'; } catch (e) {}
+    var ID = '';
+    try { ID = sessionStorage.getItem('mlive.id') || ''; } catch (e) {}
+    if (!/^[A-Za-z0-9_-]{16}$/.test(ID)) {
+      var abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-', rnd = new Uint8Array(16); ID = '';
+      try { crypto.getRandomValues(rnd); } catch (e) { for (var r = 0; r < 16; r++) rnd[r] = Math.random() * 256; }
+      for (var j = 0; j < 16; j++) ID += abc.charAt(rnd[j] & 63);
+      try { sessionStorage.setItem('mlive.id', ID); } catch (e) {}
+    }
+    var imp = null; try { imp = new Function('u', 'return import(u)'); } catch (e) {} // trình duyệt cũ không hiểu import(): bỏ qua, không làm hỏng ui.js
+    function later(fn, ms) {
+      function go() { setTimeout(function () { try { if (window.requestIdleCallback) requestIdleCallback(function () { try { fn(); } catch (e) {} }, { timeout: 3000 }); else fn(); } catch (e) {} }, ms || 0); }
+      if (document.readyState === 'complete') go(); else addEventListener('load', go);
+    }
+
+    // ---------- Google Analytics 4 ----------
+    if (GA_ID && GA_ID.indexOf('__') !== 0) later(function () {
+      if (window.gtag) { var dl = window.dataLayer || [], has = false; for (var i = 0; i < dl.length; i++) if (dl[i] && dl[i][0] === 'config' && dl[i][1] === GA_ID) has = true; if (!has) window.gtag('config', GA_ID, { site: SITE }); return; }
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date()); window.gtag('config', GA_ID, { site: SITE });
+      var gs = document.createElement('script'); gs.async = true; gs.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID); gs.onerror = function () {}; document.head.appendChild(gs);
+    }, 500);
+
+    // ---------- Firebase (tải khi cần, app riêng tên 'live' để không đụng app của acc.js) ----------
+    var dbP = null, D = null, db = null;
+    function load() {
+      if (dbP) return dbP;
+      if (!imp) return (dbP = Promise.reject(new Error('no import')));
+      dbP = Promise.all([imp(SDK + 'firebase-app.js'), imp(SDK + 'firebase-database.js')]).then(function (m) {
+        var A = m[0], app = null; D = m[1];
+        try { app = A.getApp('live'); } catch (e) { app = A.initializeApp(CFG, 'live'); }
+        db = D.getDatabase(app, DBURL); return db;
+      });
+      dbP.catch(function () {});
+      return dbP;
+    }
+    function count(val, now, skip) {
+      var n = 0, k, v;
+      if (val && typeof val === 'object') for (k in val) { v = val[k]; if (k !== skip && v && typeof v.t === 'number' && v.t >= now - FRESH) n++; }
+      return n;
+    }
+    // thầy: đếm cả 4 web — MLIVE_ALL().then(console.log)
+    window.MLIVE_ALL = function () {
+      return load().then(function () {
+        var now = Date.now() + off;
+        return Promise.all(SITES.map(function (s) { return D.get(D.ref(db, 'online/' + s)).then(function (sn) { return count(sn.val(), now, ''); }, function () { return null; }); }));
+      }).then(function (a) { var o = {}; SITES.forEach(function (s, i) { o[s] = a[i]; }); return o; });
+    };
+
+    // ---------- giao diện: viên "đang học" trên thanh menu ----------
+    var pill = null, others = -1, off = 0, all = null, tip = '';
+    function css() {
+      var s = document.createElement('style');
+      s.textContent =
+        '.mlive{display:inline-flex;align-items:center;gap:7px;flex:none;height:30px;box-sizing:border-box;padding:0 11px 0 10px;border-radius:999px;border:1px solid rgba(31,143,108,.28);border:1px solid color-mix(in srgb,var(--ok,#1f8f6c) 28%,transparent);background:var(--ok-soft,#e1f4ec);color:var(--ink,#1e232b);font:600 12.5px/1 "IBM Plex Sans",system-ui,sans-serif;white-space:nowrap;cursor:default;user-select:none}' +
+        '.mlive[hidden]{display:none!important}.mlive-n{font-weight:700;font-variant-numeric:tabular-nums}.mlive-t{font-weight:500;color:var(--dim,#4b5260)}' +
+        '.mlive i{position:relative;width:8px;height:8px;border-radius:50%;background:var(--ok,#1f8f6c);flex:none}' +
+        '.mlive.cpt{padding:0 9px 0 8px;gap:6px}.mlive.cpt .mlive-t{display:none}' +
+        '.mbrand small .mlive{height:16px;margin:-3px 0 -2px 8px;padding:0 7px 0 6px;gap:4px;vertical-align:middle;letter-spacing:0;font-size:10.5px;border-width:1px}.mbrand small .mlive i{width:6px;height:6px}.mbrand small .mlive.cpt{padding:0 6px 0 5px}' +
+        '@media (prefers-reduced-motion:no-preference){.mlive i::after{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;animation:mlivep 2.4s ease-out infinite}@keyframes mlivep{0%{transform:scale(1);opacity:.55}70%,100%{transform:scale(2.6);opacity:0}}}' +
+        'html[data-theme=dark] .mlive{background:rgba(63,191,143,.14);border-color:rgba(63,191,143,.4);background:color-mix(in srgb,var(--ok,#3fbf8f) 14%,transparent);border-color:color-mix(in srgb,var(--ok,#3fbf8f) 40%,transparent)}html[data-theme=dark] .mlive-t{color:var(--dim,#9aa1ad)}' +
+        'html[data-skin=scifi] .mlive{background:rgba(74,215,255,.10);border-color:rgba(74,215,255,.45);color:#e6ecff;box-shadow:0 0 12px rgba(74,215,255,.18)}html[data-skin=scifi] .mlive i{background:#4ad7ff;box-shadow:0 0 6px #4ad7ff}';
+      document.head.appendChild(s);
+    }
+    // vừa chỗ thì hiện đủ chữ, chật thì chỉ hiện số, vẫn chật nữa thì ẩn (không làm tràn thanh menu)
+    function fit() {
+      if (!pill) return; var inr = pill.closest('.in') || pill.parentNode;
+      function over() { return inr.scrollWidth - inr.clientWidth; }
+      pill.hidden = true; var base = Math.max(0, over());
+      pill.hidden = false; pill.classList.remove('cpt');
+      if (over() > base) pill.classList.add('cpt');
+      if (over() > base) pill.hidden = true;
+    }
+    function paint() {
+      if (EXAM || others < 0) return;
+      var n = others + 1;
+      if (!pill) {
+        // đặt cạnh dòng chữ nhỏ ミント英語 dưới logo (thanh menu không phải nới ra); không có thì đặt trước các nút ⚙
+        var tl = document.querySelector('.mnav .mbrand small') || document.querySelector('.mnav .mtool'); if (!tl) return;
+        css(); pill = document.createElement('span'); pill.className = 'mlive'; pill.setAttribute('lang', 'vi');
+        pill.innerHTML = '<i aria-hidden="true"></i><span class="mlive-n"></span><span class="mlive-t"></span>';
+        if (tl.classList.contains('mtool')) tl.insertBefore(pill, tl.firstChild); else tl.appendChild(pill);
+        var rt = 0; addEventListener('resize', function () { cancelAnimationFrame(rt); rt = requestAnimationFrame(fit); });
+        try { document.fonts && document.fonts.ready.then(fit); } catch (e) {}
+        setTimeout(fit, 2500);
+        if (TEACHER) { teach(); setInterval(teach, 60000); }
+      }
+      var b = pill.querySelector('.mlive-n'), t = pill.querySelector('.mlive-t'), txt = n + ' bạn đang học', changed = b.textContent !== String(n);
+      b.textContent = n; t.textContent = ' bạn đang học';
+      tip = n > 1 ? txt + ' trên web này (tính cả bạn)' : 'Lúc này chỉ có bạn đang học trên web này';
+      pill.setAttribute('aria-label', txt);
+      pill.title = tip + (all ? '\n— Cả 4 web —\n' + SITES.map(function (s) { return NAME[s] + ': ' + (all[s] == null ? '?' : all[s]); }).join('\n') : '');
+      if (changed) fit();
+    }
+    function teach() { window.MLIVE_ALL().then(function (o) { all = o; paint(); }, function () {}); }
+
+    // ---------- có mặt ----------
+    var me = null, live = false, ever = false, offline = false, hideT = 0, beat = 0, cleaned = {}, last = null, tick = 0;
+    function write() {
+      if (!me || !live || offline || document.hidden) return;
+      D.set(me, { t: D.serverTimestamp(), p: KIND }).catch(function () {});
+    }
+    function seen(val) {
+      last = val; var now = Date.now() + off;
+      others = count(val, now, ID);
+      if (val && typeof val === 'object') {
+        var n = 0;
+        for (var k in val) {
+          var v = val[k];
+          if (k === ID || cleaned[k] || n >= 5 || !/^[A-Za-z0-9_-]{8,32}$/.test(k)) continue;
+          if (v && typeof v.t === 'number' && v.t < now - STALE) { cleaned[k] = 1; n++; D.remove(D.ref(db, 'online/' + SITE + '/' + k)).catch(function () {}); }
+        }
+      }
+      paint();
+    }
+    function sleep() { try { offline = true; if (me && live) D.remove(me).catch(function () {}); D.goOffline(db); } catch (e) {} }
+    function wake() { try { if (offline) { offline = false; D.goOnline(db); } else write(); } catch (e) {} }
+    function start() {
+      load().then(function () {
+        me = D.ref(db, 'online/' + SITE + '/' + ID);
+        D.onValue(D.ref(db, '.info/serverTimeOffset'), function (s) { var v = s.val(); if (typeof v === 'number') off = v; }, function () {});
+        D.onValue(D.ref(db, '.info/connected'), function (s) {
+          live = s.val() === true; if (!live) return; ever = true;
+          D.onDisconnect(me).remove().then(write, function () {});
+        }, function () {});
+        D.onValue(D.ref(db, 'online/' + SITE), function (s) { seen(s.val()); }, function () {});
+        beat = setInterval(write, 60000);
+        tick = setInterval(function () { if (last !== null && !document.hidden) seen(last); }, 30000);
+        // không kết nối được (mạng chặn…) sau 45 giây: thôi thử, đợi lần quay lại tab sau
+        setTimeout(function () { if (!ever && !offline) sleep(); }, 45000);
+        document.addEventListener('visibilitychange', function () {
+          clearTimeout(hideT);
+          if (document.hidden) hideT = setTimeout(sleep, 120000);
+          else wake();
+        });
+      }).catch(function () {});
+    }
+    later(start, 1500);
+  } catch (e) {}
+})();
