@@ -1257,3 +1257,99 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
+/* Có gì mới: link trên thanh menu + trong bảng ⚙, và thẻ nhắc nhỏ khi web có cập nhật (dữ liệu ở cap-nhat.js). Dùng chung web TOEIC và IELTS. */
+(function () {
+  'use strict';
+  var cs = document.currentScript, src = (cs && cs.src) || '';
+  if (!src) { var ss = document.querySelectorAll('script[src*="ui.js"]'); if (ss.length) src = ss[ss.length - 1].src; }
+  var mm = /^(.*\/)(assets|shared)\/ui\.js/.exec(src); if (!mm) return;
+  var ROOT = mm[1], HREF = ROOT + 'cap-nhat.html', KEY = 'mt.seenUpdate', P = location.pathname;
+  if ((cs && cs.getAttribute('data-site') === 'summary') || location.href.indexOf(ROOT) !== 0) return;
+  var NEWS = /\/cap-nhat\.html$/.test(P);
+  var QUIET = !!window.MEXAM || document.documentElement.hasAttribute('data-exam') || /\/(test\.html|test-\d+\.html|ws\.html|mini\.html|xep-lop\.html|chinh-ta\.html|go-tu\.html|phan-xa\.html)$/.test(P);
+  function g(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function s(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  // đã từng dùng web chưa? (chụp lúc tải trang, trước khi ui.js tự ghi huy hiệu / hướng dẫn lần đầu)
+  var used = false;
+  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k !== KEY && /^(mt\.|ets26\.|cam\d*\.|vocab\.)/.test(k)) { used = true; break; } } } catch (e) {}
+  var SPARK = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3l1.9 5.6L18.5 10.5l-5.6 1.9L11 18l-1.9-5.6L3.5 10.5l5.6-1.9z"/><path d="M19 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>';
+  var st = document.createElement('style');
+  st.textContent =
+    '.mlinks a.mnew-l{position:relative}.mlinks a.mnew-l.dot::after{content:"";position:absolute;top:6px;right:5px;width:7px;height:7px;border-radius:50%;background:#e0483a;box-shadow:0 0 0 2px var(--card,#fff)}' +
+    '@media (min-width:761px) and (max-width:1359px){.mlinks a.mnew-l{padding-left:9px;padding-right:9px}.mlinks a.mnew-l span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.mlinks a.mnew-l .ic{display:inline-block;width:1.25em;height:1.25em}}' +
+    '@media (max-width:960px){.mlinks a.mnew-l{display:none}}' +
+    'a.mp-new{text-decoration:none;box-sizing:border-box}a.mp-new.dot::after{content:"mới";font:700 10.5px/1 "IBM Plex Sans",sans-serif;background:#e0483a;color:#fff;border-radius:999px;padding:3px 6px 2px;margin-left:2px}' +
+    '.mnew{position:fixed;z-index:96;left:20px;bottom:20px;width:340px;max-width:calc(100vw - 24px);box-sizing:border-box;background:var(--card,#fff);color:var(--ink,#1e232b);border:1px solid var(--line,#ddd7c9);border-left:4px solid var(--brand,#a8691a);border-radius:14px;padding:13px 15px 12px;box-shadow:0 14px 40px rgba(0,0,0,.18);font:14px/1.45 "IBM Plex Sans",system-ui,sans-serif;animation:mnewin .4s cubic-bezier(.2,.9,.3,1.2)}' +
+    '.mnew-k{display:block;font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--brand-ink,#6b4410);margin:0 26px 3px 0}.mnew-t{display:block;font:600 16.5px/1.3 Fraunces,Georgia,serif;margin:0 0 6px}' +
+    '.mnew ul{margin:0 0 10px;padding-left:18px;color:var(--ink,#1e232b)}.mnew li{margin:3px 0;font-size:13.5px}' +
+    '.mnew-x{position:absolute;top:8px;right:8px;width:30px;height:30px;border:0;border-radius:50%;background:none;color:var(--dim,#666e7a);font-size:15px;cursor:pointer}.mnew-x:hover{background:var(--panel2,#f2efe8)}' +
+    '.mnew-b{display:flex;gap:8px}.mnew-b a,.mnew-b button{flex:1;display:flex;align-items:center;justify-content:center;min-height:38px;border-radius:10px;font:700 13.5px/1 "IBM Plex Sans",sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box}' +
+    '.mnew-all{background:var(--brand,#a8691a);border:1px solid var(--brand,#a8691a);color:#fff}.mnew-ok{background:var(--panel2,#f2efe8);border:1px solid var(--line,#ddd7c9);color:var(--ink,#1e232b)}' +
+    '.mnew :focus-visible{outline:3px solid var(--brand,#a8691a);outline-offset:2px}' +
+    'html[data-theme=dark] .mnew{box-shadow:0 14px 40px rgba(0,0,0,.55)}html[data-skin=scifi] .mnew{border-color:#2e4377;border-left-color:#4ad7ff}html[data-skin=scifi] .mnew-k{color:#4ad7ff}' +
+    'html[data-skin=scifi] .mnew-all{color:#1a1240;background:linear-gradient(180deg,#ffe36b,#ffc21a);border-color:#ffc21a}' +
+    '@media (max-width:760px){.mnew{left:12px;right:12px;width:auto;margin:0 auto;bottom:calc(14px + env(safe-area-inset-bottom))}body.has-nav .mnew{bottom:calc(78px + env(safe-area-inset-bottom))}}' +
+    '@keyframes mnewin{from{opacity:0;transform:translateY(16px)}}@media (prefers-reduced-motion:reduce){.mnew{animation:none}}';
+  document.head.appendChild(st);
+  // link trên thanh menu (màn hình rộng; điện thoại / máy tính bảng thanh menu đã chật nên link nằm trong bảng ⚙)
+  var ml = document.querySelector('.mlinks');
+  if (ml && !ml.querySelector('.mnew-l')) {
+    var a = document.createElement('a'); a.className = 'mnew-l'; a.href = HREF; a.title = 'Có gì mới'; a.innerHTML = SPARK + '<span>Có gì mới</span>';
+    if (NEWS) a.setAttribute('aria-current', 'page');
+    ml.appendChild(a);
+  }
+  // nút trong bảng ⚙ (có ở mọi trang, kể cả trang làm bài)
+  var unseen = false;
+  function addPop(p) {
+    if (p.querySelector('.mp-new')) return;
+    var first = p.querySelector('.mp-tour'); if (!first) return;
+    var b = document.createElement('a'); b.className = 'mp-tour mp-new' + (unseen ? ' dot' : ''); b.href = HREF; b.innerHTML = SPARK + ' Có gì mới';
+    first.insertAdjacentElement('afterend', b);
+  }
+  if (window.MutationObserver) new MutationObserver(function (ms) {
+    ms.forEach(function (m) { [].forEach.call(m.addedNodes, function (n) {
+      if (n.nodeType !== 1 || !n.classList.contains('mpop')) return;
+      addPop(n); new MutationObserver(function () { addPop(n); }).observe(n, { childList: true });
+    }); });
+  }).observe(document.body, { childList: true });
+  // dữ liệu cập nhật
+  function ready(U) {
+    var top = U && U[0]; if (!top || !top.id) return;
+    if (NEWS || !used) { s(KEY, top.id); return; }
+    if (g(KEY) === top.id) return;
+    unseen = true;
+    var l = document.querySelector('.mlinks a.mnew-l'); if (l) { l.classList.add('dot'); l.title = 'Có gì mới · có cập nhật mới'; }
+    if (!QUIET) later(top);
+  }
+  function seen(id) { s(KEY, id); unseen = false; [].forEach.call(document.querySelectorAll('.mnew-l.dot,.mp-new.dot'), function (e) { e.classList.remove('dot'); }); }
+  function busy() { return !!document.querySelector('.mtour,.mtoast,.fbk,.mgc,.mpop,.mhl-note:not([hidden])') || document.hidden; }
+  function later(top) {
+    var n = 0;
+    function go() {
+      if (document.querySelector('.mnew')) return;
+      if (busy()) { if (++n < 60) setTimeout(go, 1500); return; }
+      show(top);
+    }
+    if (document.readyState === 'complete') setTimeout(go, 2200); else addEventListener('load', function () { setTimeout(go, 2200); });
+  }
+  function show(top) {
+    var d = document.createElement('div'); d.className = 'mnew'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Có gì mới trên web');
+    var items = (top.items || []).slice(0, 2);
+    d.innerHTML = '<button type="button" class="mnew-x" aria-label="Đóng, đã xem">✕</button><b class="mnew-k">✨ Có gì mới (' + esc(String(top.date || '').slice(0, 5)) + ')</b><strong class="mnew-t">' + esc(top.title) + '</strong>' +
+      (items.length ? '<ul>' + items.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '') +
+      '<div class="mnew-b"><a class="mnew-all" href="' + esc(HREF) + '">Xem tất cả</a><button type="button" class="mnew-ok">Đã xem</button></div>';
+    function close() { seen(top.id); d.remove(); }
+    d.querySelector('.mnew-x').onclick = close; d.querySelector('.mnew-ok').onclick = close;
+    d.querySelector('.mnew-all').onclick = function () { seen(top.id); };
+    d.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    document.body.appendChild(d);
+  }
+  if (window.MT_UPDATES) ready(window.MT_UPDATES);
+  else if (!QUIET || !used) {
+    var sc = document.createElement('script'); sc.src = ROOT + 'cap-nhat.js?v=1'; sc.async = true;
+    sc.onload = function () { ready(window.MT_UPDATES); };
+    document.head.appendChild(sc);
+  }
+  window.MNEWS_SEEN = function () { var U = window.MT_UPDATES; if (U && U[0]) seen(U[0].id); };
+})();
