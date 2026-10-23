@@ -405,7 +405,7 @@
       var url = window.ETSCFG && window.ETSCFG.SCRIPT_URL; if (!url) return;
       var body = { kind: 'cam20', name: localStorage.getItem('cam20.name') || '', lop: localStorage.getItem('cam20.lop') || '', test: NAME, part: name,
         mode: M.exam ? 'Thi thử' : 'Luyện tập', got: res.lc + res.rc, total: res.lcT + res.rcT, band: score ? 'TOEIC ~' + score : '', minutes: res.mins,
-        wrong: res.wrong.join(', '), auto: res.auto, submittedAt: new Date(res.at).toISOString(), userAgent: navigator.userAgent.slice(0, 120) };
+        wrong: res.wrong.join(', '), auto: res.auto, submittedAt: new Date(res.at).toISOString(), answers: JSON.stringify({ v: 1, site: 'T', t: T, m: MODE, at: res.at, a: ST.ans || {} }), userAgent: navigator.userAgent.slice(0, 120) };
       try { fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }).catch(function () {}); } catch (e) {}
     }
     if (nm) return go();
