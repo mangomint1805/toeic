@@ -113,7 +113,7 @@
     if (hist.length) {
       h += '<div class="box"><h3>Kết quả đã nộp</h3><table class="hist"><tr><th>Ngày</th><th>Cách làm</th><th>Đúng</th><th>Điểm ước tính</th><th></th></tr>';
       hist.slice(-12).reverse().forEach(function (r) {
-        h += '<tr><td>' + new Date(r.at).toLocaleDateString('vi-VN') + '</td><td>' + esc(r.name) + '</td><td>' + r.got + '/' + r.total + '</td><td>' + (r.score ? r.score : '–') + '</td><td>' + (r.ans && r.mode ? '<a href="?t=' + T + '&m=' + r.mode + '&xem=' + r.at + '">👀 Xem lại</a>' : (function () { var st = r.mode && get('ets26.t' + T + '.' + r.mode); return st && st.done && st.res && st.res.at === r.at ? '<a href="?t=' + T + '&m=' + r.mode + '">👀 Xem lại</a>' : ''; })()) + '</td></tr>';
+        h += '<tr><td>' + new Date(r.at).toLocaleDateString('vi-VN') + '</td><td>' + esc(r.name) + '</td><td>' + r.got + '/' + r.total + '</td><td>' + (r.score ? r.score : '–') + '</td><td>' + (r.ans && r.mode ? '<a href="?t=' + T + '&m=' + r.mode + '&xem=' + r.at + '">👀 Xem lại</a>' + ' · <a href="#" data-kq="' + r.at + '">📊 Phân tích</a>' : (function () { var st = r.mode && get('ets26.t' + T + '.' + r.mode); return st && st.done && st.res && st.res.at === r.at ? '<a href="?t=' + T + '&m=' + r.mode + '">👀 Xem lại</a>' : ''; })()) + '</td></tr>';
       });
       h += '</table></div>';
     }
@@ -124,6 +124,10 @@
       var k = 'ets26.t' + T + '.' + b.dataset.m, s = get(k);
       if (s && s.done) { try { localStorage.removeItem(k); } catch (e) {} }
       location.search = '?t=' + T + '&m=' + b.dataset.m; }; });
+    [].forEach.call(document.querySelectorAll('[data-kq]'), function (a) { a.onclick = function (e) { e.preventDefault();
+      var r = hist.filter(function (x) { return String(x.at) === a.dataset.kq; })[0]; if (!r) return;
+      var K = { self: true, data: { v: 1, site: 'T', t: T, m: r.mode, at: r.at, a: r.ans }, name: (function () { try { return localStorage.getItem('cam20.name') || ''; } catch (e) { return ''; } })(), test: NAME, part: r.name, mode: '', when: r.at, got: r.got, total: r.total, score: r.score ? String(r.score).replace(/[^0-9]/g, '') : '' };
+      try { sessionStorage.setItem('mt.kq', JSON.stringify(K)); } catch (er) {} window.open('/ket-qua.html', '_blank'); }; });
     loadVocab();
   }
   function loadVocab() {
@@ -450,10 +454,14 @@
     if (window.MBUDDY && !window.MEXAM) h += window.MBUDDY('<b>' + say + '</b>' + (cm.length ? '<ul class="rp-cm">' + cm.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>' : ''), mood, 'rp-buddy');
     else if (cm.length) h += '<ul class="rp-cm">' + cm.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>';
     h += '<p class="rp-note">Điểm ước tính dựa trên số câu đúng của bài luyện tập, không phải điểm thi chính thức.</p>' +
-      '<div class="filt"><button class="btn sm" id="rpSave" type="button">' + window.MICON('check') + ' Lưu ảnh khoe story</button><button class="btn alt sm" id="hideOk" type="button">' + (ST.hideOk ? 'Hiện tất cả câu' : 'Chỉ xem câu sai') + '</button><a class="btn alt sm" href="phan-tich.html">Xem điểm yếu</a><a class="btn alt sm" href="?t=' + T + '">Làm lại</a></div></div>' +
+      '<div class="filt"><button class="btn sm" id="rpSave" type="button">' + window.MICON('check') + ' Lưu ảnh khoe story</button><button class="btn alt sm" id="hideOk" type="button">' + (ST.hideOk ? 'Hiện tất cả câu' : 'Chỉ xem câu sai') + '</button><button class="btn alt sm" id="rpKq" type="button">📊 Phân tích chi tiết</button><a class="btn alt sm" href="phan-tich.html">Xem điểm yếu</a><a class="btn alt sm" href="?t=' + T + '">Làm lại</a></div></div>' +
       '<p class="hint">Câu xanh là đúng, đỏ là sai. Mở Dịch nghĩa, Lời thoại, Giải thích dưới mỗi câu; phần nghe có nút audio riêng để nghe lại.</p>';
     top.innerHTML = h;
     $('#hideOk').onclick = function () { ST.hideOk = !ST.hideOk; save(); show(CUR); };
+    $('#rpKq').onclick = function () {
+      var K = { self: true, data: { v: 1, site: 'T', t: T, m: MODE, at: r.at, a: ST.ans || {} }, name: nm, lop: (function () { try { return localStorage.getItem('cam20.lop') || ''; } catch (e) { return ''; } })(),
+        test: NAME, part: M.name, mode: M.exam ? 'Thi thử' : 'Luyện tập', when: r.at, got: got, total: tot, minutes: r.mins, score: (r.lcS || r.rcS) ? String((r.lcS || 0) + (r.rcS || 0)) : '' };
+      try { sessionStorage.setItem('mt.kq', JSON.stringify(K)); } catch (e) {} window.open('/ket-qua.html', '_blank'); };
     $('#rpSave').onclick = function () { if (window.MSHARE) shareImage(r, nm); else saveImage(r, nm); };
     if (window.MANIM) window.MANIM(top);
   }
