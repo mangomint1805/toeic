@@ -1,6 +1,16 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-24b', date: '24/10/2026',
+    title: 'Phân tích bài làm chi tiết sau khi nộp',
+    items: [
+      'Nộp bài xong bấm "📊 Phân tích chi tiết" để xem trang phân tích giống study4: số câu đúng, sai, bỏ qua, điểm ước tính.',
+      'Bảng phân tích theo từng dạng câu hỏi của mỗi Part: biết ngay mình hay sai dạng nào để luyện thêm.',
+      'Danh sách đáp án từng câu so với câu bạn chọn; bấm "Chi tiết" để mở đúng câu đó xem giải thích.',
+      'Bài đã nộp trước đây (có lưu bài làm) cũng mở được phân tích từ bảng "Kết quả đã nộp" của mỗi đề.'
+    ]
+  },
+  {
     id: '2026-10-24', date: '24/10/2026',
     title: 'Audio tải nhanh hơn',
     items: [
