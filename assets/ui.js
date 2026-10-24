@@ -1073,7 +1073,7 @@
 
   var P = location.pathname, isT = /\/test\.html$/.test(P), mc = /\/c(\d+)\/test-(\d+)\.html$/.exec(P);
   if (!isT && !mc) return;
-  var KEY = isT ? 'mt.hl.toeic.t' + Math.max(1, Math.min(10, parseInt(new URLSearchParams(location.search).get('t'), 10) || 1)) : 'mt.hl.cam' + mc[1] + '.t' + mc[2];
+  var KEY = isT ? 'mt.hl.toeic.t' + Math.max(1, Math.min(20, parseInt(new URLSearchParams(location.search).get('t'), 10) || 1)) : 'mt.hl.cam' + mc[1] + '.t' + mc[2];
   var OLD = mc ? 'cam' + mc[1] + '.hl.t' + mc[2] : '';
   var ZONE = '#partBody,.sect';
   var NOZ = '.panel,.ptools,.qmk,.qnote,.vpop,.audio,audio,.exambar,.mhl-bar,.mhl-note,#xpSheet,.karaopt,summary,.overlay';

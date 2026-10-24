@@ -1,6 +1,16 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-24d', date: '24/10/2026',
+    title: 'Chép chính tả có thêm Part 3 và Part 4',
+    items: [
+      'Chép chính tả có thêm Part 3 (hội thoại) và Part 4 (bài nói) của cả 20 đề: khoảng 3.300 câu, cắt từng câu một từ audio của đề.',
+      'Mỗi câu ghi rõ thuộc nhóm câu hỏi nào (ví dụ câu hỏi 32–34) và là giọng nam hay giọng nữ.',
+      'Part 3–4 nói nhanh và câu dài hơn Part 1–2: cứ bấm 🐢 Chậm hoặc 💡 Gợi ý nếu khó nghe.',
+      'Sửa lỗi: phần tô sáng và ghi chú ở các đề ETS 2024 trước đây bị lẫn với ETS 2026 Test 10, giờ mỗi đề lưu riêng.'
+    ]
+  },
+  {
     id: '2026-10-24c', date: '24/10/2026',
     title: 'Chép chính tả thêm 10 đề ETS 2024',
     items: [

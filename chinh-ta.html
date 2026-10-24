@@ -71,12 +71,12 @@ footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
     <a class="back" href="./">← Trang chủ</a>
     <p class="kicker">Luyện nghe · chép chính tả</p>
     <h1>Nghe từng câu, gõ lại</h1>
-    <p>Các câu Part 1 (mô tả tranh) và Part 2 (hỏi – đáp) của 20 đề ETS 2026 và ETS 2024 được cắt từ chính audio của đề — câu ngắn, rất hợp để luyện nghe từng từ. Nghe bao nhiêu lần cũng được, gõ lại câu nghe được rồi bấm <b>Kiểm tra</b>: web chỉ ra từ nào đúng, sai, thiếu.</p>
+    <p>Các câu Part 1 (mô tả tranh), Part 2 (hỏi – đáp), Part 3 (hội thoại) và Part 4 (bài nói) của 20 đề ETS 2026 và ETS 2024 được cắt từ chính audio của đề. Part 1–2 câu ngắn, hợp để mới bắt đầu; Part 3–4 câu dài hơn, tốc độ nói tự nhiên. Nghe bao nhiêu lần cũng được, gõ lại câu nghe được rồi bấm <b>Kiểm tra</b>: web chỉ ra từ nào đúng, sai, thiếu.</p>
   </header>
 
   <div class="pick">
         <label>Đề<select id="sT"><optgroup label="ETS 2026"><option value="1">ETS 2026 · Test 1</option><option value="2">ETS 2026 · Test 2</option><option value="3">ETS 2026 · Test 3</option><option value="4">ETS 2026 · Test 4</option><option value="5">ETS 2026 · Test 5</option><option value="6">ETS 2026 · Test 6</option><option value="7">ETS 2026 · Test 7</option><option value="8">ETS 2026 · Test 8</option><option value="9">ETS 2026 · Test 9</option><option value="10">ETS 2026 · Test 10</option></optgroup><optgroup label="ETS 2024"><option value="11">ETS 2024 · Test 1</option><option value="12">ETS 2024 · Test 2</option><option value="13">ETS 2024 · Test 3</option><option value="14">ETS 2024 · Test 4</option><option value="15">ETS 2024 · Test 5</option><option value="16">ETS 2024 · Test 6</option><option value="17">ETS 2024 · Test 7</option><option value="18">ETS 2024 · Test 8</option><option value="19">ETS 2024 · Test 9</option><option value="20">ETS 2024 · Test 10</option></optgroup></select></label>
-    <label>Part<select id="sP"><option value="p1">Part 1 · Mô tả tranh</option><option value="p2">Part 2 · Hỏi – đáp</option></select></label>
+    <label>Part<select id="sP"><option value="p1">Part 1 · Mô tả tranh</option><option value="p2">Part 2 · Hỏi – đáp</option><option value="p3">Part 3 · Hội thoại</option><option value="p4">Part 4 · Bài nói</option></select></label>
   </div>
 
   <div id="dots" class="dots" aria-label="Danh sách câu"></div>
@@ -151,7 +151,7 @@ footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
     clearInterval(timer); try{ au.pause(); }catch(e){}
     if(!list.length){ main.innerHTML='<div class="empty">Part này chưa có câu chép chính tả (đang được chuẩn bị). Chọn part khác hoặc quay lại sau nhé.</div>'; return; }
     var x=list[cur], p=PROG[key(cur)];
-    main.innerHTML='<div class="card"><div class="top"><b>Câu '+(cur+1)+' / '+list.length+'</b><span>'+words(x.t).length+' từ'+(p?' · tốt nhất '+p+'%':'')+'</span></div>'+
+    main.innerHTML='<div class="card"><div class="top"><b>Câu '+(cur+1)+' / '+list.length+(x.k&&x.k[0]==='S'?' · <small>câu hỏi '+x.q+'–'+(x.q+2)+(x.sp?' · '+({W:'giọng nữ',M:'giọng nam'}[x.sp[0]]||x.sp):'')+'</small>':'')+'</b><span>'+words(x.t).length+' từ'+(p?' · tốt nhất '+p+'%':'')+'</span></div>'+
       '<div class="play"><button type="button" class="btn main" id="bPlay">▶ Nghe</button><button type="button" class="btn'+(slow?' on':'')+'" id="bSlow">🐢 Chậm</button></div>'+
       '<textarea id="ans" placeholder="Gõ lại câu bạn nghe được…" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>'+
       '<div id="hintbox"></div>'+

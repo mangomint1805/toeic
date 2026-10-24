@@ -12,7 +12,7 @@ Trang luyện đề TOEIC Listening & Reading tự chấm cho học viên: 10 đ
 - Xem lại: lời thoại kèm dịch tiếng Việt, dịch bài đọc, giải thích từng câu; lọc chỉ xem câu sai.
 - Bấm vào từ tiếng Anh để tra nghĩa, nghe phát âm, lưu flashcard (`flashcards.html`, dùng chung với web IELTS).
 - Chỉnh tốc độ audio 0.75x / 1x / 1.25x khi luyện tập.
-- `chinh-ta.html`: chép chính tả ~2.400 câu Part 1–2 (20 đề ETS 2026 + ETS 2024) cắt từ audio.
+- `chinh-ta.html`: chép chính tả ~5.800 câu Part 1–4 (20 đề ETS 2026 + ETS 2024) cắt từ audio.
 - `phan-tich.html`: điểm yếu theo Part và dạng câu hỏi, biểu đồ điểm qua các lần làm.
 - Bài làm tự lưu trên máy; kết quả gửi về Google Sheet của thầy (link Apps Script trong `config.js`; mã Apps Script dùng chung với web IELTS, ở repo [cam](https://github.com/mangomint1805/cam/blob/main/apps-script/Code.gs)).
 
