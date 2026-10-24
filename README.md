@@ -14,7 +14,7 @@ Trang luyện đề TOEIC Listening & Reading tự chấm cho học viên: 10 đ
 - Chỉnh tốc độ audio 0.75x / 1x / 1.25x khi luyện tập.
 - `chinh-ta.html`: chép chính tả ~1.200 câu Part 1–2 cắt từ audio.
 - `phan-tich.html`: điểm yếu theo Part và dạng câu hỏi, biểu đồ điểm qua các lần làm.
-- Bài làm tự lưu trên máy; kết quả gửi về Google Sheet của thầy.
+- Bài làm tự lưu trên máy; kết quả gửi về Google Sheet của thầy (link Apps Script trong `config.js`; mã Apps Script dùng chung với web IELTS, ở repo [cam](https://github.com/mangomint1805/cam/blob/main/apps-script/Code.gs)).
 
 ## Cấu trúc
 - `index.html` — trang chủ chọn đề
