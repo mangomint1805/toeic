@@ -1,6 +1,14 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-24', date: '24/10/2026',
+    title: 'Audio tải nhanh hơn',
+    items: [
+      'Audio của 10 đề ETS 2026 nhẹ hơn khoảng 2 lần, mở đề và tua trên điện thoại nhanh hơn, đỡ tốn 4G.',
+      'Giọng đọc vẫn rõ như cũ, thời lượng từng câu giữ nguyên.'
+    ]
+  },
+  {
     id: '2026-10-22b', date: '22/10/2026',
     title: 'Xem có bao nhiêu bạn đang học cùng',
     items: [
