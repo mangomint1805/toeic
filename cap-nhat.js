@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-24c', date: '24/10/2026',
+    title: 'Chép chính tả thêm 10 đề ETS 2024',
+    items: [
+      'Chép chính tả có thêm khoảng 1.200 câu Part 1–2 của 10 đề ETS 2024, nâng tổng lên khoảng 2.400 câu. Chọn đề ở ô "Đề".',
+      'Bổ sung những câu còn thiếu ở các đề ETS 2026, và sửa vài câu trước đây bị cắt lệch (dính chữ "A" hoặc mất chữ đầu).',
+      'Trò Phản xạ Part 2 giờ nghe được câu hỏi của cả 10 đề ETS 2024, không chỉ đọc như trước.'
+    ]
+  },
+  {
     id: '2026-10-24b', date: '24/10/2026',
     title: 'Phân tích bài làm chi tiết sau khi nộp',
     items: [
