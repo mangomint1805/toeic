@@ -7,3 +7,4 @@
   - Thay đổi chỉ trong README, code nội bộ hay Apps Script (học viên không thấy) thì không cần thêm.
   - Nếu cùng thay đổi áp dụng cho nhiều web (cam, toeic, summary-old, summary-new), cập nhật patch notes ở tất cả các web đó.
 - Firebase Realtime Database (`online/`, `who/`, `log/`) chỉ nhận các trường đã khai báo trong Rules (`"$other": {".validate": false}`). Muốn gửi thêm trường mới thì nhờ thầy thêm vào Rules trước, nếu không Firebase từ chối cả lần ghi. Firestore: luật đang chạy (21/10/2026) đã an toàn, đừng Publish đè bằng `firestore.rules` trong repo mangomint1805.github.io.
+- Mỗi lần đẩy code, GitHub Actions (`.github/workflows/kiem-tra.yml`) tự mở mọi trang tìm lỗi JavaScript, file thiếu, lỗi cú pháp. Đẩy xong nhớ xem kết quả: `gh run list -L 1` (xanh = ổn).
