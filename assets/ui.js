@@ -994,7 +994,13 @@
     '@media (max-width:340px){.mbrand b em{display:none!important}}' +
     '.minapp{display:flex;align-items:center;gap:10px;background:#fff6dd;border-bottom:1px solid #f0d996;color:#5a3a00;font:500 13.5px/1.4 "IBM Plex Sans",sans-serif;padding:9px 16px;position:relative;z-index:39}' +
     '.minapp span{flex:1}.minapp a{flex:none;background:#a8691a;color:#fff!important;font-weight:700;text-decoration:none;border-radius:999px;padding:7px 14px}.minapp button{flex:none;border:0;background:none;font-size:15px;cursor:pointer;color:#8a6a2a}' +
-    'html[data-theme=dark] .minapp{background:#2d2614;border-color:#5a4a22;color:#f0d9a0}';
+    'html[data-theme=dark] .minapp{background:#2d2614;border-color:#5a4a22;color:#f0d9a0}' +
+    '.mlogin-nudge{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(90deg,#fff6e6,#fdeccf);border-bottom:1px solid #f0d996;color:#5a3a00;font:500 13.5px/1.45 "IBM Plex Sans",sans-serif;padding:10px 16px;position:relative;z-index:39}' +
+    '.mlogin-nudge span:first-child{flex:1;min-width:200px}.mlogin-nudge b{color:#6b4410}.mln-b{display:flex;gap:8px;flex:none}' +
+    '.mln-go{border:0;background:#a8691a;color:#fff;font:700 13px/1 "IBM Plex Sans",sans-serif;border-radius:999px;padding:9px 16px;cursor:pointer}.mln-go:hover{background:#905712}' +
+    '.mln-x{border:1px solid #e0cfa6;background:#fff;color:#8a6a2a;font:600 13px/1 "IBM Plex Sans",sans-serif;border-radius:999px;padding:9px 14px;cursor:pointer}' +
+    'html[data-theme=dark] .mlogin-nudge{background:linear-gradient(90deg,#2d2614,#241f12);border-color:#5a4a22;color:#f0d9a0}html[data-theme=dark] .mlogin-nudge b{color:#ffd98a}html[data-theme=dark] .mln-x{background:#1f2228;border-color:#4a3f22;color:#e8d6a6}' +
+    '@media (max-width:760px){.mlogin-nudge{font-size:13px;padding:10px 14px}.mln-go,.mln-x{flex:1}}';
   document.head.appendChild(stA);
   var st6 = document.createElement('style'); st6.textContent = '.mslogan{max-width:760px;margin:-10px auto 0;padding:0 20px 40px;text-align:center;color:var(--dim,#666e7a)}.mslogan span{color:var(--brand,#a8691a);font-size:14px}.mslogan p{font:italic 500 17px/1.5 Fraunces,Georgia,serif;color:var(--brand-ink,#6b4410);margin:6px 0 4px}.mslogan p i{display:inline-block;white-space:nowrap;font-style:inherit}.mslogan small{font-size:12px;letter-spacing:.08em}body.has-nav .mslogan{padding-bottom:20px}@media (max-width:760px){body.has-nav .mslogan{padding-bottom:10px}}'; document.head.appendChild(st6);
   // ================= nút: trong thanh menu (nếu có) + nút nổi =================
@@ -1042,6 +1048,21 @@
     ib.querySelector('button').onclick = function () { ib.remove(); try { sessionStorage.setItem('mt-inapp-x', '1'); } catch (e) {} };
     var hideIb = false; try { hideIb = !!sessionStorage.getItem('mt-inapp-x') || !!localStorage.getItem('mt.acc'); } catch (e) {}
     if (!hideIb) { var nv = document.querySelector('.mnav'); if (nv) nv.insertAdjacentElement('afterend', ib); else document.body.insertBefore(ib, document.body.firstChild); }
+  }
+  // nhắc nhẹ học viên đăng nhập để thầy thấy tiến độ (chỉ web luyện đề, trang chủ, khách chưa đăng nhập; ẩn 10 ngày khi bấm Để sau)
+  if (SITE !== 'summary' && !EXAM && !INAPP && cur === 'home') {
+    var logged = false; try { logged = !!localStorage.getItem('mt.acc'); } catch (e) {}
+    var hideNudge = false; try { var tx = +localStorage.getItem('mt.loginNudgeX') || 0; hideNudge = tx > Date.now() - 864e5 * 10; } catch (e) {}
+    if (!logged && !hideNudge) {
+      var ln = document.createElement('div'); ln.className = 'mlogin-nudge';
+      ln.innerHTML = '<span>👋 <b>Đăng nhập Google</b> để thầy thấy tiến độ của bạn, và lưu bài làm, flashcard qua mọi thiết bị.</span>' +
+        '<span class="mln-b"><button type="button" class="mln-go">Đăng nhập</button><button type="button" class="mln-x" aria-label="Để sau">Để sau</button></span>';
+      ln.querySelector('.mln-go').onclick = function () { var mb = document.querySelector('.macc-b'); if (mb) mb.click(); };
+      ln.querySelector('.mln-x').onclick = function () { ln.remove(); try { localStorage.setItem('mt.loginNudgeX', String(Date.now())); } catch (e) {} };
+      var nvn = document.querySelector('.mnav');
+      if (nvn) nvn.insertAdjacentElement('afterend', ln); else document.body.insertBefore(ln, document.body.firstChild);
+      var prev = window.MACCPAINT; window.MACCPAINT = function () { var r = prev && prev.apply(this, arguments); try { if (localStorage.getItem('mt.acc')) ln.remove(); } catch (e) {} return r; }; if (prev) for (var pk in prev) window.MACCPAINT[pk] = prev[pk];
+    }
   }
   [].forEach.call(document.querySelectorAll('.mgem'), function (b) { b.onclick = function () { window.MGACHA(); }; });
   applySkin(skin());

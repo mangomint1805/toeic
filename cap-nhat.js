@@ -1,6 +1,14 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-25c', date: '25/10/2026',
+    title: 'Nhắc đăng nhập để lưu tiến độ',
+    items: [
+      'Trang chủ có thêm lời nhắc nhẹ: đăng nhập Google để thầy thấy tiến độ, và giữ bài làm, flashcard qua mọi thiết bị. Bấm "Để sau" là ẩn đi, không làm phiền nữa.',
+      'Đăng nhập ổn định hơn khi mạng yếu: nếu tải dịch vụ đăng nhập không được, web báo rõ "kiểm tra mạng rồi thử lại" thay vì đứng im.'
+    ]
+  },
+  {
     id: '2026-10-25b', date: '25/10/2026',
     title: 'Sửa nút Có gì mới và màu giao diện Băng hoại',
     items: [
