@@ -1,6 +1,14 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-25d', date: '25/10/2026',
+    title: 'Đề mini khó: Part 3 + Part 6',
+    items: [
+      'Trang Đề mini có thêm nút 🔥 "Đề khó": luyện Part 3 (hội thoại dài, có audio) và Part 6 (đoạn văn điền từ) — hợp cho các bạn đã chắc Part 1, 2, 5.',
+      'Mỗi lần 14 câu lấy ngẫu nhiên từ 20 đề ETS, làm xong biết đúng sai ngay kèm nghĩa tiếng Việt từng đáp án.'
+    ]
+  },
+  {
     id: '2026-10-25c', date: '25/10/2026',
     title: 'Nhắc đăng nhập để lưu tiến độ',
     items: [

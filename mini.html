@@ -36,6 +36,13 @@ header p{margin:0;color:var(--dim)}
 .big{display:block;width:100%;text-align:left;font:inherit;background:var(--brand);color:#fff;border:0;border-radius:14px;padding:16px 18px;cursor:pointer;margin:0 0 10px}
 .big b{display:block;font-size:18px}.big span{font-size:13.5px;opacity:.9}
 .big.alt{background:var(--card);color:var(--ink);border:1.5px solid var(--line)}.big.alt span{color:var(--dim);opacity:1}
+.big.hard{background:linear-gradient(100deg,#b8431f,#d9731f);box-shadow:0 6px 18px rgba(184,67,31,.22)}.big.hard span{opacity:.95}
+.big.hard[disabled]{opacity:.7;cursor:default}
+.p6pass{border:1px solid var(--line);background:var(--bg,#faf8f4);border-radius:10px;padding:12px 14px;margin:0 0 12px;font-size:14.5px;line-height:1.7;max-height:260px;overflow:auto}
+.p6pass .p6h{font-weight:700;color:var(--dim);font-size:12.5px;margin:0 0 6px}
+.p6pass .blank{color:#b8431f;font-weight:700;white-space:nowrap}
+.p6pass .blank.cur{background:#ffe8b0;border-radius:4px;padding:0 4px}
+html[data-theme=dark] .p6pass{background:#1b1e24}html[data-theme=dark] .p6pass .blank.cur{background:#5a4a1a;color:#ffd98a}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
 .top{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;color:var(--dim);margin:0 0 8px}
@@ -84,6 +91,22 @@ img.ph{display:block;width:100%;max-height:300px;object-fit:contain;border-radiu
   function rng(seed){ var h=2166136261; for(var i=0;i<seed.length;i++){ h^=seed.charCodeAt(i); h=Math.imul(h,16777619); } return function(){ h+=0x6D2B79F5; var t=h; t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; }; }
   function pick(list,n,r,seen){ var a=list.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(r()*(i+1)); var x=a[i]; a[i]=a[j]; a[j]=x; } if(seen){ a.sort(function(x,y){ return (seen[x.t+'.'+x.n]?1:0)-(seen[y.t+'.'+y.n]?1:0); }); } return a.slice(0,n); }
   var DAYS=get('ets26.mini.days',{}), SEEN=get('ets26.mini.seen',{});
+  // Đề khó (Part 3 hội thoại + Part 6 đoạn văn) — dữ liệu tải khi bấm
+  var hardP=null;
+  function loadHard(cb){
+    if(window.ETSMINIHARD) return cb();
+    var b=document.getElementById('bHard'), lab=b&&b.querySelector('b'), txt=lab&&lab.textContent;
+    if(b){ b.disabled=true; if(lab) lab.textContent='🔥 Đang tải đề khó…'; }
+    if(!hardP){ hardP=new Promise(function(res,rej){ var s=document.createElement('script'); s.src='data/mini-hard.js?v=1'; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); hardP.catch(function(){ hardP=null; }); }
+    hardP.then(function(){ cb(); }, function(){ if(b){ b.disabled=false; if(lab) lab.textContent=txt; } if(window.MTOAST) MTOAST('alert','Không tải được đề khó','Kiểm tra mạng rồi thử lại nhé.'); });
+  }
+  function hardSet(){
+    var H=window.ETSMINIHARD, r=Math.random, set=[];
+    function take(arr,n){ var a=arr.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(r()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a.slice(0,n); }
+    take(H.p3,2).forEach(function(g){ g.qs.forEach(function(q,qi){ set.push({p:3,t:g.t,n:q.n,o:q.opts,v:q.vi,a:q.ans,q:q.q,qv:q.qvi,au:g.a,gfirst:qi===0,gi:qi,gn:g.qs.length}); }); });
+    take(H.p6,2).forEach(function(g){ g.qs.forEach(function(q,qi){ set.push({p:6,t:g.t,n:q.n,o:q.opts,v:q.vi,a:q.ans,head:g.head,passage:g.passage,gfirst:qi===0,gi:qi,gn:g.qs.length}); }); });
+    return set;
+  }
   function streak(){ var s=0, d=new Date(); if(!DAYS[today(d)]) d.setDate(d.getDate()-1); while(DAYS[today(d)]){ s++; d.setDate(d.getDate()-1); } return s; }
   var SET=[], i=0, score=0, kind='', answers=[];
   function home(){
@@ -95,25 +118,30 @@ img.ph{display:block;width:100%;max-height:300px;object-fit:contain;border-radiu
     main.innerHTML='<div class="streak"><div><b>🔥 '+streak()+'</b><span>ngày liên tục</span></div><div><b>'+best+'</b><span>ngày đã làm đề mini</span></div><div><b>'+(done?done+'/20':'–')+'</b><span>điểm hôm nay</span></div></div><div class="week">'+wk+'</div>'+
       '<button class="big" id="bDay"><b>'+(done?'↻ Làm lại đề hôm nay':'▶ Làm đề hôm nay')+'</b><span>20 câu · 3 Part 1 + 7 Part 2 + 10 Part 5 · cả lớp cùng một đề trong ngày</span></button>'+
       '<div class="grid2"><button class="big alt" data-k="p5"><b>📝 15 câu Part 5</b><span>Ngữ pháp & từ vựng, ưu tiên câu chưa gặp</span></button><button class="big alt" data-k="p2"><b>🎧 10 câu Part 2</b><span>Hỏi – đáp, có audio</span></button></div>'+
+      '<button class="big hard" id="bHard"><b>🔥 Đề khó: Part 3 + Part 6</b><span>Hội thoại dài & đoạn văn điền từ — luyện nghe và đọc nâng cao (cho lớp A)</span></button>'+
       '<p class="hint">Mẹo: làm mỗi ngày một đề để giữ chuỗi 🔥. Câu nào sai, mở giải thích rồi tra từ ngay trên trang.</p>';
     document.getElementById('bDay').onclick=function(){ var r=rng('ets-mini-'+t); var P=function(p){ return ALL.filter(function(x){ return x.p===p; }); };
       start('day',pick(P(1),3,r).concat(pick(P(2),7,r),pick(P(5),10,r))); };
+    document.getElementById('bHard').onclick=function(){ loadHard(function(){ start('hard',hardSet()); }); };
     [].forEach.call(main.querySelectorAll('[data-k]'),function(b){ b.onclick=function(){ var p=+b.dataset.k.slice(1), r=Math.random; start(b.dataset.k,pick(ALL.filter(function(x){ return x.p===p; }),p===5?15:10,r,SEEN)); }; });
   }
   function start(k,set){ kind=k; SET=set; i=0; score=0; answers=[]; if(window.MCOMBO) MCOMBO.reset(); show(); }
   function play(){ var x=SET[i]; if(!x||!x.au) return; var src='audio/t'+x.t+'/'+x.au; if(au.getAttribute('src')!==src) au.setAttribute('src',src); au.currentTime=0; au.play().catch(function(){}); }
   function show(){
     var x=SET[i]; if(!x) return end();
-    var lab=x.p===1?'Part 1 · Mô tả tranh':x.p===2?'Part 2 · Hỏi – đáp':'Part 5 · Điền câu';
-    var h='<div class="card"><div class="top"><span class="tag">'+lab+'</span><span>Câu '+(i+1)+'/'+SET.length+' · Test '+x.t+' câu '+x.n+'</span></div><div class="pbar"><s style="width:'+(i/SET.length*100)+'%"></s></div>';
+    var lab=x.p===1?'Part 1 · Mô tả tranh':x.p===2?'Part 2 · Hỏi – đáp':x.p===3?'Part 3 · Hội thoại':x.p===6?'Part 6 · Điền đoạn văn':'Part 5 · Điền câu';
+    var showTx=(x.p===5||x.p===3||x.p===6);
+    var h='<div class="card"><div class="top"><span class="tag">'+lab+'</span><span>Câu '+(i+1)+'/'+SET.length+(x.gn?' · ý '+(x.gi+1)+'/'+x.gn:'')+' · Test '+x.t+' câu '+x.n+'</span></div><div class="pbar"><s style="width:'+(i/SET.length*100)+'%"></s></div>';
     if(x.p===1) h+='<img class="ph" src="img/t'+x.t+'/'+x.img+'" alt="Tranh">';
+    if(x.p===6){ var pas=String(x.passage||'').replace('class="blank" data-n="'+x.n+'"','class="blank cur" data-n="'+x.n+'"'); h+='<div class="p6pass">'+(x.head?'<p class="p6h">'+esc(x.head)+'</p>':'')+pas+'</div>'; }
     if(x.au) h+='<div class="aud"><button id="bPl">▶ Nghe</button><button class="ghost" id="bSl">🐢 Chậm</button></div>';
-    h+='<div class="q">'+(x.p===5?esc(x.q):x.p===2?'Nghe câu hỏi và chọn câu đáp phù hợp nhất.':'Nghe 4 câu mô tả và chọn câu đúng với bức tranh.')+'</div><div class="opts">';
+    var qt=x.p===5?esc(x.q):x.p===3?esc(x.q):x.p===6?'Chọn phương án điền vào chỗ trống ('+x.n+').':x.p===2?'Nghe câu hỏi và chọn câu đáp phù hợp nhất.':'Nghe 4 câu mô tả và chọn câu đúng với bức tranh.';
+    h+='<div class="q">'+qt+'</div><div class="opts">';
     var n=x.o.length;
-    for(var k=0;k<n;k++) h+='<button class="opt" data-l="'+'ABCD'[k]+'"><span class="L">'+'ABCD'[k]+'</span><span class="tx">'+(x.p===5?esc(x.o[k]):'')+'</span></button>';
+    for(var k=0;k<n;k++) h+='<button class="opt" data-l="'+'ABCD'[k]+'"><span class="L">'+'ABCD'[k]+'</span><span class="tx">'+(showTx?esc(x.o[k]):'')+'</span></button>';
     h+='</div><div id="fb"></div><div class="nav" id="nav"></div></div>';
     main.innerHTML=h; window.scrollTo(0,0);
-    if(x.au){ document.getElementById('bPl').onclick=function(){ au.playbackRate=1; play(); }; document.getElementById('bSl').onclick=function(){ play(); au.playbackRate=0.8; }; play(); }
+    if(x.au){ document.getElementById('bPl').onclick=function(){ au.playbackRate=1; play(); }; document.getElementById('bSl').onclick=function(){ play(); au.playbackRate=0.8; }; if(x.gfirst!==false) play(); else { var src='audio/t'+x.t+'/'+x.au; if(au.getAttribute('src')!==src) au.setAttribute('src',src); } }
     [].forEach.call(main.querySelectorAll('.opt'),function(b){ b.onclick=function(){ choose(b.dataset.l); }; });
   }
   function choose(L){
@@ -123,6 +151,7 @@ img.ph{display:block;width:100%;max-height:300px;object-fit:contain;border-radiu
       if(x.p!==5) b.querySelector('.tx').innerHTML=esc(x.o[k])+(x.v&&x.v[k]?'<small>'+esc(x.v[k])+'</small>':''); });
     var fb=ok?'✓ Chính xác!':'✗ Chưa đúng — đáp án là ('+x.a+').';
     if(x.p===2) fb+='\n\nCâu hỏi: '+x.q+(x.qv?'\n'+x.qv:'');
+    if(x.p===3&&x.qv) fb+='\n\n'+x.qv;
     if(x.p===5&&x.x) fb+='\n\n'+x.x;
     document.getElementById('fb').innerHTML='<div class="fb '+(ok?'ok':'bad')+'">'+esc(fb)+'</div>';
     document.getElementById('nav').innerHTML='<button class="btn" id="bN">'+(i<SET.length-1?'Câu tiếp →':'Xem kết quả')+'</button>';
@@ -132,7 +161,7 @@ img.ph{display:block;width:100%;max-height:300px;object-fit:contain;border-radiu
     au.pause();
     var pct=Math.round(score/SET.length*100);
     if(kind==='day'){ var t=today(); DAYS[t]=Math.max(DAYS[t]||0,score); put('ets26.mini.days',DAYS); send(); }
-    main.innerHTML='<div class="card res"><p class="hint">'+(kind==='day'?'Đề mini hôm nay':'Luyện thêm')+'</p><div class="sc">'+score+'/'+SET.length+'</div><p>'+(pct>=85?'🎉 Xuất sắc!':pct>=65?'👍 Tốt lắm, cố thêm chút nữa!':'💪 Ôn lại các câu sai rồi thử lại nhé!')+'</p>'+
+    main.innerHTML='<div class="card res"><p class="hint">'+(kind==='day'?'Đề mini hôm nay':kind==='hard'?'Đề khó · Part 3 + Part 6':'Luyện thêm')+'</p><div class="sc">'+score+'/'+SET.length+'</div><p>'+(pct>=85?'🎉 Xuất sắc!':pct>=65?'👍 Tốt lắm, cố thêm chút nữa!':'💪 Ôn lại các câu sai rồi thử lại nhé!')+'</p>'+
       (kind==='day'?'<p>🔥 Chuỗi: <b>'+streak()+' ngày</b> liên tục</p>':'')+'<div class="nav" style="justify-content:center;gap:8px"><button class="btn" id="bH">Về trang đề mini</button></div></div>';
     document.getElementById('bH').onclick=home;
   }
