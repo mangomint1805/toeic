@@ -4,7 +4,8 @@ window.MT_UPDATES = [
     id: '2026-10-25', date: '25/10/2026',
     title: 'Thanh menu thẳng hàng ở mọi trang',
     items: [
-      'Sửa lỗi thanh menu bị tụt xuống ở trang Có gì mới, Chép chính tả, Đề mini, Phản xạ, Phân tích, Flashcard và vài trang khác: giờ mọi trang đều thẳng hàng.'
+      'Sửa lỗi thanh menu bị tụt xuống ở trang Có gì mới, Chép chính tả, Đề mini, Phản xạ, Phân tích, Flashcard và vài trang khác: giờ mọi trang đều thẳng hàng.',
+      'Chép chính tả Part 3–4 có thêm gần 30 câu (những câu có tên riêng, trước đây bị bỏ sót).'
     ]
   },
   {
