@@ -973,7 +973,12 @@
     'html[data-skin=scifi] :is(.btn:not(.alt),.big:not(.alt),.mt-next,.mark button:not(.on)){color:#1a1240!important;background:linear-gradient(180deg,#ffe36b,#ffc21a)!important;border-color:#ffc21a!important;box-shadow:0 0 14px rgba(255,210,63,.35)}' +
     'html[data-skin=scifi] :is(.mp-cd,.mt-i,.mbadge.on .mb-i,.num,.stop.open .dot){background:linear-gradient(150deg,#4ad7ff,#b04cff)!important;border-color:#4ad7ff!important}' +
     'html[data-skin=scifi] .mlinks a[aria-current=page]{background:rgba(74,215,255,.14);color:#7fe6ff;box-shadow:inset 0 -2px 0 #4ad7ff}html[data-skin=scifi] .kicker,html[data-skin=scifi] .hello .kicker{color:#4ad7ff}' +
-    'html[data-skin=scifi] .mp-bar i,html[data-skin=scifi] .skbar s{background:linear-gradient(90deg,#4ad7ff,#b04cff)!important}';
+    'html[data-skin=scifi] .mp-bar i,html[data-skin=scifi] .skbar s{background:linear-gradient(90deg,#4ad7ff,#b04cff)!important}' +
+    // Băng hoại: bỏ các khung màu nâu/cam của giao diện tối, đổi sang tông xanh – tím cho đồng bộ
+    'html[data-skin=scifi] .mbrand b em{background:rgba(74,215,255,.14)!important;color:#7fe6ff!important}' +
+    'html[data-skin=scifi] :is(.doc thead th,.doc tr:first-child th,table thead th){background:linear-gradient(90deg,#1b2a5c,#2a1b5c)!important;color:#bfefff!important}html[data-skin=scifi] .doc table.v3note td{background:#18234a!important}' +
+    'html[data-skin=scifi] :is(.more-sites a,.gv,.lopbar,.gate,.resume,.minapp){background:linear-gradient(120deg,#111a35,#1a1140)!important;border-color:#2e4377!important}html[data-skin=scifi] .more-sites a:hover{border-color:#4ad7ff!important}' +
+    'html[data-skin=scifi] :is(.gv tr.next td,.sn-res mark,.doc h2.sn-hit,.doc h3.sn-hit){background:rgba(176,76,255,.22)!important}';
   document.head.appendChild(st5);
   applySkin(skin());
 
@@ -1280,10 +1285,10 @@
   var SPARK = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3l1.9 5.6L18.5 10.5l-5.6 1.9L11 18l-1.9-5.6L3.5 10.5l5.6-1.9z"/><path d="M19 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>';
   var st = document.createElement('style');
   st.textContent =
-    '.mlinks a.mnew-l{position:relative}.mlinks a.mnew-l.dot::after{content:"";position:absolute;top:6px;right:5px;width:7px;height:7px;border-radius:50%;background:#e0483a;box-shadow:0 0 0 2px var(--card,#fff)}' +
+    '.mlinks a.mnew-l{position:relative}.mlinks a.mnew-l.mn-dot::after{content:"";position:absolute;top:6px;right:5px;width:7px;height:7px;border-radius:50%;background:#e0483a;box-shadow:0 0 0 2px var(--card,#fff)}' +
     '@media (min-width:761px) and (max-width:1359px){.mlinks a.mnew-l{padding-left:9px;padding-right:9px}.mlinks a.mnew-l span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.mlinks a.mnew-l .ic{display:inline-block;width:1.25em;height:1.25em}}' +
     '@media (max-width:960px){.mlinks a.mnew-l{display:none}}' +
-    'a.mp-new{text-decoration:none;box-sizing:border-box}a.mp-new.dot::after{content:"mới";font:700 10.5px/1 "IBM Plex Sans",sans-serif;background:#e0483a;color:#fff;border-radius:999px;padding:3px 6px 2px;margin-left:2px}' +
+    'a.mp-new{text-decoration:none;box-sizing:border-box}a.mp-new.mn-dot::after{content:"mới";font:700 10.5px/1 "IBM Plex Sans",sans-serif;background:#e0483a;color:#fff;border-radius:999px;padding:3px 6px 2px;margin-left:2px}' +
     '.mnew{position:fixed;z-index:96;left:20px;bottom:20px;width:340px;max-width:calc(100vw - 24px);box-sizing:border-box;background:var(--card,#fff);color:var(--ink,#1e232b);border:1px solid var(--line,#ddd7c9);border-left:4px solid var(--brand,#a8691a);border-radius:14px;padding:13px 15px 12px;box-shadow:0 14px 40px rgba(0,0,0,.18);font:14px/1.45 "IBM Plex Sans",system-ui,sans-serif;animation:mnewin .4s cubic-bezier(.2,.9,.3,1.2)}' +
     '.mnew-k{display:block;font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--brand-ink,#6b4410);margin:0 26px 3px 0}.mnew-t{display:block;font:600 16.5px/1.3 Fraunces,Georgia,serif;margin:0 0 6px}' +
     '.mnew ul{margin:0 0 10px;padding-left:18px;color:var(--ink,#1e232b)}.mnew li{margin:3px 0;font-size:13.5px}' +
@@ -1308,7 +1313,7 @@
   function addPop(p) {
     if (p.querySelector('.mp-new')) return;
     var first = p.querySelector('.mp-tour'); if (!first) return;
-    var b = document.createElement('a'); b.className = 'mp-tour mp-new' + (unseen ? ' dot' : ''); b.href = HREF; b.innerHTML = SPARK + ' Có gì mới';
+    var b = document.createElement('a'); b.className = 'mp-tour mp-new' + (unseen ? ' mn-dot' : ''); b.href = HREF; b.innerHTML = SPARK + ' Có gì mới';
     first.insertAdjacentElement('afterend', b);
   }
   if (window.MutationObserver) new MutationObserver(function (ms) {
@@ -1323,10 +1328,10 @@
     if (NEWS || !used) { s(KEY, top.id); return; }
     if (g(KEY) === top.id) return;
     unseen = true;
-    var l = document.querySelector('.mlinks a.mnew-l'); if (l) { l.classList.add('dot'); l.title = 'Có gì mới · có cập nhật mới'; }
+    var l = document.querySelector('.mlinks a.mnew-l'); if (l) { l.classList.add('mn-dot'); l.title = 'Có gì mới · có cập nhật mới'; }
     if (!QUIET) later(top);
   }
-  function seen(id) { s(KEY, id); unseen = false; [].forEach.call(document.querySelectorAll('.mnew-l.dot,.mp-new.dot'), function (e) { e.classList.remove('dot'); }); }
+  function seen(id) { s(KEY, id); unseen = false; [].forEach.call(document.querySelectorAll('.mnew-l.mn-dot,.mp-new.mn-dot'), function (e) { e.classList.remove('mn-dot'); }); }
   function busy() { return !!document.querySelector('.mtour,.mtoast,.fbk,.mgc,.mpop,.mhl-note:not([hidden])') || document.hidden; }
   function later(top) {
     var n = 0;
@@ -1383,10 +1388,10 @@
   var SPARK = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3l1.9 5.6L18.5 10.5l-5.6 1.9L11 18l-1.9-5.6L3.5 10.5l5.6-1.9z"/><path d="M19 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>';
   var st = document.createElement('style');
   st.textContent =
-    '.mlinks a.mnew-l{position:relative}.mlinks a.mnew-l.dot::after{content:"";position:absolute;top:6px;right:5px;width:7px;height:7px;border-radius:50%;background:#e0483a;box-shadow:0 0 0 2px var(--card,#fff)}' +
+    '.mlinks a.mnew-l{position:relative}.mlinks a.mnew-l.mn-dot::after{content:"";position:absolute;top:6px;right:5px;width:7px;height:7px;border-radius:50%;background:#e0483a;box-shadow:0 0 0 2px var(--card,#fff)}' +
     '@media (min-width:761px) and (max-width:1359px){.mlinks a.mnew-l{padding-left:9px;padding-right:9px}.mlinks a.mnew-l span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.mlinks a.mnew-l .ic{display:inline-block;width:1.25em;height:1.25em}}' +
     '@media (max-width:960px){.mlinks a.mnew-l{display:none}}' +
-    'a.mp-new{text-decoration:none;box-sizing:border-box}a.mp-new.dot::after{content:"mới";font:700 10.5px/1 "IBM Plex Sans",sans-serif;background:#e0483a;color:#fff;border-radius:999px;padding:3px 6px 2px;margin-left:2px}' +
+    'a.mp-new{text-decoration:none;box-sizing:border-box}a.mp-new.mn-dot::after{content:"mới";font:700 10.5px/1 "IBM Plex Sans",sans-serif;background:#e0483a;color:#fff;border-radius:999px;padding:3px 6px 2px;margin-left:2px}' +
     '.mnew{position:fixed;z-index:96;left:20px;bottom:20px;width:340px;max-width:calc(100vw - 24px);box-sizing:border-box;background:var(--card,#fff);color:var(--ink,#1e232b);border:1px solid var(--line,#ddd7c9);border-left:4px solid var(--brand,#a8691a);border-radius:14px;padding:13px 15px 12px;box-shadow:0 14px 40px rgba(0,0,0,.18);font:14px/1.45 "IBM Plex Sans",system-ui,sans-serif;animation:mnewin .4s cubic-bezier(.2,.9,.3,1.2)}' +
     '.mnew-k{display:block;font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--brand-ink,#6b4410);margin:0 26px 3px 0}.mnew-t{display:block;font:600 16.5px/1.3 Fraunces,Georgia,serif;margin:0 0 6px}' +
     '.mnew ul{margin:0 0 10px;padding-left:18px;color:var(--ink,#1e232b)}.mnew li{margin:3px 0;font-size:13.5px}' +
@@ -1412,7 +1417,7 @@
   function addPop(p) {
     if (p.querySelector('.mp-new')) return;
     var first = p.querySelector('.mp-tour'); if (!first) return;
-    var b = document.createElement('a'); b.className = 'mp-tour mp-new' + (unseen ? ' dot' : ''); b.href = HREF; b.innerHTML = SPARK + ' Có gì mới';
+    var b = document.createElement('a'); b.className = 'mp-tour mp-new' + (unseen ? ' mn-dot' : ''); b.href = HREF; b.innerHTML = SPARK + ' Có gì mới';
     first.insertAdjacentElement('afterend', b);
   }
   if (window.MutationObserver) new MutationObserver(function (ms) {
@@ -1427,10 +1432,10 @@
     if (NEWS || !used) { s(KEY, top.id); return; }
     if (g(KEY) === top.id) return;
     unseen = true;
-    var l = document.querySelector('.mlinks a.mnew-l'); if (l) { l.classList.add('dot'); l.title = 'Có gì mới · có cập nhật mới'; }
+    var l = document.querySelector('.mlinks a.mnew-l'); if (l) { l.classList.add('mn-dot'); l.title = 'Có gì mới · có cập nhật mới'; }
     if (!QUIET) later(top);
   }
-  function seen(id) { s(KEY, id); unseen = false; [].forEach.call(document.querySelectorAll('.mnew-l.dot,.mp-new.dot'), function (e) { e.classList.remove('dot'); }); }
+  function seen(id) { s(KEY, id); unseen = false; [].forEach.call(document.querySelectorAll('.mnew-l.mn-dot,.mp-new.mn-dot'), function (e) { e.classList.remove('mn-dot'); }); }
   // chờ khi: đang ở màn nhập mã lớp, trang bài bị khoá, đang mở flashcard, bảng ⚙ / góp ý / thông báo khác đang mở
   function busy() { return !!document.querySelector('body.gated,html.sn-lock,.fc-bg.on,.mtour,.mtoast,.fbk,.mgc,.mpop') || document.hidden; }
   function later(top) {

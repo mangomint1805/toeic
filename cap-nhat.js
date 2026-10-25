@@ -1,6 +1,14 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-25b', date: '25/10/2026',
+    title: 'Sửa nút Có gì mới và màu giao diện Băng hoại',
+    items: [
+      'Nút ✨ Có gì mới trên thanh menu đã gọn lại như các nút khác, không còn hiện thành ô vuông lạ.',
+      'Giao diện Băng hoại đổi các khung màu nâu (bảng, thẻ, nhãn) sang tông xanh – tím cho đồng bộ, dễ nhìn hơn.'
+    ]
+  },
+  {
     id: '2026-10-25', date: '25/10/2026',
     title: 'Thanh menu thẳng hàng ở mọi trang',
     items: [
