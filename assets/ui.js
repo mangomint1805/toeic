@@ -1360,6 +1360,7 @@
   var GA_ID = 'G-WTQLYLYL0G'; // mã đo lường GA4 (G-XXXXXXXXXX); còn bắt đầu bằng '__' thì không chạy GA
   try {
     if (window.__mlive) return; window.__mlive = 1;
+    if (!/(^|\.)github\.io$/.test(location.hostname)) return; // chỉ đếm trên web thật, không đếm khi chạy thử trên máy
     var me0 = document.currentScript && document.currentScript.src || '', mm = /\/(toeic|cam)\/(?:assets|shared)\/ui\.js/.exec(me0.split('?')[0]);
     if (!mm) return;
     var SITE = mm[1], SITES = ['toeic', 'cam'], NAME = { toeic: 'TOEIC ETS', cam: 'IELTS Cam' };
