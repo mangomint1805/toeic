@@ -16,6 +16,10 @@ jobs:
           node-version: 20
       - name: Cài trình duyệt
         run: npm i --no-save --no-package-lock playwright@1.48.2 && npx playwright install --with-deps chromium
+      - name: Kiểm tra ui.js giống nhau ở 4 web
+        run: node .github/scripts/check-ui.js
+        env:
+          SELF: "toeic"
       - name: Mở từng trang và kiểm tra
         run: node .github/scripts/check-pages.js
         env:
