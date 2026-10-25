@@ -82,6 +82,7 @@
     '.mlinks a{display:flex;align-items:center;gap:7px;font:600 14px/1 "IBM Plex Sans",sans-serif;color:#4b5260;text-decoration:none;padding:9px 12px;border-radius:9px}' +
     '.mlinks a:hover{background:#f6f1e7;color:#6b4410}' +
     '.mlinks a[aria-current=page]{background:#f2e2c4;color:#6b4410}' +
+    'header.mnav{padding:0;margin:0}' + // trang nào tự đặt kiểu cho thẻ header thì thanh menu không bị đẩy xuống
     '.mlinks a:focus-visible,.mbrand:focus-visible{outline:3px solid #f2c879;outline-offset:2px}' +
     'body.has-nav .back{display:none}.mbrand,.mlinks a{white-space:nowrap}' +
     '@media (min-width:761px) and (max-width:1100px){.mnav .in{gap:10px;padding:10px 14px}.mlinks{gap:0}.mlinks a{padding:9px 8px;font-size:13.5px}.mlinks a .ic{display:none}}' +

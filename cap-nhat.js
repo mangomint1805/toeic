@@ -1,6 +1,13 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-25', date: '25/10/2026',
+    title: 'Thanh menu thẳng hàng ở mọi trang',
+    items: [
+      'Sửa lỗi thanh menu bị tụt xuống ở trang Có gì mới, Chép chính tả, Đề mini, Phản xạ, Phân tích, Flashcard và vài trang khác: giờ mọi trang đều thẳng hàng.'
+    ]
+  },
+  {
     id: '2026-10-24d', date: '24/10/2026',
     title: 'Chép chính tả có thêm Part 3 và Part 4',
     items: [
