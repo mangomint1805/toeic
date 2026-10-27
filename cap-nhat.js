@@ -1,6 +1,14 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-27', date: '27/10/2026',
+    title: 'Sửa lỗi đăng nhập trên iPhone (Safari)',
+    items: [
+      'Sửa lỗi bấm Đăng nhập Google trên iPhone, iPad hoặc Safari thì hiện dòng chữ tiếng Anh "Unable to process request…" và không vào được.',
+      'Giờ đăng nhập ngay trên trang của web, không cần chỉnh gì trong Cài đặt. Bạn nào lỡ tắt "Ngăn theo dõi chéo trang" để đăng nhập thì có thể bật lại.'
+    ]
+  },
+  {
     id: '2026-10-25d', date: '25/10/2026',
     title: 'Đề mini khó: Part 3 + Part 6',
     items: [
