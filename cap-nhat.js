@@ -1,6 +1,13 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-27b', date: '27/10/2026',
+    title: 'Sửa lỗi đăng nhập Google trên iPhone',
+    items: [
+      'Đăng nhập Google bằng Safari hoặc trình duyệt trên iPhone, iPad không còn báo lỗi "missing initial state" nữa. Nếu trước đây bạn bị kẹt ở bước này, hãy thử đăng nhập lại.'
+    ]
+  },
+  {
     id: '2026-10-27', date: '27/10/2026',
     title: 'Sửa lỗi đăng nhập trên iPhone (Safari)',
     items: [
