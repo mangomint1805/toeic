@@ -86,6 +86,7 @@
     'header.mnav{padding:0;margin:0}' + // trang nào tự đặt kiểu cho thẻ header thì thanh menu không bị đẩy xuống
     '.mlinks a:focus-visible,.mbrand:focus-visible{outline:3px solid #f2c879;outline-offset:2px}' +
     'body.has-nav .back{display:none}.mbrand,.mlinks a{white-space:nowrap}' +
+    '@media (min-width:1101px) and (max-width:1500px){.mlinks a .ic{display:none}.mlinks a{padding-left:9px;padding-right:9px}}' +
     '@media (min-width:761px) and (max-width:1100px){.mnav .in{gap:10px;padding:10px 14px}.mlinks{gap:0}.mlinks a{padding:9px 8px;font-size:13.5px}.mlinks a .ic{display:none}}' +
     '@media (max-width:760px){.mlinks{position:fixed;left:0;right:0;bottom:0;margin:0;background:#fff;border-top:1px solid #e6e0d3;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom));gap:0;box-shadow:0 -6px 20px rgba(0,0,0,.05)}' +
     '.mlinks a{flex-direction:column;gap:3px;font-size:11px;padding:6px 4px;flex:1;text-align:center}.mlinks a .ic{width:22px;height:22px}' +

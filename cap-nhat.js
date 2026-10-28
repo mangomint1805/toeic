@@ -1,7 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
-    id: '2026-10-29', date: '29/10/2026',
+    id: '2026-10-28b', date: '28/10/2026',
+    title: 'Thanh menu vừa màn hình laptop',
+    items: [
+      'Sửa lỗi trên laptop (màn hình khoảng 1100–1500px), thanh menu dài quá màn hình làm nút ⚙ Cài đặt và nút Góp ý bị khuất, phải kéo ngang mới thấy.',
+      'Giờ menu tự gọn lại (ẩn biểu tượng nhỏ cạnh chữ) để mọi nút đều nằm trong màn hình, ở cả 4 phong cách.'
+    ]
+  },
+  {
+    id: '2026-10-28', date: '28/10/2026',
     title: 'Làm mới 3 phong cách: Hành baro, Thiên thần, Băng hoại',
     items: [
       'Hành baro đổi sang tông Miku: xanh ngọc phối hồng, chữ logo tròn kèm nốt nhạc ♪, viền xanh ngọc trên các thẻ.',
@@ -11,17 +19,10 @@ window.MT_UPDATES = [
     ]
   },
   {
-    id: '2026-10-27b', date: '27/10/2026',
-    title: 'Sửa lỗi đăng nhập Google trên iPhone',
-    items: [
-      'Đăng nhập Google bằng Safari hoặc trình duyệt trên iPhone, iPad không còn báo lỗi "missing initial state" nữa. Nếu trước đây bạn bị kẹt ở bước này, hãy thử đăng nhập lại.'
-    ]
-  },
-  {
     id: '2026-10-27', date: '27/10/2026',
     title: 'Sửa lỗi đăng nhập trên iPhone (Safari)',
     items: [
-      'Sửa lỗi bấm Đăng nhập Google trên iPhone, iPad hoặc Safari thì hiện dòng chữ tiếng Anh "Unable to process request…" và không vào được.',
+      'Sửa lỗi bấm Đăng nhập Google trên iPhone, iPad hoặc Safari thì hiện dòng chữ tiếng Anh "Unable to process request…" hoặc "missing initial state" và không vào được. Nếu trước đây bạn bị kẹt ở bước này, hãy thử đăng nhập lại.',
       'Giờ đăng nhập ngay trên trang của web, không cần chỉnh gì trong Cài đặt. Bạn nào lỡ tắt "Ngăn theo dõi chéo trang" để đăng nhập thì có thể bật lại.'
     ]
   },
