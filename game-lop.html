@@ -53,6 +53,13 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
 .hear .big{font-size:clamp(70px,12vw,150px);line-height:1}
 .hear p{font:500 clamp(22px,3vw,40px)/1.25 'Fraunces',serif;margin:10px 0 0;color:var(--brand-ink)}
 .hear .qt{font-family:'IBM Plex Sans';font-weight:700;color:var(--ink)}
+.sent{font:600 clamp(24px,3.3vw,46px)/1.4 'IBM Plex Sans',sans-serif;text-align:center;max-width:1200px;margin:0 auto;color:var(--ink)}
+.sent .bl{display:inline-block;min-width:4.5em;border-bottom:4px solid var(--brand);color:var(--brand-ink);padding:0 .15em}
+.sent .bl.fill{background:var(--brand-soft);border-radius:8px 8px 0 0}
+.p5n{text-align:center;max-width:1100px;margin:16px auto 0;font-size:clamp(16px,1.8vw,24px);color:var(--dim)}
+.p5n b{color:var(--brand-ink)}
+.p5n .tip{display:inline-block;margin-top:8px;background:#fff7e8;border:1.5px solid var(--brand-soft);border-radius:12px;padding:8px 14px;color:var(--ink)}
+.chip.off{opacity:.4}
 .hear .qv{font-size:.6em;color:var(--dim);font-family:'IBM Plex Sans';font-weight:500}
 .status{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);background:rgba(30,35,43,.85);color:#fff;border-radius:999px;padding:7px 18px;font-weight:700;font-size:clamp(14px,1.6vw,20px);white-space:nowrap}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;height:clamp(150px,30vh,300px)}
@@ -95,8 +102,9 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
   <h1>🎮 Game lớp học</h1>
   <p class="sub">Chiếu lên màn hình lớp. Máy phát audio, đếm giờ, cả lớp giơ tay hoặc giơ thẻ màu A·B·C·D; thầy bấm đội nào đúng để cộng điểm.</p>
 
-  <div class="box"><h2>Part</h2><div class="chips" id="parts"></div></div>
-  <div class="box"><h2>Đề ETS 2026</h2><div class="chips" id="t26"></div>
+  <div class="box"><h2>Bộ câu theo chủ điểm</h2><div class="chips" id="sets"></div></div>
+  <div class="box" id="boxPart"><h2>Part</h2><div class="chips" id="parts"></div></div>
+  <div class="box" id="boxTests"><h2>Đề ETS 2026</h2><div class="chips" id="t26"></div>
     <h2 style="margin-top:14px">Đề ETS 2024</h2><div class="chips" id="t24"></div></div>
   <div class="box"><h2>Cách chơi</h2>
     <div class="row">
@@ -139,16 +147,38 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
     D: '<svg class="sh" viewBox="0 0 40 40"><rect x="4" y="4" width="32" height="32" rx="3" fill="#fff"/></svg>'
   };
   var L = 'ABCD';
+  // Bộ câu chọn sẵn: [đề, số câu, ghi chú hiện khi đáp án]. Đề 1–10 = ETS 2026, 11–20 = ETS 2024.
+  var SETS = {
+    participle: { name: 'Participle (phân từ) · 15 câu', part: 5, items: [
+      [8, 101, '<b>excited</b> visitors: du khách <b>cảm thấy</b> hào hứng → người bị tác động dùng <b>V-ed</b>.'],
+      [11, 105, '<b>updated</b> software: phần mềm <b>được</b> cập nhật → nghĩa bị động dùng <b>V-ed</b>.'],
+      [11, 102, 'a <b>connecting</b> flight: chuyến bay <b>nối</b> tiếp (tự nó làm) → nghĩa chủ động dùng <b>V-ing</b>.'],
+      [5, 104, '<b>satisfied</b> customers: khách hàng <b>cảm thấy</b> hài lòng → <b>V-ed</b>.'],
+      [20, 105, 'a <b>leading</b> expert: chuyên gia <b>dẫn đầu</b>, hàng đầu → chủ động <b>V-ing</b>.'],
+      [14, 107, 'the <b>completed</b> surveys: phiếu khảo sát <b>đã được</b> điền xong → <b>V-ed</b>.'],
+      [10, 129, '<b>convincing</b> arguments: lập luận <b>gây</b> thuyết phục (vật gây cảm xúc) → <b>V-ing</b>. Còn <i>intrigued</i> = người <b>bị</b> tò mò.'],
+      [2, 116, '<b>qualified</b> candidates: ứng viên <b>đủ</b> tiêu chuẩn, có trình độ → <b>V-ed</b>.'],
+      [19, 107, 'money <b>remaining</b> = money <i>which remains</i>: tiền <b>còn lại</b>. Rút gọn mệnh đề chủ động → <b>V-ing</b>.'],
+      [4, 127, 'the <b>preferred</b> process: quy trình <b>được</b> ưu tiên → <b>V-ed</b>.'],
+      [12, 122, 'expenses <b>associated</b> with = expenses <i>which are associated</i> with: chi phí <b>được gắn</b> với… Rút gọn bị động → <b>V-ed</b>.'],
+      [9, 127, 'remain <b>engaged</b>: khán giả <b>bị cuốn hút</b>, vẫn tập trung → người bị tác động dùng <b>V-ed</b>.'],
+      [10, 121, 'a <b>coordinated</b> effort: nỗ lực <b>được</b> phối hợp → <b>V-ed</b>.'],
+      [15, 130, 'participants <b>imitating</b> the movements = participants <i>who imitate</i>: chủ động, phía sau có tân ngữ → <b>V-ing</b>.'],
+      [14, 129, '…, <b>displaying</b> her skills: rút gọn mệnh đề, Mia <b>tự</b> thể hiện kỹ năng (có tân ngữ) → <b>V-ing</b>.']
+    ] }
+  };
   // ---------- cài đặt (đọc từ URL, mặc định Part 1 · Test 9–10) ----------
   var qs = new URLSearchParams(location.search);
   var S = {
-    part: qs.get('p') === '2' ? 2 : 1,
+    set: SETS[qs.get('set')] ? qs.get('set') : '',
+    part: qs.get('p') === '2' ? 2 : qs.get('p') === '5' ? 5 : 1,
     tests: (qs.get('t') || '9,10').split(',').map(Number).filter(function (n) { return n >= 1 && n <= 20; }),
     sec: 0, shuf: qs.get('shuf') === '1', txt: qs.get('txt') === '1', nt: 4,
     names: []
   };
   try { var sv = JSON.parse(localStorage.getItem('mt.gamelop') || '{}'); if (sv.names) S.names = sv.names; if (sv.nt != null) S.nt = sv.nt; } catch (e) {}
-  function defSec() { return S.part === 1 ? 15 : 10; }
+  function defSec() { return S.part === 1 ? 15 : S.part === 5 ? 25 : 10; }
+  if (S.set) S.part = SETS[S.set].part;
   S.sec = +qs.get('s') || defSec();
 
   function label(t) { return t <= 10 ? 'ETS 2026 · Test ' + t : 'ETS 2024 · Test ' + (t - 10); }
@@ -162,15 +192,23 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
   }
   function drawLobby() {
     $('parts').innerHTML = '';
-    [[1, 'Part 1 · Mô tả tranh'], [2, 'Part 2 · Hỏi – đáp']].forEach(function (p) {
+    $('sets').innerHTML = '';
+    [['', 'Không · tự chọn Part và đề']].concat(Object.keys(SETS).map(function (k) { return [k, SETS[k].name]; })).forEach(function (o) {
+      var b = document.createElement('button'); b.className = 'chip' + (S.set === o[0] ? ' on' : ''); b.textContent = o[1];
+      b.onclick = function () { S.set = o[0]; if (S.set) { S.part = SETS[S.set].part; S.sec = defSec(); $('sec').value = S.sec; } drawLobby(); };
+      $('sets').appendChild(b);
+    });
+    $('boxPart').style.opacity = $('boxTests').style.opacity = S.set ? '.4' : '';
+    $('boxPart').style.pointerEvents = $('boxTests').style.pointerEvents = S.set ? 'none' : '';
+    [[1, 'Part 1 · Mô tả tranh'], [2, 'Part 2 · Hỏi – đáp'], [5, 'Part 5 · Điền từ']].forEach(function (p) {
       var b = document.createElement('button'); b.className = 'chip' + (S.part === p[0] ? ' on' : ''); b.textContent = p[1];
       b.onclick = function () { if (S.part !== p[0]) { S.part = p[0]; S.sec = defSec(); $('sec').value = S.sec; } drawLobby(); };
       $('parts').appendChild(b);
     });
     chipsTests($('t26'), 1); chipsTests($('t24'), 11);
-    var per = S.part === 1 ? 6 : 25;
-    $('cnt').textContent = S.tests.length ? (S.tests.length * per) + ' câu' : 'chọn ít nhất 1 đề';
-    $('go').disabled = !S.tests.length;
+    var per = S.part === 1 ? 6 : S.part === 5 ? 30 : 25;
+    $('cnt').textContent = S.set ? SETS[S.set].items.length + ' câu' : S.tests.length ? (S.tests.length * per) + ' câu' : 'chọn ít nhất 1 đề';
+    $('go').disabled = !S.set && !S.tests.length;
     drawTeams();
   }
   function drawTeams() {
@@ -201,11 +239,16 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
   var au = $('au');
   $('go').onclick = function () {
     $('go').disabled = true; $('go').textContent = 'Đang tải…';
-    Promise.all(S.tests.map(load)).then(function () {
+    var need = S.set ? SETS[S.set].items.map(function (it) { return it[0]; }).filter(function (t, k, a) { return a.indexOf(t) === k; }) : S.tests;
+    Promise.all(need.map(load)).then(function () {
       Q = [];
-      S.tests.forEach(function (t) {
-        var d = window.ETSDATA[t].lc['p' + S.part] || [];
-        d.forEach(function (x) { Q.push({ t: t, x: x }); });
+      if (S.set) SETS[S.set].items.forEach(function (it) {
+        var x = (window.ETSDATA[it[0]].rc.p5 || []).filter(function (y) { return y.n === it[1]; })[0];
+        if (x) Q.push({ t: it[0], x: x, note: it[2] });
+      });
+      else S.tests.forEach(function (t) {
+        var D = window.ETSDATA[t], d = S.part === 5 ? D.rc.p5 : D.lc['p' + S.part];
+        (d || []).forEach(function (x) { Q.push({ t: t, x: x }); });
       });
       if (S.shuf) for (var k = Q.length - 1; k > 0; k--) { var j = Math.floor(Math.random() * (k + 1)), z = Q[k]; Q[k] = Q[j]; Q[j] = z; }
       teams = []; for (var n = 0; n < S.nt; n++) teams.push({ name: (S.names[n] || 'Đội ' + (n + 1)).trim() || 'Đội ' + (n + 1), pts: 0, st: 0 });
@@ -225,16 +268,23 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
     $('sSrc').textContent = label(q.t) + ' · Q' + x.n;
     $('bRe').style.display = ''; $('tmr').style.display = '';
     var mid = $('mid');
-    if (S.part === 1) mid.innerHTML = '<img src="' + img(q) + '" alt="Tranh câu ' + x.n + '"><div class="status" id="stt"></div>';
+    var p5 = S.part === 5;
+    $('bRe').style.display = p5 ? 'none' : '';
+    if (p5) mid.innerHTML = '<div><div class="sent">' + blank(x.q, '') + '</div></div><div class="status" id="stt"></div>';
+    else if (S.part === 1) mid.innerHTML = '<img src="' + img(q) + '" alt="Tranh câu ' + x.n + '"><div class="status" id="stt"></div>';
     else mid.innerHTML = '<div class="hear"><div class="big">🎧</div><p>Nghe câu hỏi và chọn câu trả lời đúng</p></div><div class="status" id="stt"></div>';
     var tl = $('tiles'); tl.className = 'tiles' + (n === 3 ? ' n3' : ''); tl.style.display = '';
     tl.innerHTML = x.opts.map(function (o, k) {
       var c = L[k];
-      return '<div class="tile ' + c + '" data-k="' + c + '">' + SHAPE[c] + (S.txt ? '<span class="tx">' + esc(o) + '</span>' : '<span class="lt">' + c + '</span>') + '<span class="ck">✔</span></div>';
+      return '<div class="tile ' + c + '" data-k="' + c + '">' + SHAPE[c] + (S.txt || p5 ? '<span class="tx">' + esc(o) + '</span>' : '<span class="lt">' + c + '</span>') + '<span class="ck">✔</span></div>';
     }).join('');
     $('bar').innerHTML = '';
     if (Q[i + 1] && S.part === 1) { var pre = new Image(); pre.src = img(Q[i + 1]); }
-    listen();
+    if (p5) countdown(); else listen();
+  }
+  function blank(q, fill) {
+    var parts = esc(q).split(/-{3,}/);
+    return parts.join(fill ? '<span class="bl fill">' + esc(fill) + '</span>' : '<span class="bl">&nbsp;</span>');
   }
   function status(t) { var s = $('stt'); if (s) { s.textContent = t; s.style.display = t ? '' : 'none'; } }
   function listen() {
@@ -262,8 +312,12 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
     var tl = $('tiles'); tl.classList.add('rv');
     [].forEach.call(tl.children, function (el, k) {
       var c = el.getAttribute('data-k'); el.classList.add(c === x.ans ? 'yes' : 'no');
-      el.querySelector('.tx, .lt').outerHTML = '<span class="tx">(' + c + ') ' + esc(x.opts[k]) + (x.vi && x.vi[k] ? '<small>' + esc(x.vi[k]) + '</small>' : '') + '</span>';
+      el.querySelector('.tx, .lt').outerHTML = '<span class="tx">' + (S.part === 5 ? '' : '(' + c + ') ') + esc(x.opts[k]) + (x.vi && x.vi[k] ? '<small>' + esc(x.vi[k]) + '</small>' : '') + '</span>';
     });
+    if (S.part === 5) {
+      var dich = ((x.xp || '').match(/Dịch:\s*(.+)/) || [])[1] || '';
+      $('mid').innerHTML = '<div><div class="sent">' + blank(x.q, x.opts[L.indexOf(x.ans)]) + '</div><div class="p5n">' + (dich ? esc(dich) : '') + (q.note ? '<br><span class="tip">💡 ' + q.note + '</span>' : '') + '</div></div>';
+    }
     if (S.part === 2) $('mid').innerHTML = '<div class="hear"><p class="qt">' + esc(x.q) + '</p><p class="qv">' + esc(x.qvi || '') + '</p></div>';
     if (!mute) chime();
     drawBar();
@@ -292,7 +346,7 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
     phase = final ? 'end' : 'board'; clearInterval(tick);
     $('tiles').style.display = 'none'; $('bRe').style.display = 'none'; $('tmr').style.display = 'none';
     var arr = teams.slice().sort(function (a, b) { return b.pts - a.pts; }), mx = Math.max(1, arr[0] ? arr[0].pts : 1);
-    var h = final ? '<div class="end"><div class="cup">🏆</div><h2 style="font:500 clamp(30px,4.5vw,56px)/1.1 Fraunces,serif;margin:6px 0">' + (arr.length ? esc(arr[0].name) + ' vô địch!' : 'Hoàn thành!') + '</h2><p>' + Q.length + ' câu · ' + S.tests.map(label).join(', ') + '</p></div>' : '<h2>Bảng điểm</h2>';
+    var h = final ? '<div class="end"><div class="cup">🏆</div><h2 style="font:500 clamp(30px,4.5vw,56px)/1.1 Fraunces,serif;margin:6px 0">' + (arr.length ? esc(arr[0].name) + ' vô địch!' : 'Hoàn thành!') + '</h2><p>' + Q.length + ' câu · ' + (S.set ? SETS[S.set].name : S.tests.map(label).join(', ')) + '</p></div>' : '<h2>Bảng điểm</h2>';
     $('mid').innerHTML = '<div class="board">' + h + arr.map(function (t, k) {
       return '<div class="br' + (k === 0 && t.pts ? ' first' : '') + '"><span class="nm">' + (final && k < 3 ? ['🥇', '🥈', '🥉'][k] + ' ' : '') + esc(t.name) + '</span><span class="tr"><span class="fl" style="width:0" data-w="' + Math.max(4, t.pts / mx * 100) + '">' + t.pts + (t.st >= 2 ? ' 🔥' + t.st : '') + '</span></span></div>';
     }).join('') + '</div>';
@@ -306,7 +360,7 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
   function finish() {
     if (teams.length) return board(true);
     phase = 'end'; $('tiles').style.display = 'none'; $('bRe').style.display = 'none'; $('tmr').style.display = 'none';
-    $('mid').innerHTML = '<div class="end"><div class="cup">🎉</div><h2 style="font:500 clamp(30px,4.5vw,56px)/1.1 Fraunces,serif;margin:6px 0">Hết câu rồi!</h2><p>' + Q.length + ' câu · ' + S.tests.map(label).join(', ') + '</p></div>';
+    $('mid').innerHTML = '<div class="end"><div class="cup">🎉</div><h2 style="font:500 clamp(30px,4.5vw,56px)/1.1 Fraunces,serif;margin:6px 0">Hết câu rồi!</h2><p>' + Q.length + ' câu · ' + (S.set ? SETS[S.set].name : S.tests.map(label).join(', ')) + '</p></div>';
     $('bar').innerHTML = '<span class="sp"></span>'; var nx = document.createElement('button'); nx.className = 'next'; nx.textContent = 'Về sảnh ↺'; nx.onclick = exit; $('bar').appendChild(nx);
     confetti();
   }
@@ -321,7 +375,7 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
     else if (phase === 'reveal') next();
     else if (phase === 'board') { i++; show(); }
   }
-  $('bRe').onclick = function () { au.currentTime = 0; au.play().catch(function () {}); if (phase === 'answer') { phase = 'listen'; clearInterval(tick); listen(); } };
+  $('bRe').onclick = function () { if (S.part === 5) return; au.currentTime = 0; au.play().catch(function () {}); if (phase === 'answer') { phase = 'listen'; clearInterval(tick); listen(); } };
   $('bMute').onclick = function () { mute = !mute; this.textContent = mute ? '🔕' : '🔔'; };
   $('bFs').onclick = fs; $('bX').onclick = exit;
   $('mid').onclick = function (e) { if (e.target.tagName === 'IMG' || e.target.closest('.hear')) main(); };
