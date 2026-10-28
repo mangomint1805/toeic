@@ -848,9 +848,11 @@
   window.MCOMBO.reset = function () { combo = 0; };
 
   // ================= bộ giao diện theo phong cách =================
-  var SKINS = [['', 'Xoài', '#a8691a'], ['idol', 'Hành baro', '#12a4a3'], ['y2k', 'Thiên thần', '#e0559a'], ['scifi', 'Băng hoại', 'linear-gradient(135deg,#4ad7ff,#b04cff)']];
+  var SKINS = [['', 'Xoài', '#a8691a'], ['idol', 'Hành baro', 'linear-gradient(135deg,#39c5bb 60%,#e12885)'], ['y2k', 'Thiên thần', 'linear-gradient(135deg,#ffb7d5,#c9a7ff 55%,#9ad8ff)'], ['scifi', 'Băng hoại', 'linear-gradient(135deg,#141d42 55%,#f2c14e)']];
   function skin() { var v = J('mt.skin', ''); return SKINS.some(function (k) { return k[0] === v; }) ? v : ''; }
-  function applySkin(v) { var r = document.documentElement; if (v) r.setAttribute('data-skin', v); else r.removeAttribute('data-skin'); [].forEach.call(document.querySelectorAll('.mbuddy:not(.mb-home) .mmint'), function (m) { m.outerHTML = mascot('cheer', 'pop'); }); if (window._mhome) window._mhome(); if (v === 'scifi') applyTheme('dark', false); else applyTheme(theme(), false); }
+  function skinFont() { if (document.getElementById('mt-skinfont')) return; var l = document.createElement('link'); l.id = 'mt-skinfont'; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=DotGothic16&family=Rajdhani:wght@700&family=M+PLUS+Rounded+1c:wght@800&display=swap'; document.head.appendChild(l); }
+  if (skin()) skinFont();
+  function applySkin(v) { if (v) skinFont(); var r = document.documentElement; if (v) r.setAttribute('data-skin', v); else r.removeAttribute('data-skin'); [].forEach.call(document.querySelectorAll('.mbuddy:not(.mb-home) .mmint'), function (m) { m.outerHTML = mascot('cheer', 'pop'); }); if (window._mhome) window._mhome(); if (v === 'scifi') applyTheme('dark', false); else applyTheme(theme(), false); }
 
   // ================= CSS cho các phần trên =================
   var st3 = document.createElement('style');
@@ -951,34 +953,41 @@
     'html[data-skin] :is(.mp-cd,.mt-i,.mbadge.on .mb-i,.num,.stop.open .dot){background:linear-gradient(150deg,var(--brand-soft),var(--brand))!important;border-color:var(--brand)!important}' +
     'html[data-skin] .mlinks a[aria-current=page]{background:var(--brand-soft);color:var(--brand-ink)}html[data-skin] .mbrand b em,html[data-skin] .mbrand small{color:var(--brand-ink)}' +
     'html[data-skin] :is(.kicker,.hello .kicker,.mp-todo h4,.rp-total small,h2.sec + *){color:var(--brand)}' +
+    'html[data-skin]:not([data-theme=dark]) .mlogin-nudge{background:linear-gradient(90deg,var(--paper),var(--brand-soft));border-color:var(--line);color:var(--brand-ink)}html[data-skin] .mlogin-nudge b{color:var(--brand-ink)}html[data-skin] .mln-go{background:var(--brand)!important;border-color:var(--brand)!important}html[data-skin=scifi] .mlogin-nudge{background:linear-gradient(90deg,#0f1730,#17143a);border-color:#2e4377;color:#e9ecf7}html[data-skin=scifi] .mln-go{color:#141d42!important}' +
     // Idol
-    'html[data-skin=idol]:not([data-theme=dark]){--paper:#f4fbfb;--brand:#12a4a3;--brand-soft:#d3f3f1;--brand-ink:#0a6766;--amber:#12a4a3;--amber-soft:#d3f3f1;--amber-ink:#0a6766;--line:#d8ecea}' +
-    'html[data-skin=idol] :is(.mdeco,.mdeco2){background-image:' + pat('width="60" height="60" viewBox="0 0 60 60"><path d="M15 8l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#12a4a3" opacity=".22"/><path d="M45 38v-10l8-2v10M45 38a3 3 0 1 1-1-1M53 36a3 3 0 1 1-1-1" stroke="#ff5fa2" stroke-width="1.8" fill="none" opacity=".35"/>') + ';background-size:60px 60px}' +
-    'html[data-skin=idol] .mnav{border-bottom:2px solid #ff9cc8}html[data-skin=idol] .mb-bub b,html[data-skin=idol] h1 em{color:#e0559a!important}' +
+    'html[data-skin=idol]:not([data-theme=dark]){--paper:#f2fbfa;--brand:#139a92;--brand-soft:#d4f3ef;--brand-ink:#0b6660;--amber:#139a92;--amber-soft:#d4f3ef;--amber-ink:#0b6660;--line:#cfeae6}' +
+    'html[data-skin=idol] :is(.mdeco,.mdeco2){background-image:' + pat('width="60" height="60" viewBox="0 0 60 60"><path d="M15 8l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#39c5bb" opacity=".26"/><path d="M45 38v-10l8-2v10M45 38a3 3 0 1 1-1-1M53 36a3 3 0 1 1-1-1" stroke="#e12885" stroke-width="1.8" fill="none" opacity=".35"/>') + ';background-size:60px 60px}' +
+    'html[data-skin=idol] .mnav{border-bottom:3px solid #39c5bb;box-shadow:0 2px 0 #f7a8cf}html[data-skin=idol] .mb-bub b,html[data-skin=idol] h1 em{color:#e12885!important}' +
+    'html[data-skin=idol] .mbrand b{font-family:"M PLUS Rounded 1c","IBM Plex Sans",sans-serif;font-weight:800;letter-spacing:0}html[data-skin=idol] .mbrand b::after{content:" ♪";color:#e12885;font-size:.8em}' +
+    'html[data-skin=idol]:not([data-theme=dark]) :is(.panel,.test,.tool,.mplan,.lesson,.book,.report,.box,.mode){border-top:3px solid #39c5bb!important}' +
     // Y2K
     'html[data-skin=y2k]:not([data-theme=dark]){--paper:#fff5fb;--card:#fff;--brand:#e0559a;--brand-soft:#ffe0f0;--brand-ink:#9b2c66;--amber:#e0559a;--amber-soft:#ffe0f0;--amber-ink:#9b2c66;--line:#f0c9e6}' +
     'html[data-skin=y2k] :is(.mdeco,.mdeco2){background-image:' + pat('width="32" height="32" viewBox="0 0 32 32"><rect width="16" height="16" fill="#e0559a" opacity=".07"/><rect x="16" y="16" width="16" height="16" fill="#8b5cf6" opacity=".07"/><path d="M22 6h2v1h1v-1h2v1h1v3h-1v1h-1v1h-1v1h-1v-1h-1v-1h-1v-1h-1v-3h1z" fill="#e0559a" opacity=".35"/>') + ';background-size:32px 32px}' +
     'html[data-skin=y2k] :is(.panel,.test,.tool,.mplan,.lesson,.book,.stat,.report,.sec .card,.mb-bub,.doc,.box,.mode){border:2px solid #d9a6e6!important;box-shadow:4px 4px 0 #c7a6f0!important;border-radius:10px!important}' +
-    'html[data-skin=y2k]:not([data-theme=dark]) .mnav{background:linear-gradient(90deg,#ffd6ec,#e8dcff)!important}html[data-skin=y2k] .mnav{border-bottom:2px solid #c7a6f0}html[data-skin=y2k][data-theme=dark] .mnav{background:linear-gradient(90deg,#2a1830,#221a3a)!important;border-bottom-color:#6a4a8a}html[data-skin=y2k]:not([data-theme=dark]) h1,html[data-skin=y2k]:not([data-theme=dark]) .sec h2{text-shadow:2px 2px 0 #ffc2e2}html[data-skin=y2k][data-theme=dark] h1{text-shadow:2px 2px 0 #6a2a50}' +
+    'html[data-skin=y2k] .mbrand b{font-family:"DotGothic16",monospace;font-weight:400;letter-spacing:.02em}html[data-skin=y2k] .mbrand b::before{content:"♡ ";color:#e0559a}' +
+    'html[data-skin=y2k]:not([data-theme=dark]) :is(.panel,.test,.tool,.mplan,.lesson,.book,.report,.box,.mode){background-image:linear-gradient(90deg,#ff9ccf,#c59bff,#9ad8ff)!important;background-size:100% 5px!important;background-repeat:no-repeat!important;background-position:top!important}' +
+    'html[data-skin=y2k]:not([data-theme=dark]) :is(.btn:not(.alt),.big:not(.alt),.mt-next){box-shadow:3px 3px 0 #c59bff!important}' +
+    'html[data-skin=y2k]:not([data-theme=dark]) .mnav{background:linear-gradient(90deg,#ffd6ec,#e8dcff 60%,#d6efff)!important}html[data-skin=y2k] .mnav{border-bottom:2px solid #c7a6f0}html[data-skin=y2k][data-theme=dark] .mnav{background:linear-gradient(90deg,#2a1830,#221a3a)!important;border-bottom-color:#6a4a8a}html[data-skin=y2k]:not([data-theme=dark]) h1,html[data-skin=y2k]:not([data-theme=dark]) .sec h2{text-shadow:2px 2px 0 #ffc2e2}html[data-skin=y2k][data-theme=dark] h1{text-shadow:2px 2px 0 #6a2a50}' +
     'html[data-skin=idol][data-theme=dark]{--paper:#0e1718;--card:#152224;--panel2:#1b2c2e;--line:#24393b;--line2:#2c4649;--brand:#3fd0cc;--brand-soft:#123a3a;--brand-ink:#8af0ec;--amber:#3fd0cc;--amber-soft:#123a3a;--amber-ink:#8af0ec}' +
     'html[data-skin=y2k][data-theme=dark]{--paper:#170f1c;--card:#221729;--panel2:#2b1d33;--line:#3a2846;--line2:#4a3358;--brand:#ff7eb6;--brand-soft:#3d1a30;--brand-ink:#ffb3d6;--amber:#ff7eb6;--amber-soft:#3d1a30;--amber-ink:#ffb3d6}' +
     'html[data-skin=y2k][data-theme=dark] :is(.panel,.test,.tool,.mplan,.lesson,.book,.stat,.report,.mb-bub,.doc,.box,.mode){border-color:#6a4a8a!important;box-shadow:4px 4px 0 #4a2f6a!important}' +
     // Băng hoại
-    'html[data-skin=scifi][data-theme=dark]{--paper:#0a1024;--card:#111a35;--panel2:#18234a;--line:#24345f;--line2:#2e4377;--ink:#e6ecff;--dim:#93a3cf;--brand:#ffd23f;--brand-soft:#2c2a4a;--brand-ink:#ffe27a;--amber:#ffd23f;--amber-soft:#2c2a4a;--amber-ink:#ffe27a;--ok:#4ad7ff;--ok-soft:#10324d;--bad:#ff5fa8;--bad-soft:#3d1838;--teal:#4ad7ff;--teal-soft:#10324d}' +
-    'html[data-skin=scifi] body{background:radial-gradient(1200px 600px at 85% -10%,rgba(176,76,255,.22),transparent 60%),radial-gradient(900px 500px at -10% 10%,rgba(74,215,255,.16),transparent 60%)!important;background-attachment:fixed!important}' +
-    'html[data-skin=scifi] :is(.mdeco,.mdeco2){background-image:' + pat('width="44" height="44" viewBox="0 0 44 44"><path d="M44 0H0v44" fill="none" stroke="#4ad7ff" stroke-width=".6" opacity=".35"/><path d="M22 18l4 4-4 4-4-4z" fill="#b04cff" opacity=".35"/>') + ';background-size:44px 44px;opacity:.9}' +
-    'html[data-skin=scifi] :is(.panel,.test,.tool,.mplan,.lesson,.book,.report,.doc,.box,.mode){border:1px solid #2e4377!important;box-shadow:inset 0 1px 0 rgba(74,215,255,.25),0 0 0 1px rgba(176,76,255,.10),0 10px 30px rgba(5,8,20,.5)!important;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}' +
-    'html[data-skin=scifi] .mnav{background:linear-gradient(90deg,rgba(10,16,36,.95),rgba(26,17,64,.95))!important;border-bottom:1px solid rgba(74,215,255,.35)}' +
-    'html[data-skin=scifi] :is(h1,.sec h2){text-shadow:0 0 18px rgba(74,215,255,.35)}html[data-skin=scifi] h1 em,html[data-skin=scifi] .mb-bub b{color:#4ad7ff!important}' +
+    'html[data-skin=scifi][data-theme=dark]{--paper:#070d1f;--card:#0f1730;--panel2:#18234a;--line:#24345f;--line2:#2e4377;--ink:#e9ecf7;--dim:#9aa6c8;--brand:#f2c14e;--brand-soft:#2e2a3c;--brand-ink:#ffd978;--amber:#f2c14e;--amber-soft:#2e2a3c;--amber-ink:#ffd978;--ok:#5fd3ff;--ok-soft:#10324d;--bad:#e0475f;--bad-soft:#3d1826;--teal:#4ad7ff;--teal-soft:#10324d}' +
+    'html[data-skin=scifi] body{background:radial-gradient(1200px 600px at 85% -10%,rgba(200,50,94,.18),transparent 60%),radial-gradient(900px 500px at -10% 10%,rgba(123,63,228,.18),transparent 60%)!important;background-attachment:fixed!important}' +
+    'html[data-skin=scifi] :is(.mdeco,.mdeco2){background-image:' + pat('width="56" height="97" viewBox="0 0 56 97"><path d="M28 0l28 16v32L28 64 0 48V16zM28 64v33" fill="none" stroke="#f2c14e" stroke-width=".7" opacity=".22"/>') + ';background-size:56px 97px;opacity:.9}' +
+    'html[data-skin=scifi] :is(.panel,.test,.tool,.mplan,.lesson,.book,.report,.doc,.box,.mode){border:1px solid #2e4377!important;box-shadow:inset 3px 0 0 #f2c14e,inset 0 1px 0 rgba(242,193,78,.18),0 10px 30px rgba(5,8,20,.5)!important;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}' +
+    'html[data-skin=scifi] .mnav{background:linear-gradient(90deg,rgba(6,11,26,.96),rgba(17,26,58,.96))!important;border-bottom:2px solid #f2c14e}' +
+    'html[data-skin=scifi] .mbrand b{font-family:"Rajdhani","IBM Plex Sans",sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f2c14e}html[data-skin=scifi] .mbrand b::before{content:"◆ ";color:#e0475f}' +
+    'html[data-skin=scifi] :is(h1,.sec h2){text-shadow:0 0 18px rgba(242,193,78,.25)}html[data-skin=scifi] h1 em,html[data-skin=scifi] .mb-bub b{color:#f2c14e!important}' +
     'html[data-skin=scifi] :is(.btn:not(.alt),.big:not(.alt),.mt-next,.mark button:not(.on)){color:#1a1240!important;background:linear-gradient(180deg,#ffe36b,#ffc21a)!important;border-color:#ffc21a!important;box-shadow:0 0 14px rgba(255,210,63,.35)}' +
-    'html[data-skin=scifi] :is(.mp-cd,.mt-i,.mbadge.on .mb-i,.num,.stop.open .dot){background:linear-gradient(150deg,#4ad7ff,#b04cff)!important;border-color:#4ad7ff!important}' +
-    'html[data-skin=scifi] .mlinks a[aria-current=page]{background:rgba(74,215,255,.14);color:#7fe6ff;box-shadow:inset 0 -2px 0 #4ad7ff}html[data-skin=scifi] .kicker,html[data-skin=scifi] .hello .kicker{color:#4ad7ff}' +
-    'html[data-skin=scifi] .mp-bar i,html[data-skin=scifi] .skbar s{background:linear-gradient(90deg,#4ad7ff,#b04cff)!important}' +
+    'html[data-skin=scifi] :is(.mp-cd,.mt-i,.mbadge.on .mb-i,.num,.stop.open .dot){background:linear-gradient(150deg,#f2c14e,#e0475f)!important;border-color:#f2c14e!important;color:#141d42!important}' +
+    'html[data-skin=scifi] .mlinks a[aria-current=page]{background:rgba(242,193,78,.14);color:#ffd978;box-shadow:inset 0 -2px 0 #f2c14e}html[data-skin=scifi] .kicker,html[data-skin=scifi] .hello .kicker{color:#f2c14e}' +
+    'html[data-skin=scifi] .mp-bar i,html[data-skin=scifi] .skbar s{background:linear-gradient(90deg,#f2c14e,#e0475f)!important}' +
     // Băng hoại: bỏ các khung màu nâu/cam của giao diện tối, đổi sang tông xanh – tím cho đồng bộ
-    'html[data-skin=scifi] .mbrand b em{background:rgba(74,215,255,.14)!important;color:#7fe6ff!important}' +
-    'html[data-skin=scifi] :is(.doc thead th,.doc tr:first-child th,table thead th){background:linear-gradient(90deg,#1b2a5c,#2a1b5c)!important;color:#bfefff!important}html[data-skin=scifi] .doc table.v3note td{background:#18234a!important}' +
-    'html[data-skin=scifi] :is(.more-sites a,.gv,.lopbar,.gate,.resume,.minapp){background:linear-gradient(120deg,#111a35,#1a1140)!important;border-color:#2e4377!important}html[data-skin=scifi] .more-sites a:hover{border-color:#4ad7ff!important}' +
-    'html[data-skin=scifi] :is(.gv tr.next td,.sn-res mark,.doc h2.sn-hit,.doc h3.sn-hit){background:rgba(176,76,255,.22)!important}';
+    'html[data-skin=scifi] .mbrand b em{background:rgba(242,193,78,.14)!important;color:#ffd978!important}' +
+    'html[data-skin=scifi] :is(.doc thead th,.doc tr:first-child th,table thead th){background:linear-gradient(90deg,#141d42,#1d1640)!important;color:#ffd978!important}html[data-skin=scifi] .doc table.v3note td{background:#18234a!important}' +
+    'html[data-skin=scifi] :is(.more-sites a,.gv,.lopbar,.gate,.resume,.minapp){background:linear-gradient(120deg,#0f1730,#17143a)!important;border-color:#2e4377!important}html[data-skin=scifi] .more-sites a:hover{border-color:#f2c14e!important}' +
+    'html[data-skin=scifi] :is(.gv tr.next td,.sn-res mark,.doc h2.sn-hit,.doc h3.sn-hit){background:rgba(224,71,95,.22)!important}';
   document.head.appendChild(st5);
   applySkin(skin());
 
@@ -1317,7 +1326,7 @@
     '.mnew-b{display:flex;gap:8px}.mnew-b a,.mnew-b button{flex:1;display:flex;align-items:center;justify-content:center;min-height:38px;border-radius:10px;font:700 13.5px/1 "IBM Plex Sans",sans-serif;cursor:pointer;text-decoration:none;box-sizing:border-box}' +
     '.mnew-all{background:var(--brand,#a8691a);border:1px solid var(--brand,#a8691a);color:#fff}.mnew-ok{background:var(--panel2,#f2efe8);border:1px solid var(--line,#ddd7c9);color:var(--ink,#1e232b)}' +
     '.mnew :focus-visible{outline:3px solid var(--brand,#a8691a);outline-offset:2px}' +
-    'html[data-theme=dark] .mnew{box-shadow:0 14px 40px rgba(0,0,0,.55)}html[data-skin=scifi] .mnew{border-color:#2e4377;border-left-color:#4ad7ff}html[data-skin=scifi] .mnew-k{color:#4ad7ff}' +
+    'html[data-theme=dark] .mnew{box-shadow:0 14px 40px rgba(0,0,0,.55)}html[data-skin=scifi] .mnew{border-color:#2e4377;border-left-color:#f2c14e}html[data-skin=scifi] .mnew-k{color:#f2c14e}' +
     'html[data-skin=scifi] .mnew-all{color:#1a1240;background:linear-gradient(180deg,#ffe36b,#ffc21a);border-color:#ffc21a}' +
     '@media (max-width:760px){.mnew{left:12px;right:12px;width:auto;margin:0 auto;bottom:calc(14px + env(safe-area-inset-bottom))}body.has-nav .mnew{bottom:calc(78px + env(safe-area-inset-bottom))}}' +
     '@keyframes mnewin{from{opacity:0;transform:translateY(16px)}}@media (prefers-reduced-motion:reduce){.mnew{animation:none}}';
@@ -1421,7 +1430,7 @@
     '.mnew-all{background:var(--brand,#a8691a);border:1px solid var(--brand,#a8691a);color:#fff}.mnew-ok{background:var(--panel2,#f2efe8);border:1px solid var(--line,#ddd7c9);color:var(--ink,#1e232b)}' +
     '.mnew :focus-visible{outline:3px solid var(--brand,#a8691a);outline-offset:2px}' +
     'body:has(.fc-bg.on) .mnew,body.gated .mnew{display:none}' +
-    'html[data-theme=dark] .mnew{box-shadow:0 14px 40px rgba(0,0,0,.55)}html[data-skin=scifi] .mnew{border-color:#2e4377;border-left-color:#4ad7ff}html[data-skin=scifi] .mnew-k{color:#4ad7ff}' +
+    'html[data-theme=dark] .mnew{box-shadow:0 14px 40px rgba(0,0,0,.55)}html[data-skin=scifi] .mnew{border-color:#2e4377;border-left-color:#f2c14e}html[data-skin=scifi] .mnew-k{color:#f2c14e}' +
     'html[data-skin=scifi] .mnew-all{color:#1a1240;background:linear-gradient(180deg,#ffe36b,#ffc21a);border-color:#ffc21a}' +
     '@media (max-width:760px){.mnew{left:12px;right:12px;width:auto;margin:0 auto;bottom:calc(14px + env(safe-area-inset-bottom))}body.has-nav .mnew{bottom:calc(78px + env(safe-area-inset-bottom))}}' +
     '@keyframes mnewin{from{opacity:0;transform:translateY(16px)}}@media (prefers-reduced-motion:reduce){.mnew{animation:none}}';
@@ -1638,7 +1647,7 @@
         '.mbrand small .mlive{height:16px;margin:-3px 0 -2px 8px;padding:0 7px 0 6px;gap:4px;vertical-align:middle;letter-spacing:0;font-size:10.5px;border-width:1px}.mbrand small .mlive i{width:6px;height:6px}.mbrand small .mlive.cpt{padding:0 6px 0 5px}' +
         '@media (prefers-reduced-motion:no-preference){.mlive i::after{content:"";position:absolute;inset:0;border-radius:50%;background:inherit;animation:mlivep 2.4s ease-out infinite}@keyframes mlivep{0%{transform:scale(1);opacity:.55}70%,100%{transform:scale(2.6);opacity:0}}}' +
         'html[data-theme=dark] .mlive{background:rgba(63,191,143,.14);border-color:rgba(63,191,143,.4);background:color-mix(in srgb,var(--ok,#3fbf8f) 14%,transparent);border-color:color-mix(in srgb,var(--ok,#3fbf8f) 40%,transparent)}html[data-theme=dark] .mlive-t{color:var(--dim,#9aa1ad)}' +
-        'html[data-skin=scifi] .mlive{background:rgba(74,215,255,.10);border-color:rgba(74,215,255,.45);color:#e6ecff;box-shadow:0 0 12px rgba(74,215,255,.18)}html[data-skin=scifi] .mlive i{background:#4ad7ff;box-shadow:0 0 6px #4ad7ff}';
+        'html[data-skin=scifi] .mlive{background:rgba(242,193,78,.10);border-color:rgba(242,193,78,.45);color:#e9ecf7;box-shadow:0 0 12px rgba(242,193,78,.15)}html[data-skin=scifi] .mlive i{background:#4ad7ff;box-shadow:0 0 6px #4ad7ff}';
       document.head.appendChild(s);
     }
     // vừa chỗ thì hiện đủ chữ, chật thì chỉ hiện số, vẫn chật nữa thì ẩn (không làm tràn thanh menu)
