@@ -453,6 +453,7 @@
     var say = pcAll >= .8 ? 'Đỉnh quá! Giữ phong độ này nha!' : pcAll >= .55 ? 'Làm tốt lắm! Xem lại câu sai là lên điểm tiếp.' : pcAll >= .35 ? 'Ổn rồi đó, luyện thêm Part yếu nhất nhé!' : 'Không sao đâu, ai cũng bắt đầu từ đây. Xem kỹ giải thích từng câu nha!';
     if (window.MBUDDY && !window.MEXAM) h += window.MBUDDY('<b>' + say + '</b>' + (cm.length ? '<ul class="rp-cm">' + cm.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>' : ''), mood, 'rp-buddy');
     else if (cm.length) h += '<ul class="rp-cm">' + cm.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>';
+    if (window.MNEXT) h += window.MNEXT({ parts: r.parts, test: T });
     h += '<p class="rp-note">Điểm ước tính dựa trên số câu đúng của bài luyện tập, không phải điểm thi chính thức.</p>' +
       '<div class="filt"><button class="btn sm" id="rpSave" type="button">' + window.MICON('check') + ' Lưu ảnh khoe story</button><button class="btn alt sm" id="hideOk" type="button">' + (ST.hideOk ? 'Hiện tất cả câu' : 'Chỉ xem câu sai') + '</button><button class="btn alt sm" id="rpKq" type="button">📊 Phân tích chi tiết</button><a class="btn alt sm" href="phan-tich.html">Xem điểm yếu</a><a class="btn alt sm" href="?t=' + T + '">Làm lại</a></div></div>' +
       '<p class="hint">Câu xanh là đúng, đỏ là sai. Mở Dịch nghĩa, Lời thoại, Giải thích dưới mỗi câu; phần nghe có nút audio riêng để nghe lại.</p>';

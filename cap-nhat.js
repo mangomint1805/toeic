@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-30b', date: '30/10/2026',
+    title: 'Nhiệm vụ hằng ngày, gợi ý "Làm tiếp" và 9 huy hiệu mới',
+    items: [
+      'Trang chủ có khung 🎯 Nhiệm vụ hôm nay: mỗi ngày 3 việc nhỏ (khoảng 10–15 phút), ví dụ làm đề mini, ôn 10 thẻ flashcard, chép chính tả 5 câu. Xong cả 3 được cộng thêm 15 điểm vào bảng xếp hạng tuần.',
+      'Nộp bài xong (đề luyện, đề mini) sẽ có khung 👉 Làm tiếp: gợi ý luyện ngay Part bạn làm yếu nhất, ôn flashcard đến hạn và nhiệm vụ còn lại trong ngày.',
+      'Thêm 9 huy hiệu: Nhiệm vụ đầu tiên, Chăm chỉ 7 ngày, Kỷ luật thép (30 ngày), Mini x30, Thuộc 50 từ, Sưu tầm 100 từ, Tai thính (chép chính tả), Phản xạ nhanh, Cao thủ Part 5. Xem ở mục Huy hiệu trên trang chủ.'
+    ]
+  },
+  {
     id: '2026-10-30', date: '30/10/2026',
     title: 'Flashcard ôn tập thông minh hơn (giống Anki)',
     items: [
