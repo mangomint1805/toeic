@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-30', date: '30/10/2026',
+    title: 'Flashcard ôn tập thông minh hơn (giống Anki)',
+    items: [
+      'Trang Flashcard của tôi giờ hẹn lịch ôn theo thuật toán FSRS, cùng thuật toán với ứng dụng Anki: từ hay quên gặp lại sớm, từ đã nhớ chắc được giãn ra vài tuần, vài tháng, nên ôn ít mà nhớ lâu hơn.',
+      'Sau khi lật thẻ, chọn 1 trong 4 nút: ✗ Quên, 😓 Khó, 🙂 Nhớ, 😎 Dễ. Dưới mỗi nút có ghi bao lâu nữa bạn sẽ gặp lại từ đó.',
+      'Trên máy tính có phím tắt: Space để lật thẻ, phím 1–4 để chọn nút. Các từ đã lưu từ trước vẫn giữ nguyên, lịch ôn được chuyển sang cách mới.'
+    ]
+  },
+  {
     id: '2026-10-28b', date: '28/10/2026',
     title: 'Thanh menu vừa màn hình laptop',
     items: [

@@ -46,6 +46,12 @@ header p{margin:0;color:var(--dim)}
 .btn{font:inherit;font-weight:700;font-size:15px;border:1.5px solid var(--brand);background:#fff;color:var(--brand-ink);border-radius:10px;padding:10px 16px;cursor:pointer}
 .btn.no{border-color:var(--bad);color:var(--bad)}.btn.yes{background:var(--ok);border-color:var(--ok);color:#fff}
 .btn.sm{font-size:13px;padding:5px 10px}
+.rate{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;margin-top:8px}
+.rate .btn{padding:9px 4px;font-size:14.5px;line-height:1.2}
+.rate .btn small{display:block;font-weight:500;font-size:11.5px;opacity:.85;margin-top:2px}
+.btn.hard{border-color:#c98a1a;color:#8a5a00}.btn.good{background:var(--ok);border-color:var(--ok);color:#fff}.btn.easy{background:#2f6fd0;border-color:#2f6fd0;color:#fff}
+.keys{text-align:center;font-size:12px;color:var(--dim);margin-top:8px}@media (hover:none){.keys{display:none}}
+@media (max-width:420px){.rate .btn{font-size:13px}.rate .btn small{font-size:10.5px}}
 .prog{text-align:center;color:var(--dim);font-size:14px;margin:4px 0 10px}
 .empty{background:var(--card);border:1px dashed var(--line);border-radius:12px;padding:20px;text-align:center;color:var(--dim)}
 table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -70,6 +76,7 @@ td .w{font-weight:700;color:var(--brand-ink)}
   </div>
   <div id="main"></div>
 </div>
+<script src="assets/fsrs.js?v=1"></script>
 <script>
 (function(){
   var KEY='vocab.cards', V='learn', queue=[], i=0;
@@ -81,12 +88,36 @@ td .w{font-weight:700;color:var(--brand-ink)}
   var main=document.getElementById('main');
   [].forEach.call(document.querySelectorAll('.tabs button'),function(b){ b.onclick=function(){ V=b.dataset.v; [].forEach.call(document.querySelectorAll('.tabs button'),function(x){ x.setAttribute('aria-selected',String(x===b)); }); render(); }; });
   var INT=[0,1,2,4,7,15,30], extra=false;
+  // Lịch ôn theo FSRS (ts-fsrs, thuật toán của Anki): mỗi thẻ có độ ổn định (s) và độ khó (d); 4 mức đánh giá Quên / Khó / Nhớ / Dễ.
+  // Vẫn ghi c.due (YYYY-MM-DD), c.box, c.lv như cũ để các trang khác (trang chủ, tra từ) đếm "cần ôn hôm nay" không phải sửa.
+  var FS = window.FSRS && window.FSRS.fsrs ? window.FSRS : null, SCH = FS ? FS.fsrs({ request_retention: 0.9, maximum_interval: 365, enable_fuzz: true, enable_short_term: false }) : null;
+  function toCard(c){
+    var f=c.f;
+    if(f) return { due:new Date(f.due), stability:f.s, difficulty:f.d, elapsed_days:f.e||0, scheduled_days:f.sd||0, learning_steps:f.ls||0, reps:f.r||0, lapses:f.l||0, state:f.st, last_review:f.lr?new Date(f.lr):undefined };
+    var bx=box(c), now=new Date();
+    if(!bx || !c.due) return FS.createEmptyCard(now);
+    // thẻ ôn theo cách cũ (hộp 1–6): coi như đã nhớ được INT[hộp] ngày
+    var due=new Date(c.due+'T08:00:00'), iv=INT[bx], lr=new Date(due.getTime()-iv*864e5);
+    return { due:due, stability:Math.max(.5,iv), difficulty:5, elapsed_days:0, scheduled_days:iv, learning_steps:0, reps:bx, lapses:0, state:FS.State.Review, last_review:lr };
+  }
+  function fromCard(c,k){
+    c.f={ due:k.due.toISOString(), s:+k.stability.toFixed(3), d:+k.difficulty.toFixed(3), e:k.elapsed_days, sd:k.scheduled_days, ls:k.learning_steps||0, r:k.reps, l:k.lapses, st:k.state, lr:k.last_review?new Date(k.last_review).toISOString():null };
+    c.due=dk(k.due);
+    var s=k.stability, b=s<1?0:s<2?1:s<4?2:s<7?3:s<15?4:s<30?5:6; c.box=b; c.lv=b>=5?3:Math.floor(b/2);
+  }
+  function days(n){ return n<=0?'hôm nay':n===1?'1 ngày':n<31?n+' ngày':n<365?Math.round(n/30)+' tháng':'1 năm'; }
   function dk(d){ d=d||new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
   function addDays(n){ var d=new Date(); d.setDate(d.getDate()+n); return dk(d); }
   function fmt(k){ var p=k.split('-'); return p[2]+'/'+p[1]; }
   function box(c){ return c.box!=null?c.box:Math.min(6,(c.lv||0)*2); }
   function isDue(c){ return !c.due || c.due<=dk(); }
   function build(){ var C=load(); queue=Object.keys(C).filter(function(k){ return extra ? box(C[k])<6 : isDue(C[k]); }).sort(function(a,b){ return (C[a].due||'').localeCompare(C[b].due||'') || box(C[a])-box(C[b]); }); i=0; }
+  // 4 nút đánh giá, dưới mỗi nút là lần ôn tiếp theo nếu chọn nút đó
+  function rateRow(c,bx){
+    if(!SCH) return '<div class="row" style="margin-top:8px"><button class="btn no" data-g="1">✗ Chưa nhớ<small style="display:block;font-weight:500;font-size:11px;opacity:.8">gặp lại hôm nay</small></button><button class="btn yes" data-g="3">✓ Nhớ rồi<small style="display:block;font-weight:500;font-size:11px;opacity:.85">ôn lại sau '+INT[Math.min(6,bx+1)]+' ngày</small></button></div>';
+    var p=SCH.repeat(toCard(c), new Date()), L=[[1,'no','✗ Quên'],[2,'hard','😓 Khó'],[3,'good','🙂 Nhớ'],[4,'easy','😎 Dễ']];
+    return '<div class="rate">'+L.map(function(x){ return '<button class="btn '+x[1]+'" data-g="'+x[0]+'">'+x[2]+'<small>'+(x[0]===1?'gặp lại ngay':days(p[x[0]].card.scheduled_days))+'</small></button>'; }).join('')+'</div><p class="keys">Phím tắt: Space lật thẻ · 1 Quên · 2 Khó · 3 Nhớ · 4 Dễ</p>';
+  }
   function render(){
     var C=load(), all=Object.keys(C);
     if(!all.length){ main.innerHTML='<div class="empty">Chưa có từ nào. Khi làm bài hoặc xem lại, <b>bấm vào một từ tiếng Anh</b> → bấm <b>☆ Lưu flashcard</b> là từ đó sẽ vào đây.</div>'; return; }
@@ -100,18 +131,19 @@ td .w{font-weight:700;color:var(--brand-ink)}
     if(i>=queue.length) build();
     if(!queue.length){
       var next=all.map(function(k){ return C[k].due; }).filter(function(d){ return d && d>dk(); }).sort()[0], nN=next?all.filter(function(k){ return C[k].due===next; }).length:0;
-      main.innerHTML='<div class="empty">🎉 Hôm nay bạn đã ôn xong tất cả từ cần ôn!'+(next?'<br>Lần ôn tiếp theo: <b>'+fmt(next)+'</b> ('+nN+' từ).':'')+'<br><small>Web tự hẹn lịch: từ hay quên sẽ gặp lại sớm, từ đã nhớ sẽ giãn ra 1, 2, 4, 7, 15, 30 ngày.</small><br><br><button class="btn sm" id="rs">Ôn thêm trước hạn</button></div>';
+      main.innerHTML='<div class="empty">🎉 Hôm nay bạn đã ôn xong tất cả từ cần ôn!'+(next?'<br>Lần ôn tiếp theo: <b>'+fmt(next)+'</b> ('+nN+' từ).':'')+'<br><small>Web tự hẹn lịch theo cách bạn chấm mỗi thẻ (thuật toán FSRS, giống Anki): từ hay quên gặp lại sớm, từ nhớ chắc giãn dần ra vài tuần, vài tháng.</small><br><br><button class="btn sm" id="rs">Ôn thêm trước hạn</button></div>';
       document.getElementById('rs').onclick=function(){ extra=true; build(); render(); }; return; }
     var c=C[queue[i]], bx=box(c);
     main.innerHTML='<p class="prog">'+(extra?'Ôn thêm · ':'Cần ôn hôm nay · ')+'thẻ '+(i+1)+' / '+queue.length+' · mức '+bx+'/6</p><div class="fc" id="fc"><div class="fc-in">'+
       '<div class="face"><div class="word">'+esc(c.w)+'</div><div class="ipa">'+esc(c.ipa)+'</div>'+(c.ex?'<div class="ex">'+hl(c.ex,c.w)+'</div>':'')+'<div class="tip">Đoán nghĩa rồi bấm vào thẻ để lật</div></div>'+
       '<div class="face back-f"><div class="word" style="font-size:28px">'+esc(c.w)+'</div><div class="mean">'+esc(c.m)+'</div>'+(c.ex?'<div class="ex">'+hl(c.ex,c.w)+'</div>':'')+'<div class="src">'+esc(c.src||'')+'</div></div>'+
-      '</div></div><div class="row"><button class="btn sm" id="sp">🔊 Nghe</button><button class="btn no" id="no">✗ Chưa nhớ<small style="display:block;font-weight:500;font-size:11px;opacity:.8">gặp lại hôm nay</small></button><button class="btn yes" id="yes">✓ Nhớ rồi<small style="display:block;font-weight:500;font-size:11px;opacity:.85">ôn lại sau '+INT[Math.min(6,bx+1)]+' ngày</small></button></div>';
+      '</div></div><div class="row"><button class="btn sm" id="sp">🔊 Nghe</button></div>'+rateRow(c,bx);
     var fc=document.getElementById('fc'); fc.onclick=function(){ fc.classList.toggle('flip'); };
     document.getElementById('sp').onclick=function(){ say(c.w); };
     function next(ok){ var C2=load(), k=queue[i], x=C2[k]; if(x){ var b2=box(x); if(ok){ b2=Math.min(6,b2+1); x.due=addDays(INT[b2]); } else { b2=0; x.due=dk(); queue.push(k); } x.box=b2; x.lv=b2>=5?3:Math.floor(b2/2); save(C2); } i++; render(); }
-    document.getElementById('no').onclick=function(){ next(false); };
-    document.getElementById('yes').onclick=function(){ next(true); };
+    function rate(g){ if(!SCH) return next(g>1); var C2=load(), k=queue[i], x=C2[k]; if(x){ var r=SCH.next(toCard(x), new Date(), g); fromCard(x, r.card); if(g===1) queue.push(k); save(C2); } i++; render(); }
+    [].forEach.call(main.querySelectorAll('[data-g]'),function(b){ b.onclick=function(e){ e.stopPropagation(); rate(+b.dataset.g); }; });
+    document.onkeydown=function(e){ if(V!=='learn'||e.target.tagName==='INPUT') return; if(e.key===' '){ e.preventDefault(); fc.classList.toggle('flip'); } else if(/^[1-4]$/.test(e.key)){ var b=main.querySelector('[data-g="'+e.key+'"]'); if(b) b.click(); } };
   }
   build(); render();
 })();
