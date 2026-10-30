@@ -1,6 +1,14 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-30d', date: '30/10/2026',
+    title: 'Thêm nút bấm hợp phong cách',
+    items: [
+      'Thêm nhiều nút được đổi kiểu theo phong cách: nút làm đề lớn ở trang Đề mini, nút phụ (Để sau, Làm lại, Đánh dấu đã ôn tập…), các nút chọn chế độ, nút tốc độ audio và hai nút tròn ở góc màn hình. Không còn nút màu xoài lạc tông khi đang dùng Hành baro, Thiên thần hay Băng hoại.',
+      'Nút chính có thêm biểu tượng nhỏ theo phong cách: ♪ (Hành baro), ♡ (Thiên thần), ◆ (Băng hoại).'
+    ]
+  },
+  {
     id: '2026-10-30c', date: '30/10/2026',
     title: 'Phong cách đẹp và dễ đọc hơn, nút bấm hợp từng phong cách',
     items: [
