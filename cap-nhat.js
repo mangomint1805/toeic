@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-31b', date: '31/10/2026',
+    title: 'Game mới: Đào vàng (Part 5–6)',
+    items: [
+      'Trang chủ có game ⛏️ Đào vàng: mỗi ván 3 phút, làm câu Part 5, Part 6 hoặc trộn cả hai (câu lấy từ 20 đề ETS). Đúng 1 câu được 10 vàng, đúng liên tiếp thì vàng nhân lên tới ×3.',
+      'Làm sai thì hiện đáp án và giải thích tiếng Việt, đồng hồ dừng trong lúc bạn đọc. Câu sai tự vào Sổ lỗi sai để làm lại sau.',
+      'Game ưu tiên câu bạn chưa gặp, nên chơi nhiều ván cũng ít bị lặp câu.'
+    ]
+  },
+  {
     id: '2026-10-31', date: '31/10/2026',
     title: 'Sổ lỗi sai: làm lại đúng những câu mình hay sai',
     items: [

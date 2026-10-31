@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>try{var d=document.documentElement,k=JSON.parse(localStorage.getItem('mt.skin')||'""');if(k==='scifi')d.setAttribute('data-theme','dark');if(k)d.setAttribute('data-skin',k)}catch(e){}</script>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#a8691a">
+<link rel="apple-touch-icon" href="icons/apple-180.png?v=3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta property="og:site_name" content="Minto English">
+<meta property="og:title" content="Minto English · Đào vàng Part 5–6">
+<meta property="og:image" content="https://mangomint1805.github.io/toeic/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="icons/fav-64.png?v=3">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Đào vàng · TOEIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--panel2:#f2efe8;--brand:#a8691a;--brand-soft:#f2e2c4;--brand-ink:#6b4410;--ok:#1f8f6c;--ok-soft:#e1f4ec;--bad:#c14636;--bad-soft:#fbe6e2}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 50px}
+header{padding:26px 0 8px}
+.mback{font-size:14px;font-weight:700;color:var(--brand-ink);text-decoration:none}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:clamp(28px,6vw,40px);margin:10px 0 4px;line-height:1.1}
+header p{margin:0;color:var(--dim)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.lbl{font-size:13px;font-weight:700;color:var(--dim);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font:inherit;font-weight:600;font-size:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip small{font-weight:500;opacity:.8}
+.btn{font:inherit;font-weight:700;font-size:16px;border:0;background:var(--brand);color:#fff;border-radius:12px;padding:12px 20px;cursor:pointer}
+.btn.alt{background:var(--card);color:var(--brand-ink);border:1.5px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.hint{font-size:13px;color:var(--dim)}
+.best{display:flex;gap:10px;margin-top:12px}
+.best div{flex:1;background:var(--panel2);border-radius:12px;padding:8px 12px}.best b{display:block;font:600 24px/1.1 Fraunces,Georgia,serif;color:var(--brand-ink)}.best span{font-size:12.5px;color:var(--dim)}
+/* đào vàng */
+.hud{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-weight:700;font-size:15px;margin:10px 0 8px}
+.hud .pill{background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;display:inline-flex;align-items:center;gap:6px}
+.hud .gold{font:600 22px/1 Fraunces,Georgia,serif;color:#a06a00}
+.hud .tm{margin-left:auto}.hud .tm.low{color:var(--bad);border-color:var(--bad)}
+.hud .x{color:var(--brand-ink)}
+.bar{height:6px;background:var(--panel2);border-radius:99px;overflow:hidden;margin:0 0 10px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#f6c445,#e0912b);width:100%;transition:width .3s linear}
+.stage{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:16px;overflow:hidden}
+.tag{display:inline-block;font-size:12px;font-weight:700;color:var(--brand-ink);background:var(--brand-soft);border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.q5{font-size:18px;font-weight:500;line-height:1.6;margin:2px 0 4px}
+.q5 .bk,.psg .blank.cur{background:#fff1c2;border-bottom:3px solid #e0a200;padding:0 6px;border-radius:4px;font-weight:700;color:#7a5200}
+.psg{max-height:42vh;overflow:auto;background:var(--panel2);border-radius:12px;padding:10px 14px;font-size:15px;line-height:1.6;margin-bottom:6px}
+@media (max-width:600px){.psg{max-height:32vh;font-size:14.5px}}
+.psg h3{font-size:16px;margin:4px 0 6px}.psg p{margin:6px 0}.psg .blank{color:var(--dim)}
+.ops{display:grid;gap:8px;margin-top:12px}
+.op{display:flex;gap:10px;align-items:flex-start;font:inherit;font-size:16px;background:var(--panel2);border:1.5px solid var(--line);border-radius:12px;padding:13px 12px;cursor:pointer;color:var(--ink);text-align:left;min-height:52px}
+.op:hover:not(:disabled){border-color:var(--brand)}
+.op .L{flex:none;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;background:var(--card)}
+.op.right{border-color:var(--ok);background:var(--ok-soft)}.op.wrong{border-color:var(--bad);background:var(--bad-soft)}.op:disabled{cursor:default}
+@media (min-width:640px){.ops.short{grid-template-columns:1fr 1fr}}
+.xp{margin-top:12px;background:var(--bad-soft);border:1.5px solid #f0c3ba;border-radius:12px;padding:12px 14px;font-size:15px}
+.xp b.k{color:var(--ok)}.xp .row{margin-top:10px;justify-content:flex-end}
+.dig{position:absolute;right:14px;top:10px;font-size:30px;pointer-events:none;opacity:0}
+.dig.on{animation:dig .6s ease-out}
+@keyframes dig{0%{opacity:1;transform:rotate(-40deg) translateY(0)}40%{transform:rotate(25deg) translateY(4px)}100%{opacity:0;transform:rotate(0) translateY(-6px)}}
+.coin{position:absolute;font-weight:800;color:#a06a00;font-size:18px;pointer-events:none;animation:coin 1s ease-out forwards}
+@keyframes coin{0%{opacity:0;transform:translateY(10px)}20%{opacity:1}100%{opacity:0;transform:translateY(-60px)}}
+.flame.hot{animation:pulse .8s ease-in-out infinite alternate}@keyframes pulse{to{transform:scale(1.18)}}
+@media (prefers-reduced-motion:reduce){.dig.on,.coin,.flame.hot{animation:none!important}.coin{display:none}}
+.res{text-align:center}.res .sc{font:600 58px/1 Fraunces,Georgia,serif;color:#a06a00}.res .row{justify-content:center;margin-top:16px}
+.rules{margin:10px 0 0;padding-left:20px;font-size:14.5px;color:var(--ink)}.rules li{margin:3px 0}
+.load{color:var(--dim);font-size:14px}
+</style>
+</head>
+<body data-nav="game">
+<div class="wrap">
+  <header>
+    <a class="mback" href="./">← Trang chủ</a>
+    <h1>⛏️ Đào vàng</h1>
+    <p>Mỗi câu Part 5–6 làm đúng là đào được vàng. Đúng liên tiếp thì vàng nhân lên. Sai thì đọc giải thích rồi đào tiếp nhé!</p>
+  </header>
+  <div id="main"></div>
+</div>
+<script src="config.js"></script>
+<script src="assets/game-gold.js?v=1"></script>
+<script src="assets/ui.js?v=9"></script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
+</body>
+</html>
