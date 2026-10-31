@@ -59,6 +59,7 @@
       '<span class="pill">✓ <span id="ok">0</span>/<span id="tt">0</span></span><span class="pill tm" id="tmb">⏱ <span id="tm">3:00</span></span></div>' +
       '<div class="bar"><i id="bar"></i></div><div class="stage" id="stg"><span class="dig" id="dig" aria-hidden="true">⛏️</span><div id="q"></div><div class="ops" id="ops"></div><div id="xp"></div></div>' +
       '<p style="margin:12px 0 0;text-align:right"><button class="btn alt" id="quit" type="button">Kết thúc</button></p>';
+    try { var mt = main.getBoundingClientRect().top + window.scrollY - 64; if (window.scrollY > mt || mt > 40) window.scrollTo(0, Math.max(0, mt)); } catch (e) {} // điện thoại: đưa khung chơi lên đầu màn hình
     var $ = function (id) { return document.getElementById(id); };
     $('quit').onclick = function () { end(); };
     function fmt(s) { s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':' + ('0' + s % 60).slice(-2); }
@@ -90,7 +91,7 @@
       else {
         $('q').innerHTML = tag + '<div class="psg" id="psg">' + cur.psg + '</div>';
         var b = $('psg').querySelector('.blank[data-n="' + cur.n + '"]');
-        if (b) { b.classList.add('cur'); b.textContent = '(' + cur.n + ') _____'; setTimeout(function () { try { b.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {} }, 30); }
+        if (b) { b.classList.add('cur'); b.textContent = '(' + cur.n + ') _____'; setTimeout(function () { try { var ps = $('psg'); ps.scrollTop = Math.max(0, b.offsetTop - ps.offsetTop - ps.clientHeight / 2); } catch (e) {} }, 30); } // chỉ cuộn đoạn văn, không kéo cả trang
       }
       var shortOpts = cur.o.every(function (o) { return String(o).length <= 28; });
       $('ops').className = 'ops' + (shortOpts ? ' short' : '');

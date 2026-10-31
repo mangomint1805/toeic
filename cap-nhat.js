@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-31f', date: '31/10/2026',
+    title: 'Gọn gàng hơn trên điện thoại',
+    items: [
+      'Trên điện thoại màn hình nhỏ, thanh trên cùng không còn bị tràn ra ngoài khi dùng giao diện Sci-fi, Y2K hay Idol: nút Cài đặt luôn bấm được, trang không bị lệch ngang.',
+      'Biểu đồ Tiến bộ theo Part xếp 2 cột trên điện thoại, xem hết 7 Part mà không phải kéo dài.',
+      'Đào vàng: bắt đầu chơi là khung câu hỏi tự lên đầu màn hình; ở Part 6 chỉ đoạn văn tự cuộn tới chỗ trống, cả trang không bị giật.'
+    ]
+  },
+  {
     id: '2026-10-31e', date: '31/10/2026',
     title: 'Biểu đồ tiến bộ theo từng Part',
     items: [

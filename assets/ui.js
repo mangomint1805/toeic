@@ -1193,6 +1193,8 @@
     '@media (max-width:440px){.macc-b span{display:none}.macc-b{width:38px!important;padding:0!important}}' +
     '@media (max-width:400px){.mnav .in{gap:6px!important;padding-left:12px!important;padding-right:12px!important}.mtool{gap:4px!important}.mtool .mbtn{width:34px!important;height:34px!important}.mbrand{gap:7px!important}.mlogo{width:32px!important;height:32px!important}.mbrand b{font-size:17px!important;gap:5px!important}.mbrand b em{font-size:8.5px!important;padding:3px 4px 2px!important}.mbrand small{letter-spacing:.2em!important}}' +
     '@media (max-width:340px){.mbrand b em{display:none!important}}' +
+    // điện thoại hẹp (360px): tên web theo phong cách không đẩy nút Cài đặt ra ngoài màn hình
+    '@media (max-width:400px){.mbrand{min-width:0}.mbrand b{white-space:nowrap}html[data-skin=scifi] .mbrand b{letter-spacing:.02em!important}html[data-skin] .mbrand b::before,html[data-skin=idol] .mbrand b::after{display:none!important}html[data-skin=y2k] .mbrand b{letter-spacing:0!important}}' +
     '.minapp{display:flex;align-items:center;gap:10px;background:#fff6dd;border-bottom:1px solid #f0d996;color:#5a3a00;font:500 13.5px/1.4 "IBM Plex Sans",sans-serif;padding:9px 16px;position:relative;z-index:39}' +
     '.minapp span{flex:1}.minapp a{flex:none;background:#a8691a;color:#fff!important;font-weight:700;text-decoration:none;border-radius:999px;padding:7px 14px}.minapp button{flex:none;border:0;background:none;font-size:15px;cursor:pointer;color:#8a6a2a}' +
     'html[data-theme=dark] .minapp{background:#2d2614;border-color:#5a4a22;color:#f0d9a0}' +
