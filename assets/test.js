@@ -55,7 +55,19 @@
     D.rc.p6.forEach(function (s) { s.qs.forEach(function (q) { addQ(q, 6, s); }); });
     D.rc.p7.forEach(function (s) { s.qs.forEach(function (q) { addQ(q, 7, s); }); });
   }
-  function nsOf(parts) { return ORDER.filter(function (n) { return parts.indexOf(ITEMS[n].p) >= 0; }); }
+  function nsOf(parts) { return ORDER.filter(function (n) { return parts.indexOf(ITEMS[n].p) >= 0 && (!ONLY || ONLY[n]); }); }
+  // chế độ "Làm lại câu sai" (từ Sổ lỗi sai): test.html?t=N&m=sai&q=101,105 — chỉ hiện các câu này (đoạn văn / audio của cả cụm vẫn hiện)
+  var ONLY = null, ONLYQ = '';
+  function setupSai() {
+    var L = String(Q.get('q') || '').split(',').map(function (x) { return parseInt(x, 10); }).filter(function (n) { return ITEMS[n]; });
+    if (!L.length) { MODE = ''; return; }
+    ONLY = {}; L.forEach(function (n) { ONLY[n] = 1; });
+    ONLYQ = ORDER.filter(function (n) { return ONLY[n]; }).join(',');
+    var parts = []; ORDER.forEach(function (n) { if (ONLY[n] && parts.indexOf(ITEMS[n].p) < 0) parts.push(ITEMS[n].p); });
+    MODES.sai = { name: 'Làm lại câu sai', parts: parts, mins: 0, exam: false };
+  }
+  function shown(q) { return !ONLY || ONLY[q.n]; }
+  function setShown(s) { return !ONLY || s.qs.some(shown); }
 
   // ---------- state ----------
   var M, KEY, ST, CUR = 0, timerId = null;
@@ -66,7 +78,7 @@
   $('#ttl').firstChild.nodeValue = NAME;
   var sc = document.createElement('script');
   sc.src = 'data/t' + T + '.js';
-  sc.onload = function () { D = window.ETSDATA && window.ETSDATA[T]; if (!D) return fail(); index(); route(); };
+  sc.onload = function () { D = window.ETSDATA && window.ETSDATA[T]; if (!D) return fail(); index(); if (MODE === 'sai') setupSai(); route(); };
   sc.onerror = fail;
   document.head.appendChild(sc);
   function fail() { $('#main').innerHTML = '<div class="box"><h3>Test ' + T + ' chưa có trên web.</h3><p><a href="./">← Về trang chủ</a></p></div>'; }
@@ -75,6 +87,7 @@
     if (!MODES[MODE]) return startScreen();
     M = MODES[MODE]; KEY = 'ets26.t' + T + '.' + MODE;
     ST = get(KEY) || { ans: {}, t0: Date.now(), done: false };
+    if (ONLY) { if (ST.q !== ONLYQ) ST = { ans: {}, t0: Date.now(), done: false }; ST.q = ONLYQ; }
     var XEM = Q.get('xem');
     if (XEM) {
       var PEEK = null; if (Q.get('peek')) { try { PEEK = JSON.parse(sessionStorage.getItem('mt.peek')); } catch (e) {} }
@@ -179,7 +192,7 @@
     var i = M.parts.indexOf(p);
     h += '<div class="navrow"><span>' + (i > 0 ? '<button class="btn alt" data-go="' + M.parts[i - 1] + '">← ' + PART_INFO[M.parts[i - 1]][0] + '</button>' : '') + '</span>' +
       '<span>' + (i < M.parts.length - 1 ? '<button class="btn alt" data-go="' + M.parts[i + 1] + '">' + PART_INFO[M.parts[i + 1]][0] + ' →</button> ' : '') +
-      (ST.done ? '<a class="btn" href="?t=' + T + '">Làm lại / chọn cách khác</a>' : '<button class="btn warn" id="submitBtn">Nộp bài</button>') + '</span></div>';
+      (ST.done ? (ONLY ? '<a class="btn alt" href="so-loi.html">📕 Về Sổ lỗi sai</a> ' : '') + '<a class="btn" href="?t=' + T + '">Làm lại / chọn cách khác</a>' : '<button class="btn warn" id="submitBtn">Nộp bài</button>') + '</span></div>';
     $('#main').innerHTML = h;
     $$('[data-go]').forEach(function (b) { b.onclick = function () { show(+b.dataset.go); window.scrollTo(0, 0); }; });
     var sb = $('#submitBtn'); if (sb) sb.onclick = submit;
@@ -231,6 +244,7 @@
   function partHTML(p) {
     var h = '';
     if (p === 1) D.lc.p1.forEach(function (q) {
+      if (!shown(q)) return;
       h += '<div class="card ' + qcls(q) + '" id="q' + q.n + '" data-a="' + esc(q.a) + '"><div class="qt"><span class="qn">' + q.n + '.</span>' + mark(q) + '</div>' +
         (practiceAudio() ? '<div style="margin-left:42px">' + audioTag(q.a) + '</div>' : '') +
         '<img class="photo" src="img/t' + T + '/' + q.img + '" alt="Tranh câu ' + q.n + '" loading="lazy">' + optsHTML(q, 4, ST.done) + xpHTML(q) + '</div>';
@@ -238,32 +252,37 @@
     if (p === 2) {
       h += '<div class="card">';
       D.lc.p2.forEach(function (q) {
+        if (!shown(q)) return;
         h += '<div class="' + qcls(q) + '" id="q' + q.n + '" data-a="' + esc(q.a) + '"><div class="qt"><span class="qn">' + q.n + '.</span><span class="blank-q">' + (ST.done ? esc(q.q) : 'Mark your answer on your answer sheet.') + '</span>' + mark(q) + '</div>' +
           (practiceAudio() ? '<div style="margin-left:42px">' + audioTag(q.a) + '</div>' : '') + optsHTML(q, 3, ST.done) + xpHTML(q) + '</div>';
       });
       h += '</div>';
     }
     if (p === 3 || p === 4) (p === 3 ? D.lc.p3 : D.lc.p4).forEach(function (s) {
-      var allok = ST.done && s.qs.every(function (q) { return ST.ans[q.n] === q.ans; });
+      if (!setShown(s)) return;
+      var allok = ST.done && s.qs.filter(shown).every(function (q) { return ST.ans[q.n] === q.ans; });
       h += '<div class="card' + (allok ? ' allok' : '') + '" id="s' + s.ns[0] + '" data-a="' + esc(s.a) + '"><p class="ghead">Questions ' + s.ns[0] + '–' + s.ns[1] + (p === 3 ? ' refer to the following conversation.' : ' refer to the following talk.') + '</p>' +
         (practiceAudio() ? audioTag(s.a) : '') + (s.img ? '<img class="graphic" src="img/t' + T + '/' + s.img + '" alt="Hình minh hoạ (graphic)">' : '');
-      s.qs.forEach(function (q) { h += '<div class="' + qcls(q) + '" id="q' + q.n + '"><div class="qt"><span class="qn">' + q.n + '.</span><span class="qtext">' + esc(q.q) + mark(q) + '</span></div>' + optsHTML(q, 4, true) + xpHTML(q) + '</div>'; });
+      s.qs.forEach(function (q) { if (!shown(q)) return; h += '<div class="' + qcls(q) + '" id="q' + q.n + '"><div class="qt"><span class="qn">' + q.n + '.</span><span class="qtext">' + esc(q.q) + mark(q) + '</span></div>' + optsHTML(q, 4, true) + xpHTML(q) + '</div>'; });
       if (ST.done && s.script && s.script.length) h += '<details class="more g"><summary>📜 Lời thoại + dịch</summary><div class="in">' + scriptHTML(s.script) + '</div></details>';
       h += '</div>';
     });
     if (p === 5) {
       h += '<div class="card">';
       D.rc.p5.forEach(function (q) {
+        if (!shown(q)) return;
         h += '<div class="' + qcls(q) + '" id="q' + q.n + '"><div class="qt"><span class="qn">' + q.n + '.</span><span class="qtext">' + esc(q.q) + mark(q) + '</span></div>' + optsHTML(q, 4, true) + xpHTML(q) + '</div>';
       });
       h += '</div>';
     }
     if (p === 6 || p === 7) (p === 6 ? D.rc.p6 : D.rc.p7).forEach(function (s) {
-      var allok = ST.done && s.qs.every(function (q) { return ST.ans[q.n] === q.ans; });
+      if (!setShown(s)) return;
+      var allok = ST.done && s.qs.filter(shown).every(function (q) { return ST.ans[q.n] === q.ans; });
       var ps = (s.passages || [s.passage]).map(function (x) { return '<div class="psg">' + x + '</div>'; }).join('');
       h += '<div class="card' + (allok ? ' allok' : '') + '" id="s' + s.ns[0] + '"><p class="ghead">' + esc(s.head || ('Questions ' + s.ns[0] + '-' + s.ns[1])) + '</p><div class="split"><div class="ptext">' + ps +
         (ST.done && s.vi ? '<details class="more g"><summary>🇻🇳 Dịch bài đọc</summary><div class="in vi-psg">' + esc(s.vi) + '</div></details>' : '') + '</div><div>';
       s.qs.forEach(function (q) {
+        if (!shown(q)) return;
         h += '<div class="' + qcls(q) + '" id="q' + q.n + '"><div class="qt"><span class="qn">' + q.n + '.</span><span class="qtext">' + (q.q ? esc(q.q) : '') + mark(q) + '</span></div>' + optsHTML(q, 4, true) + xpHTML(q) + '</div>';
       });
       h += '</div></div></div>';
@@ -453,6 +472,7 @@
     var say = pcAll >= .8 ? 'Đỉnh quá! Giữ phong độ này nha!' : pcAll >= .55 ? 'Làm tốt lắm! Xem lại câu sai là lên điểm tiếp.' : pcAll >= .35 ? 'Ổn rồi đó, luyện thêm Part yếu nhất nhé!' : 'Không sao đâu, ai cũng bắt đầu từ đây. Xem kỹ giải thích từng câu nha!';
     if (window.MBUDDY && !window.MEXAM) h += window.MBUDDY('<b>' + say + '</b>' + (cm.length ? '<ul class="rp-cm">' + cm.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>' : ''), mood, 'rp-buddy');
     else if (cm.length) h += '<ul class="rp-cm">' + cm.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>';
+    if (r.wrong && r.wrong.length) h += '<p class="hint" style="margin:10px 0">📕 ' + r.wrong.length + ' câu sai đã được lưu vào <a href="so-loi.html"><b>Sổ lỗi sai</b></a> để làm lại sau. Làm đúng lại thì câu đó tự biến mất khỏi sổ.</p>';
     if (window.MNEXT) h += window.MNEXT({ parts: r.parts, test: T });
     h += '<p class="rp-note">Điểm ước tính dựa trên số câu đúng của bài luyện tập, không phải điểm thi chính thức.</p>' +
       '<div class="filt"><button class="btn sm" id="rpSave" type="button">' + window.MICON('check') + ' Lưu ảnh khoe story</button><button class="btn alt sm" id="hideOk" type="button">' + (ST.hideOk ? 'Hiện tất cả câu' : 'Chỉ xem câu sai') + '</button><button class="btn alt sm" id="rpKq" type="button">📊 Phân tích chi tiết</button><a class="btn alt sm" href="phan-tich.html">Xem điểm yếu</a><a class="btn alt sm" href="?t=' + T + '">Làm lại</a></div></div>' +

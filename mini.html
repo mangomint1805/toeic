@@ -145,7 +145,7 @@ img.ph{display:block;width:100%;max-height:300px;object-fit:contain;border-radiu
     [].forEach.call(main.querySelectorAll('.opt'),function(b){ b.onclick=function(){ choose(b.dataset.l); }; });
   }
   function choose(L){
-    var x=SET[i], ok=L===x.a; if(ok) score++; answers.push(ok?1:0); SEEN[x.t+'.'+x.n]=1; put('ets26.mini.seen',SEEN);
+    var x=SET[i], ok=L===x.a; if(ok) score++; answers.push(ok?1:0); SEEN[x.t+'.'+x.n]=1; put('ets26.mini.seen',SEEN); var MW=get('ets26.miniwrong',{}); if(ok) delete MW[x.t+'.'+x.n]; else MW[x.t+'.'+x.n]=[Date.now(),x.p]; put('ets26.miniwrong',MW);
     if(window.MCOMBO){ var ch=main.querySelector('.opt[data-l="'+L+'"]'); MCOMBO(ok,ch); }
     [].forEach.call(main.querySelectorAll('.opt'),function(b,k){ b.disabled=true; if(b.dataset.l===x.a) b.classList.add('right'); else if(b.dataset.l===L) b.classList.add('wrong');
       if(x.p!==5) b.querySelector('.tx').innerHTML=esc(x.o[k])+(x.v&&x.v[k]?'<small>'+esc(x.v[k])+'</small>':''); });

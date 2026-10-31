@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-31', date: '31/10/2026',
+    title: 'Sổ lỗi sai: làm lại đúng những câu mình hay sai',
+    items: [
+      'Trang mới 📕 Sổ lỗi sai (ở mục công cụ trên trang chủ): mọi câu bạn làm sai trong đề luyện từng Part, đề thi thử và đề mini đều tự vào đây, xếp theo từng đề và từng Part.',
+      'Bấm "Làm lại câu sai" để làm lại riêng những câu đó (Part 3, 4, 6, 7 vẫn có đủ đoạn hội thoại, bài đọc). Làm đúng rồi thì câu đó tự biến mất khỏi sổ.',
+      'Nộp bài xong sẽ thấy dòng nhắc số câu sai đã được lưu vào sổ.'
+    ]
+  },
+  {
     id: '2026-10-30d', date: '30/10/2026',
     title: 'Thêm nút bấm hợp phong cách',
     items: [
