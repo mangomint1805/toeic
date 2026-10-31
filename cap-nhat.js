@@ -1,6 +1,14 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-31e', date: '31/10/2026',
+    title: 'Biểu đồ tiến bộ theo từng Part',
+    items: [
+      'Trang Điểm yếu có thêm biểu đồ Tiến bộ theo Part: phần trăm câu đúng của Part 1–7 theo từng tuần (8 tuần gần nhất), kèm gợi ý như "Part 5 tăng từ 40% lên 62%" hay "Nên luyện thêm Part 3".',
+      'Đăng nhập Google thì biểu đồ đi theo tài khoản, đổi máy vẫn còn; trang Hồ sơ cũng hiện biểu đồ này.'
+    ]
+  },
+  {
     id: '2026-10-31d', date: '31/10/2026',
     title: 'Sổ lỗi sai có lịch ôn',
     items: [
