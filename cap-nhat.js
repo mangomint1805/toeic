@@ -1,6 +1,14 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-31c', date: '31/10/2026',
+    title: 'Bảng vàng Đào vàng của cả lớp',
+    items: [
+      'Trang Xếp hạng có thêm Bảng vàng tuần: ai đào được nhiều vàng nhất trong 1 ván Đào vàng tuần này. Chỉ cần đăng nhập Google và bật "Hiện tôi trên bảng xếp hạng".',
+      'Hết ván Đào vàng có nút xem Bảng vàng của lớp; Đào vàng cũng tính vào Nhiệm vụ hằng ngày.'
+    ]
+  },
+  {
     id: '2026-10-31b', date: '31/10/2026',
     title: 'Game mới: Đào vàng (Part 5–6)',
     items: [

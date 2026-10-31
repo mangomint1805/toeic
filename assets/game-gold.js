@@ -131,12 +131,17 @@
       if (!running) return; running = false; cancelAnimationFrame(raf);
       var B = get(KEY, {}), g = Math.round(gold), rec = g > (B.best || 0);
       if (rec) B.best = g; B.streak = Math.max(B.streak || 0, bestStreak); B.games = (B.games || 0) + 1; B.right = (B.right || 0) + right; B.total = (B.total || 0) + total; B.last = Date.now();
+      // kỷ lục trong tuần (Thứ Hai đầu tuần), để lên Bảng vàng tuần ở trang Xếp hạng
+      var d0 = new Date(), mon = new Date(d0.getFullYear(), d0.getMonth(), d0.getDate() - (d0.getDay() + 6) % 7), wk = mon.getFullYear() + '-' + ('0' + (mon.getMonth() + 1)).slice(-2) + '-' + ('0' + mon.getDate()).slice(-2);
+      if (B.gw !== wk) { B.gw = wk; B.gwb = 0; } if (g > (B.gwb || 0)) B.gwb = g;
       put(KEY, B);
+      try { if (window.MACC && MACC.board && localStorage.getItem('mt.board.on') === '1') MACC.board.push(); } catch (e) {}
       if (rec && g > 0 && window.MCONFETTI) try { window.MCONFETTI(); } catch (e) {}
       var wrong = total - right;
       main.innerHTML = '<div class="card res"><div style="font-size:40px">🪙</div><div class="sc">' + g + '</div><p>' + (rec && g ? '🏆 Kỷ lục mới!' : 'Kỷ lục: ' + (B.best || 0) + ' vàng') + '</p>' +
         '<p>Đúng <b>' + right + '/' + total + '</b> câu · chuỗi dài nhất <b>' + bestStreak + '</b></p>' +
         (wrong ? '<p><a href="so-loi.html">📕 Xem ' + wrong + ' câu sai trong Sổ lỗi sai →</a></p>' : (total ? '<p>Không sai câu nào, giỏi quá! ✨</p>' : '')) +
+        '<p><a href="/xep-hang.html#dao-vang">🏆 Bảng vàng tuần của cả lớp →</a>' + (localStorage.getItem('mt.board.on') === '1' ? '' : ' <small style="color:var(--dim)">(đăng nhập Google và bật "Hiện tôi trên bảng xếp hạng" để có tên)</small>') + '</p>' +
         '<div class="row"><button class="btn" id="again" type="button">↻ Chơi lại</button><button class="btn alt" id="menu" type="button">Đổi loại câu</button></div></div>';
       document.getElementById('again').onclick = start; document.getElementById('menu').onclick = menu;
     }
