@@ -374,6 +374,42 @@
       };
     } catch (e) {}
   })();
+  // ---------- Sổ lỗi sai có lịch ôn (web TOEIC): mt.errlog = {"đề.câu": {d: 'YYYY-MM-DD' ngày đến hạn, s: lần ôn 0–2, p: part}} ----------
+  // sai → ôn lại sau 1 ngày; làm đúng khi đến hạn → sau 3 ngày, rồi 7 ngày; đúng lần thứ 3 thì rời sổ. Khoá mt.* nên tự đồng bộ theo tài khoản (acc.js).
+  (function () {
+    var EK = 'mt.errlog';
+    function pOf(n) { return n <= 6 ? 1 : n <= 31 ? 2 : n <= 70 ? 3 : n <= 100 ? 4 : n <= 130 ? 5 : n <= 146 ? 6 : 7; }
+    function plus(days) { var d = new Date(); d.setDate(d.getDate() + days); return dkey(d); }
+    function rd(k, d) { try { var v = JSON.parse(window.localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } }
+    function wr(k, v) { try { window.localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    // lần đầu: chuyển các câu đang sai (kết quả mới nhất của đề luyện / đề mini) sang sổ mới, đến hạn hôm nay
+    function load() {
+      var L = rd(EK, null); if (L && typeof L === 'object') return L;
+      L = {}; var last = {}, td = dkey(new Date());
+      (rd('ets26.hist', []) || []).forEach(function (h) { if (!h || !h.r || !h.test) return; Object.keys(h.r).forEach(function (n) { var k = h.test + '.' + n, at = h.at || 0; if (!last[k] || at >= last[k].at) last[k] = { at: at, ok: h.r[n] === 1 }; }); });
+      var MW = rd('ets26.miniwrong', {}) || {};
+      Object.keys(MW).forEach(function (k) { var v = MW[k], at = Array.isArray(v) ? v[0] : +v || 0; if (!last[k] || at > last[k].at) last[k] = { at: at, ok: false }; });
+      Object.keys(last).forEach(function (k) { var sp = k.split('.'); if (!last[k].ok && +sp[0] && +sp[1]) L[k] = { d: td, s: 0, p: pOf(+sp[1]) }; });
+      wr(EK, L); return L;
+    }
+    function bump(n) { if (!n) return; var t = dkey(new Date()), q = rd('mt.qact', {}) || {}, d = q[t] || (q[t] = {}); d.err = (d.err || 0) + n; var ks = Object.keys(q).sort(); while (ks.length > 14) delete q[ks.shift()]; wr('mt.qact', q); }
+    // res = {số câu: true/false}; trả về số câu đến hạn đã ôn đúng
+    function markMany(t, res, parts) {
+      var L = load(), td = dkey(new Date()), adv = 0;
+      Object.keys(res).forEach(function (n) {
+        var k = t + '.' + n, x = L[k], p = (parts && parts[n]) || (x && x.p) || pOf(+n);
+        if (!res[n]) L[k] = { d: plus(1), s: 0, p: p };
+        else if (x && x.d <= td) { adv++; if ((x.s || 0) >= 2) delete L[k]; else { x.s = (x.s || 0) + 1; x.d = plus(x.s === 1 ? 3 : 7); } }
+      });
+      wr(EK, L); bump(adv); return adv;
+    }
+    window.MERR = {
+      all: load, pOf: pOf,
+      mark: function (t, n, ok, p) { var o = {}, pp = {}; o[n] = !!ok; pp[n] = p; return markMany(t, o, pp); },
+      markMany: markMany,
+      due: function () { var L = load(), td = dkey(new Date()); return Object.keys(L).filter(function (k) { return L[k].d <= td; }).length; }
+    };
+  })();
   function seedRand(str) { var h = 2166136261; for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return function () { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 10000) / 10000; }; }
   // danh sách nhiệm vụ hôm nay: [id, icon, chữ, link, đã làm, cần làm]
   function quests(s) {
@@ -384,6 +420,8 @@
       core = ['mini', 'flame', 'Làm đề mini hôm nay', 'mini.html', s.miniToday ? 1 : 0, 1];
       pool = [cardsQ, ['dict', 'pen', 'Chép chính tả 5 câu', 'chinh-ta.html', A.dict || 0, 5], ['px', 'bolt', 'Chơi 1 lượt Phản xạ Part 2', 'phan-xa.html', A.px || 0, 1],
         ['gotu', 'game', 'Chơi 1 ván Gõ từ rơi', 'go-tu.html', A.gotu || 0, 1], ['gold', 'game', 'Chơi 1 ván Đào vàng (Part 5, 6)', 'dao-vang.html', A.gold || 0, 1], ['part', 'test', 'Nộp 1 bài luyện Part bất kỳ', 'index.html#de-thi', s.subsToday, 1]];
+      var eDue = 0; try { eDue = window.MERR ? window.MERR.due() : 0; } catch (e) {}
+      if (eDue + (A.err || 0) > 0) pool.push(['err', 'test', 'Làm lại câu sai đến hạn trong Sổ lỗi sai', 'so-loi.html', A.err || 0, Math.min(5, eDue + (A.err || 0))]);
     } else {
       core = ['part', 'headphones', 'Làm 1 phần Listening hoặc Reading', 'index.html', s.subsToday, 1];
       pool = [cardsQ, ['dict', 'pen', 'Chép chính tả 5 câu', 'chinh-ta.html', A.dict || 0, 5], ['gotu', 'game', 'Chơi 1 ván Gõ từ rơi', 'go-tu.html', A.gotu || 0, 1]];

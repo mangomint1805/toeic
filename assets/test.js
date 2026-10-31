@@ -418,6 +418,9 @@
     hist = hist.slice(-300); var withAns = 0;
     for (var hi = hist.length - 1; hi >= 0; hi--) { if (hist[hi] && hist[hi].ans) { withAns++; if (withAns > 40) { delete hist[hi].ans; delete hist[hi].res; } } }
     put('ets26.hist', hist);
+    // lịch ôn của Sổ lỗi sai (ui.js): sai → ôn lại sau 1 ngày; đúng câu đến hạn → lần ôn tiếp theo
+    try { if (window.MERR) { var rqb = {}, rqp = {}; Object.keys(rq).forEach(function (n) { rqb[n] = rq[n] === 1; rqp[n] = ITEMS[n].p; }); window.MERR.markMany(T, rqb, rqp); } } catch (e) {}
+    try { if (window.MPARTWK) MPARTWK.addR(rq, res.at); } catch (e) {}
     $('#player').hidden = true; $('#timer').textContent = '';
     send(res, name, score);
     show(M.parts[0]); window.scrollTo(0, 0);

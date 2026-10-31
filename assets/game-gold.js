@@ -110,6 +110,7 @@
       var MW = get('ets26.miniwrong', {}) || {};
       if (ok) { delete MW[id]; } else MW[id] = [Date.now(), it.p];
       put('ets26.miniwrong', MW);
+      try { if (window.MERR) window.MERR.mark(it.t, it.n, ok, it.p); } catch (e) {}
       if (window.MCOMBO) try { window.MCOMBO(ok, $('ops')); } catch (e) {}
       if (ok) {
         right++; streak++; bestStreak = Math.max(bestStreak, streak);

@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-10-31d', date: '31/10/2026',
+    title: 'Sổ lỗi sai có lịch ôn',
+    items: [
+      'Câu sai giờ được hẹn ngày ôn lại: sau 1 ngày, 3 ngày rồi 7 ngày. Trang Sổ lỗi sai chia rõ "Đến hạn ôn hôm nay" và "Chưa đến hạn", mỗi câu ghi lần ôn 1/3, 2/3, 3/3.',
+      'Đúng đủ 3 lần thì câu đó rời sổ, làm sai thì ôn lại từ đầu. Câu sai trong Đào vàng cũng vào sổ.',
+      'Nhiệm vụ hằng ngày có thêm "Làm lại câu sai đến hạn". Đăng nhập Google thì sổ đi theo bạn sang máy khác.'
+    ]
+  },
+  {
     id: '2026-10-31c', date: '31/10/2026',
     title: 'Bảng vàng Đào vàng của cả lớp',
     items: [
