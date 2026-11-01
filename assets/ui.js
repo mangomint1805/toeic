@@ -1095,7 +1095,10 @@
     '.mp-todo a.done{color:#7d838c}.mp-todo a.done>span:nth-child(2){text-decoration:line-through}.mp-todo a.done .mp-ck{background:#1f8f6c;border-color:#1f8f6c;color:#fff}.mp-go{margin-left:auto;color:#c2b9a7}' +
     'html[data-theme=dark] .mplan{background:#1c1f25;border-color:#373b44}html[data-theme=dark] :is(.mp-h small,.mp-i>small,.mp-f label){color:#9aa1ad}html[data-theme=dark] .mp-i>span{color:#c0c5cd}' +
     'html[data-theme=dark] .mp-todo{border-color:#2c3038}html[data-theme=dark] .mp-todo a{color:#e8e4dc}html[data-theme=dark] .mp-todo a:hover{background:#242830}html[data-theme=dark] .mp-ck{border-color:#4a4f58;color:#f0c787}html[data-theme=dark] .mp-bar{background:#2c3038}html[data-theme=dark] .mp-i button{background:#3b2d1b;color:#f0c787}' +
-    '@media (max-width:520px){.mp-cd{width:76px;height:76px;border-radius:18px}.mp-cd b{font-size:31px}.mp-top{gap:12px}}';
+    '@media (max-width:520px){.mp-cd{width:76px;height:76px;border-radius:18px}.mp-cd b{font-size:31px}.mp-top{gap:12px}}' +
+    // điện thoại: vùng chạm tối thiểu ~44px (lớp ::before vô hình, không đổi bố cục)
+    '@media (max-width:600px){.mtool .mbtn,.mfloat .mbtn,.mp-i button,.mp-sw,.mp-skins button{position:relative}.mtool .mbtn::before,.mfloat .mbtn::before,.mp-i button::before,.mp-sw::before,.mp-skins button::before{content:"";position:absolute}.mtool .mbtn::before{inset:-5px -2px}.mfloat .mbtn::before{inset:-4px}.mp-i button::before{inset:-10px -4px}.mp-sw::before{inset:-9px -2px}.mp-skins button::before{inset:-7px -3px}.mbrand{position:relative}.mbrand::before{content:"";position:absolute;inset:-6px 0}' +
+    '.mp-fs button,.mp-tour,.fbk-types button,.fbk-row button,.mt-row button,.mp-f button,.mp-f input,.mp-f select{min-height:44px}.mgc-x{min-width:44px;min-height:44px}}';
   document.head.appendChild(st3);
 
 

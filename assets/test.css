@@ -200,3 +200,14 @@ details.more.g{margin-left:0}
 .tvsv{position:absolute;top:8px;right:8px;border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:3px 8px;font:600 12px/1 "IBM Plex Sans",sans-serif;cursor:pointer;color:var(--brand-ink)}
 .tvsv.on{background:var(--brand);border-color:var(--brand);color:#fff}
 .tvact{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+/* điện thoại: vùng chạm tối thiểu ~44px (lớp ::before vô hình, máy tính không đổi) */
+@media (max-width:600px){
+.spd button,.tvs,.home,.hlogo{position:relative}
+.spd button::before,.tvs::before,.tvsv::before,.home::before,.hlogo::before{content:"";position:absolute}
+.spd button::before{inset:-12px -2px}
+.tvs::before{inset:-14px -11px}
+.tvsv::before{inset:-12px -4px}
+.home::before{inset:-11px -8px}
+.hlogo::before{inset:-5px}
+.btn.sm,.notebox .btn{padding-top:12px;padding-bottom:12px}
+}
