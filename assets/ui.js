@@ -212,7 +212,7 @@
       var md = J('ets26.mini.days', {}); Object.keys(md).forEach(function (k) { days[k] = 1; }); o.mini = Object.keys(md).length; o.miniToday = !!md[o.today];
     } else {
       var pairs = {}, bp = {}; o.subs = 0; o.bestL = 0; o.bestR = 0; o.books = {}; o.full = 0; o.lastFull = 0; o.done = {};
-      BOOKS.concat(['v7', 'v8', 'v9']).forEach(function (b) {
+      BOOKS.concat(['v6', 'v7', 'v8', 'v9']).forEach(function (b) {
         J('cam' + b + '.hist', []).forEach(function (r) {
           if (!r) return; o.subs++; if (r.t) days[dkey(r.t)] = 1; o.books[b] = 1; o.done[b + '-' + r.test] = 1;
           if (r.total === 40) { var bd = +r.band || 0; if (r.sec === 'L') o.bestL = Math.max(o.bestL, bd); else o.bestR = Math.max(o.bestR, bd); pairs[b + '-' + r.test + r.sec] = r.t || 1; }
@@ -233,7 +233,7 @@
     o.pxGames = (J('mt.game.reflex', {}) || {}).games || 0;
     o.subsToday = 0;
     if (SITE === 'toeic') J('ets26.hist', []).forEach(function (r) { if (r && r.at && dkey(r.at) === o.today) o.subsToday++; });
-    else if (SITE === 'ielts') BOOKS.concat(['v7', 'v8', 'v9']).forEach(function (b) { J('cam' + b + '.hist', []).forEach(function (r) { if (r && r.t && dkey(r.t) === o.today) o.subsToday++; }); });
+    else if (SITE === 'ielts') BOOKS.concat(['v6', 'v7', 'v8', 'v9']).forEach(function (b) { J('cam' + b + '.hist', []).forEach(function (r) { if (r && r.t && dkey(r.t) === o.today) o.subsToday++; }); });
     var A = (J('mt.qact', {}) || {})[o.today] || {}; o.actToday = A;
     o.days = days; o.streak = streakOf(days); o.ndays = Object.keys(days).length;
     return o;
