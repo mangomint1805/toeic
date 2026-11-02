@@ -1,6 +1,16 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-02b', date: '02/11/2026',
+    title: 'Phòng thi chung: cả lớp thi cùng lúc',
+    items: [
+      'Thầy có thể mở một phòng thi trên lớp: bạn quét mã QR hoặc mở link thầy gửi, nhập tên rồi chờ trong phòng. Thầy bấm Bắt đầu là cả lớp vào đề cùng một lúc.',
+      'Đồng hồ đếm ngược giống hệt nhau trên mọi máy, hết giờ bài tự nộp. Thầy cộng thêm giờ thì đồng hồ của bạn tự cập nhật.',
+      'Giao diện làm bài y như khi luyện đề. Nộp xong vẫn xem được đáp án, giải thích, và kết quả được lưu vào lịch sử và Sổ lỗi sai như bình thường.',
+      'Lưu ý: trong lúc thi đừng chuyển sang tab hay ứng dụng khác nhé, thầy sẽ thấy đấy.'
+    ]
+  },
+  {
     id: '2026-11-02', date: '02/11/2026',
     title: 'Nút bấm dễ chạm hơn trên điện thoại',
     items: [

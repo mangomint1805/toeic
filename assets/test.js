@@ -71,6 +71,15 @@
 
   // ---------- state ----------
   var M, KEY, ST, CUR = 0, timerId = null;
+  // Phòng thi chung (test.html?room=MÃ): assets/phong-thi.js lo phòng chờ, giờ chung, gửi tiến độ cho thầy; RM = móc nối khi đang thi
+  var ROOM = Q.get('room'), RM = null;
+  function roomBoot() {
+    var api = { T: T, MODE: MODE, NAME: NAME, route: route, submit: submit, bind: function (o) { RM = o; }, count: function (m) { return MODES[m] ? nsOf(MODES[m].parts).length : 0; }, state: function () { return ST; }, key: function (m) { return 'ets26.t' + T + '.' + m; }, modeName: function (m) { return MODES[m] ? MODES[m].name : ''; }, hasMode: function (m) { return !!MODES[m] && m !== 'sai'; } };
+    if (window.MROOM) return window.MROOM.boot(api);
+    var s = document.createElement('script'); s.src = 'assets/phong-thi.js?v=1'; s.onload = function () { window.MROOM.boot(api); };
+    s.onerror = function () { $('#main').innerHTML = '<div class="box"><h3>Không tải được phòng thi.</h3><p>Kiểm tra mạng rồi tải lại trang.</p></div>'; };
+    document.head.appendChild(s);
+  }
   function save() { put(KEY, ST); }
 
   // ---------- boot ----------
@@ -78,7 +87,7 @@
   $('#ttl').firstChild.nodeValue = NAME;
   var sc = document.createElement('script');
   sc.src = 'data/t' + T + '.js';
-  sc.onload = function () { D = window.ETSDATA && window.ETSDATA[T]; if (!D) return fail(); index(); if (MODE === 'sai') setupSai(); route(); };
+  sc.onload = function () { D = window.ETSDATA && window.ETSDATA[T]; if (!D) return fail(); index(); if (MODE === 'sai') setupSai(); if (ROOM != null) return roomBoot(); route(); };
   sc.onerror = fail;
   document.head.appendChild(sc);
   function fail() { $('#main').innerHTML = '<div class="box"><h3>Test ' + T + ' chưa có trên web.</h3><p><a href="./">← Về trang chủ</a></p></div>'; }
@@ -184,7 +193,7 @@
   }
   function show(p) {
     CUR = p; ST.cur = p; if (!ST.done) save();
-    window.ETS_LOOKUP = !!(ST.done || !M.exam); window.LOOKUP_SRC = NAME;
+    window.ETS_LOOKUP = !!(ST.done || (!M.exam && !RM)); window.LOOKUP_SRC = NAME;
     $$('#ptabs button').forEach(function (b) { b.setAttribute('aria-selected', String(+b.dataset.p === p)); });
     var h = (ST.done ? '' : '') + '<div id="resTop"></div><div class="pt-head"><h2>' + PART_INFO[p][0] + '</h2><span>' + PART_INFO[p][1] + ' · ' + nsOf([p]).length + ' câu</span>' + (p <= 4 && practiceAudio() ? speedHTML() : '') + (window.ETS_LOOKUP ? '<span class="lkhint">💡 Bấm vào từ tiếng Anh bất kỳ để tra nghĩa</span>' : '') + '</div>';
     if (!ST.done) h += '<p class="dir">' + DIRS[p] + '</p>';
@@ -292,7 +301,7 @@
 
   function bindInputs() {
     $$('#partBody input[type=radio]').forEach(function (r) {
-      r.onchange = function () { var n = +r.name.slice(1); ST.ans[n] = r.value; save(); counts(); blanks(); };
+      r.onchange = function () { var n = +r.name.slice(1); ST.ans[n] = r.value; save(); counts(); blanks(); if (RM) RM.ans(n, nsOf(M.parts).filter(function (k) { return ST.ans[k]; }).length); };
     });
     $$('#partBody .psg .blank').forEach(function (b) {
       b.onclick = function () { var el = document.getElementById('q' + b.dataset.n); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); };
@@ -332,8 +341,8 @@
     clearInterval(timerId);
     function tick() {
       var el = $('#timer'), used = (Date.now() - ST.t0) / 1000;
-      if (M.mins) {
-        var left = M.mins * 60 - used;
+      if (M.mins || RM) {
+        var left = RM ? RM.left() : M.mins * 60 - used;
         if (left <= 0) { el.textContent = '00:00'; clearInterval(timerId); toast('Hết giờ — bài được nộp tự động.', 4000); submit(true); return; }
         el.textContent = '⏱ ' + fmt(left); el.classList.toggle('low', left < 300);
       } else el.textContent = '⏱ ' + fmt(used);
@@ -396,6 +405,7 @@
 
   // ---------- submit & review ----------
   function submit(auto) {
+    if (ST && ST.done) return;
     var ns = nsOf(M.parts), miss = ns.filter(function (n) { return !ST.ans[n]; }).length;
     if (auto !== true && miss && !confirm('Còn ' + miss + ' câu chưa chọn đáp án. Vẫn nộp bài?')) return;
     if (PL.au) { PL.au.pause(); PL.on = false; }
@@ -423,6 +433,7 @@
     try { if (window.MPARTWK) MPARTWK.addR(rq, res.at); } catch (e) {}
     $('#player').hidden = true; $('#timer').textContent = '';
     send(res, name, score);
+    if (RM) try { RM.done(res, score); } catch (e) {}
     show(M.parts[0]); window.scrollTo(0, 0);
   }
   function send(res, name, score) {
