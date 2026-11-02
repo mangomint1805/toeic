@@ -357,12 +357,12 @@
     try {
       var set1 = Storage.prototype.setItem, TYP = /^mt\.game\.typing\.(toeic|ielts)$/;
       Storage.prototype.setItem = function (k, v) {
-        var old = null, ls = this === window.localStorage, hit = ls && (k === 'ets26.dict' || k === 'cam.dict' || k === 'mt.game.reflex' || k === 'mt.game.gold' || TYP.test(k));
+        var old = null, ls = this === window.localStorage, hit = ls && (k === 'ets26.dict' || k === 'cam.dict' || k === 'mt.game.reflex' || k === 'mt.game.gold' || k === 'mt.game.pic' || TYP.test(k));
         if (hit) try { old = this.getItem(k); } catch (e) {}
         set1.apply(this, arguments);
         if (!hit) return;
         try {
-          var kind = /dict$/.test(k) ? 'dict' : k === 'mt.game.reflex' ? 'px' : k === 'mt.game.gold' ? 'gold' : 'gotu', inc = 0;
+          var kind = /dict$/.test(k) ? 'dict' : k === 'mt.game.reflex' ? 'px' : k === 'mt.game.gold' ? 'gold' : k === 'mt.game.pic' ? 'pic' : 'gotu', inc = 0;
           if (kind === 'dict') inc = 1;
           else { var a = JSON.parse(old || '{}') || {}, b = JSON.parse(v || '{}') || {}; inc = Math.max(0, (b.games || 0) - (a.games || 0)); }
           if (!inc) return;
@@ -419,7 +419,7 @@
     if (SITE === 'toeic') {
       core = ['mini', 'flame', 'Làm đề mini hôm nay', 'mini.html', s.miniToday ? 1 : 0, 1];
       pool = [cardsQ, ['dict', 'pen', 'Chép chính tả 5 câu', 'chinh-ta.html', A.dict || 0, 5], ['px', 'bolt', 'Chơi 1 lượt Phản xạ Part 2', 'phan-xa.html', A.px || 0, 1],
-        ['gotu', 'game', 'Chơi 1 ván Gõ từ rơi', 'go-tu.html', A.gotu || 0, 1], ['gold', 'game', 'Chơi 1 ván Đào vàng (Part 5, 6)', 'dao-vang.html', A.gold || 0, 1], ['part', 'test', 'Nộp 1 bài luyện Part bất kỳ', 'index.html#de-thi', s.subsToday, 1]];
+        ['gotu', 'game', 'Chơi 1 ván Gõ từ rơi', 'go-tu.html', A.gotu || 0, 1], ['gold', 'game', 'Chơi 1 ván Đào vàng (Part 5, 6)', 'dao-vang.html', A.gold || 0, 1], ['pic', 'game', 'Chơi 1 ván Nghe chọn tranh', 'nghe-tranh.html', A.pic || 0, 1], ['part', 'test', 'Nộp 1 bài luyện Part bất kỳ', 'index.html#de-thi', s.subsToday, 1]];
       var eDue = 0; try { eDue = window.MERR ? window.MERR.due() : 0; } catch (e) {}
       if (eDue + (A.err || 0) > 0) pool.push(['err', 'test', 'Làm lại câu sai đến hạn trong Sổ lỗi sai', 'so-loi.html', A.err || 0, Math.min(5, eDue + (A.err || 0))]);
     } else {
@@ -1502,7 +1502,7 @@
   var ROOT = mm[1], HREF = ROOT + 'cap-nhat.html', KEY = 'mt.seenUpdate', P = location.pathname;
   if ((cs && cs.getAttribute('data-site') === 'summary') || location.href.indexOf(ROOT) !== 0) return;
   var NEWS = /\/cap-nhat\.html$/.test(P);
-  var QUIET = !!window.MEXAM || document.documentElement.hasAttribute('data-exam') || /\/(test\.html|test-\d+\.html|ws\.html|mini\.html|xep-lop\.html|chinh-ta\.html|go-tu\.html|phan-xa\.html|dao-vang\.html)$/.test(P);
+  var QUIET = !!window.MEXAM || document.documentElement.hasAttribute('data-exam') || /\/(test\.html|test-\d+\.html|ws\.html|mini\.html|xep-lop\.html|chinh-ta\.html|go-tu\.html|phan-xa\.html|dao-vang\.html|nghe-tranh\.html)$/.test(P);
   function g(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function s(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -1707,7 +1707,7 @@
     var SDK = 'https://www.gstatic.com/firebasejs/10.12.2/', DBURL = 'https://minto-english-default-rtdb.asia-southeast1.firebasedatabase.app';
     var CFG = { apiKey: 'AIzaSyA7LEweMPy4tSjjR_An_KZaGXSzGI2nQv4', authDomain: 'minto-english.firebaseapp.com', databaseURL: DBURL, projectId: 'minto-english', messagingSenderId: '160119750089', appId: '1:160119750089:web:aac59cf8b1f577c035bc18' };
     var FRESH = 180000, STALE = 900000, PATH = location.pathname;
-    var EXAM = !!window.MEXAM || document.documentElement.hasAttribute('data-exam') || /\/(test|test-\d+|mini|xep-lop|ws|chinh-ta|go-tu|phan-xa|dao-vang)\.html$/.test(PATH);
+    var EXAM = !!window.MEXAM || document.documentElement.hasAttribute('data-exam') || /\/(test|test-\d+|mini|xep-lop|ws|chinh-ta|go-tu|phan-xa|dao-vang|nghe-tranh)\.html$/.test(PATH);
     var base = (PATH.split('/').pop() || '').replace(/\.html$/, '');
     var KIND = EXAM ? 'test' : (!base || base === 'index') ? 'home' : /^summary/.test(SITE) ? 'lesson' : (base.toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 20) || 'page');
     var TEACHER = false;
