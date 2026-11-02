@@ -7,7 +7,9 @@ window.MT_UPDATES = [
       'Chữ màu cam, chữ phụ màu xám và nút bấm ở giao diện Xoài, Hành baro, Thiên thần được làm đậm hơn một chút, nhìn rõ hơn trên điện thoại, nhất là khi ra ngoài trời sáng.',
       'Thanh menu dưới cùng có chữ to hơn một chút, dễ đọc tên từng mục hơn.',
       'Flashcard: hai thẻ Ôn tập / Danh sách đọc đúng cho bạn dùng trình đọc màn hình.',
-      'Đào vàng: chữ nhỏ trên nút chế độ đang chọn rõ hơn.'
+      'Đào vàng: chữ nhỏ trên nút chế độ đang chọn rõ hơn.',
+      'Nút chính ở giao diện Hành baro và Thiên thần giữ nguyên kiểu bóng và màu, chỉ đậm hơn để chữ trắng đọc rõ.',
+      'Chữ "TOEIC" cạnh logo to hơn, dễ đọc trên điện thoại.'
     ]
   },
   {
