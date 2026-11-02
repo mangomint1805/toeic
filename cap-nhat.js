@@ -2,6 +2,16 @@
 window.MT_UPDATES = [
   {
     id: '2026-11-02b', date: '02/11/2026',
+    title: 'Game mới: Nghe chọn tranh',
+    items: [
+      'Trang chủ có game 🎧 Nghe chọn tranh: nghe một câu tiếng Anh ngắn rồi chọn 1 trong 4 tranh. Rất hợp cho bạn mới học, là bước khởi động trước khi làm Part 1.',
+      '3 cấp: Cấp 1 từ và cụm từ, Cấp 2 câu ngắn, Cấp 3 câu giống Part 1 với các tranh gần giống nhau (đang cầm hay đang đội mũ, cửa đang mở hay đã mở sẵn…).',
+      'Mỗi ván 10 câu, có nút 🔊 Nghe lại và 🐢 Nghe chậm. Chọn xong sẽ thấy câu tiếng Anh kèm nghĩa tiếng Việt. Đúng liên tiếp được nhiều vàng hơn, đúng 8–10 câu được sao.',
+      'Câu nghe sai được hẹn ôn lại sau 1, 3, 7 ngày: bấm "Ôn câu sai" trong game để luyện lại.'
+    ]
+  },
+  {
+    id: '2026-11-02b', date: '02/11/2026',
     title: 'Phòng thi chung: cả lớp thi cùng lúc',
     items: [
       'Thầy có thể mở một phòng thi trên lớp: bạn quét mã QR hoặc mở link thầy gửi, nhập tên rồi chờ trong phòng. Thầy bấm Bắt đầu là cả lớp vào đề cùng một lúc.',

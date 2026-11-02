@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>try{var d=document.documentElement,k=JSON.parse(localStorage.getItem('mt.skin')||'""');if(k==='scifi')d.setAttribute('data-theme','dark');if(k)d.setAttribute('data-skin',k)}catch(e){}</script>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#a8691a">
+<link rel="apple-touch-icon" href="icons/apple-180.png?v=3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta property="og:site_name" content="Minto English">
+<meta property="og:title" content="Minto English · Nghe chọn tranh">
+<meta property="og:image" content="https://mangomint1805.github.io/toeic/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="icons/fav-64.png?v=3">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Nghe chọn tranh · TOEIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--panel2:#f2efe8;--brand:#a8691a;--brand-soft:#f2e2c4;--brand-ink:#6b4410;--ok:#1f8f6c;--ok-soft:#e1f4ec;--bad:#c14636;--bad-soft:#fbe6e2}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 50px}
+header{padding:26px 0 8px}
+.mback{font-size:14px;font-weight:700;color:var(--brand-ink);text-decoration:none}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:clamp(28px,6vw,40px);margin:10px 0 4px;line-height:1.1}
+header p{margin:0;color:var(--dim)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.lbl{font-size:13px;font-weight:700;color:var(--dim);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font:inherit;font-weight:600;font-size:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip small{font-weight:500;opacity:.8}
+.btn{font:inherit;font-weight:700;font-size:16px;border:0;background:var(--brand);color:#fff;border-radius:12px;padding:12px 20px;cursor:pointer}
+.btn.alt{background:var(--card);color:var(--brand-ink);border:1.5px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.hint{font-size:13px;color:var(--dim)}
+.best{display:flex;gap:10px;margin-top:12px}
+.best div{flex:1;background:var(--panel2);border-radius:12px;padding:8px 12px}.best b{display:block;font:600 24px/1.1 Fraunces,Georgia,serif;color:var(--brand-ink)}.best span{font-size:12.5px;color:var(--dim)}
+/* nghe chọn tranh */
+.lvs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lvb{font:inherit;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:14px;padding:10px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:44px}
+.lvb b{font-size:16px}.lvb span{font-size:12.5px;color:var(--dim);text-align:center;line-height:1.3}.lvb .st{font-style:normal;color:#d99a00;letter-spacing:2px}
+.lvb[aria-pressed=true]{border-color:var(--brand);background:var(--brand-soft)}
+.hud{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-weight:700;font-size:15px;margin:10px 0 8px}
+.hud .pill{background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;display:inline-flex;align-items:center;gap:6px}
+.hud .gp{margin-left:auto}.hud .gold{font:600 20px/1 Fraunces,Georgia,serif;color:#a06a00}
+.bar{height:6px;background:var(--panel2);border-radius:99px;overflow:hidden;margin:0 0 10px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#f6c445,#e0912b);width:0;transition:width .3s}
+.stage{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:14px;overflow:hidden}
+.lis{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.btn.big{font-size:17px;padding:12px 22px}.btn.sm{font-size:14px;padding:8px 14px}
+.ask{text-align:center;color:var(--dim);font-size:14px;margin:10px 0 8px}
+.pics{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:560px;margin:0 auto}
+.pic{position:relative;padding:0;border:2.5px solid var(--line);border-radius:14px;background:#fff;cursor:pointer;overflow:hidden;line-height:0;transition:transform .1s}
+.pic svg{display:block;width:100%;height:auto;aspect-ratio:4/3}
+.pic:hover:not(:disabled){border-color:var(--brand)}.pic:active:not(:disabled){transform:scale(.98)}
+.pic .L{position:absolute;left:6px;top:6px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.92);border:1.5px solid var(--line);font:700 13px/23px 'IBM Plex Sans',sans-serif;text-align:center;color:var(--ink)}
+.pic.right{border-color:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}.pic.right .L{background:var(--ok);color:#fff;border-color:var(--ok)}
+.pic.wrong{border-color:var(--bad);box-shadow:0 0 0 3px var(--bad-soft)}.pic.wrong .L{background:var(--bad);color:#fff;border-color:var(--bad)}
+.pic.dim{opacity:.45}.pic:disabled{cursor:default}
+.fb{margin-top:12px;border-radius:12px;padding:12px 14px;font-size:15px;border:1.5px solid}
+.fb.ok{background:var(--ok-soft);border-color:#a9dcc6}.fb.no{background:var(--bad-soft);border-color:#f0c3ba}
+.fb .v{font-weight:700;margin-bottom:6px}.fb .en{display:flex;gap:8px;align-items:center;font-size:18px;font-weight:600}.fb .vi{color:var(--dim);margin:2px 0 0 52px}
+.fb .tip{margin-top:8px;background:rgba(255,255,255,.7);border-radius:10px;padding:8px 10px;font-size:14px}
+.fb .row{justify-content:flex-end;margin-top:10px}
+.say{flex:none;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);font-size:18px;cursor:pointer}
+.coin{position:absolute;font-weight:800;color:#a06a00;font-size:18px;pointer-events:none;animation:coin 1s ease-out forwards;z-index:2}
+@keyframes coin{0%{opacity:0;transform:translateY(10px)}20%{opacity:1}100%{opacity:0;transform:translateY(-60px)}}
+.flame.hot{animation:pulse .8s ease-in-out infinite alternate;display:inline-block}@keyframes pulse{to{transform:scale(1.18)}}
+@media (prefers-reduced-motion:reduce){.coin,.flame.hot{animation:none!important}.coin{display:none}}
+.res{text-align:center}.res .stars{font-size:40px;color:#d99a00;letter-spacing:4px;min-height:10px}.res .sc{font:600 54px/1 Fraunces,Georgia,serif;color:#a06a00}.res .row{justify-content:center;margin-top:16px}
+.wl{text-align:left;margin-top:12px;background:var(--panel2);border-radius:12px;padding:10px 12px;font-size:14.5px}.wi{display:flex;gap:10px;align-items:center;margin-top:8px}
+.rules{margin:12px 0 0;padding-left:20px;font-size:14.5px}.rules li{margin:4px 0}
+@media (max-width:420px){.pics{gap:7px}.stage{padding:10px}.fb .vi{margin-left:0}}
+</style>
+</head>
+<body data-nav="game">
+<div class="wrap">
+  <header>
+    <a class="mback" href="./">← Trang chủ</a>
+    <h1>🎧 Nghe chọn tranh</h1>
+    <p>Nghe một câu tiếng Anh ngắn rồi chọn tranh đúng. Bước khởi động cho Part 1 — dành cho bạn mới học!</p>
+  </header>
+  <div id="main"></div>
+</div>
+<script src="config.js"></script>
+<script src="data/nghe-tranh.js?v=1"></script>
+<script src="assets/pic-art.js?v=1"></script>
+<script src="assets/game-pic.js?v=1"></script>
+<script src="assets/ui.js?v=14"></script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
+</body>
+</html>
