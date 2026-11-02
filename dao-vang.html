@@ -30,7 +30,7 @@ header p{margin:0;color:var(--dim)}
 .lbl{font-size:13px;font-weight:700;color:var(--dim);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.06em}
 .chip{font:inherit;font-weight:600;font-size:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
 .chip[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
-.chip small{font-weight:500;opacity:.8}
+.chip[aria-pressed=true] small{opacity:1}.chip small{font-weight:500;opacity:.8}
 .btn{font:inherit;font-weight:700;font-size:16px;border:0;background:var(--brand);color:#fff;border-radius:12px;padding:12px 20px;cursor:pointer}
 .btn.alt{background:var(--card);color:var(--brand-ink);border:1.5px solid var(--line)}
 .btn:disabled{opacity:.5;cursor:default}
@@ -82,7 +82,7 @@ header p{margin:0;color:var(--dim)}
 </div>
 <script src="config.js"></script>
 <script src="assets/game-gold.js?v=4"></script>
-<script src="assets/ui.js?v=15"></script>
+<script src="assets/ui.js?v=16"></script>
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
 </body>
 </html>

@@ -71,8 +71,8 @@ td .w{font-weight:700;color:var(--brand-ink)}
     <p>Những từ bạn bấm <b>☆ Lưu flashcard</b> khi tra từ trong bài. Bộ thẻ dùng chung cho cả web TOEIC và IELTS, lưu trên máy này.</p>
   </header>
   <div class="tabs" role="tablist">
-    <button type="button" data-v="learn" aria-selected="true">Ôn tập</button>
-    <button type="button" data-v="list" aria-selected="false">Danh sách</button>
+    <button type="button" role="tab" data-v="learn" aria-selected="true">Ôn tập</button>
+    <button type="button" role="tab" data-v="list" aria-selected="false">Danh sách</button>
   </div>
   <div id="main"></div>
 </div>
@@ -149,6 +149,6 @@ td .w{font-weight:700;color:var(--brand-ink)}
 })();
 </script>
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
-<script src="assets/ui.js?v=15"></script>
+<script src="assets/ui.js?v=16"></script>
 </body>
 </html>
