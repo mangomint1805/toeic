@@ -1,7 +1,7 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
-    id: '2026-11-02b', date: '02/11/2026',
+    id: '2026-11-02c', date: '02/11/2026',
     title: 'Game mới: Nghe chọn tranh',
     items: [
       'Trang chủ có game 🎧 Nghe chọn tranh: nghe một câu tiếng Anh ngắn rồi chọn 1 trong 4 tranh. Rất hợp cho bạn mới học, là bước khởi động trước khi làm Part 1.',
