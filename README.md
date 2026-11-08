@@ -1,6 +1,6 @@
 # ETS 2026 · Luyện đề TOEIC
 
-Trang luyện đề TOEIC Listening & Reading tự chấm cho học viên: 10 đề ETS 2026 và 10 đề ETS 2024 (mỗi đề 200 câu), cùng 10 đề Bộ xanh cam (1000 câu) vol 2 (`t=21`–`30`: Test 1–6 mới có Reading vì chưa có audio, Test 7–10 đủ 200 câu).
+Trang luyện đề TOEIC Listening & Reading tự chấm cho học viên: 10 đề ETS 2026 và 10 đề ETS 2024 (mỗi đề 200 câu), cùng 10 đề TOEIC 1000 Listening/Reading (`t=21`–`30`: Test 1–6 mới có Reading vì chưa có audio, Test 7–10 đủ 200 câu).
 
 **Link cho học viên:** https://mangomint1805.github.io/toeic/
 
@@ -19,5 +19,5 @@ Trang luyện đề TOEIC Listening & Reading tự chấm cho học viên: 10 đ
 ## Cấu trúc
 - `index.html` — trang chủ chọn đề
 - `test.html?t=N` — trang làm bài (một trang dùng chung cho mọi đề)
-- `data/tN.js` — nội dung đề N (1–10 ETS 2026, 11–20 ETS 2024, 21–30 Bộ xanh cam vol 2; đề chưa có audio để `lc: null`, trang làm bài tự ẩn Listening)
+- `data/tN.js` — nội dung đề N (1–10 ETS 2026, 11–20 ETS 2024, 21–30 TOEIC 1000 Listening/Reading; đề chưa có audio để `lc: null`, trang làm bài tự ẩn Listening)
 - `audio/tN/`, `img/tN/` — audio và hình của đề N

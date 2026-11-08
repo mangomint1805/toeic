@@ -1,10 +1,19 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
-    id: '2026-11-08', date: '08/11/2026',
-    title: 'Bộ đề mới: Xanh cam (1000 câu) vol 2',
+    id: '2026-11-08b', date: '08/11/2026',
+    title: 'TOEIC 1000 Listening/Reading: Test 7–10 đủ 200 câu',
     items: [
-      'Trang chủ có thêm mục "Bộ xanh cam (1000 câu) vol 2" với 10 đề mới.',
+      'Test 7, 8, 9, 10 của bộ TOEIC 1000 Listening/Reading đã có đủ cả Listening (Part 1–4, có audio từng câu, tranh và bảng biểu) lẫn Reading (Part 5–7).',
+      'Mỗi câu đều có giải thích tiếng Việt; bài nghe có lời thoại kèm bản dịch, bài đọc có bản dịch đầy đủ để bạn tự ôn lại chỗ sai.',
+      'Làm full đề 2 tiếng hoặc luyện riêng Listening, Reading hay từng Part, chấm điểm và quy đổi điểm ngay. Test 1–6 vẫn chỉ có Reading vì chưa có audio.'
+    ]
+  },
+  {
+    id: '2026-11-08', date: '08/11/2026',
+    title: 'Bộ đề mới: TOEIC 1000 Listening/Reading',
+    items: [
+      'Trang chủ có thêm mục "TOEIC 1000 Listening/Reading" với 10 đề mới.',
       'Test 1 đến Test 6: đã có đủ phần Reading (Part 5, 6, 7 – 100 câu mỗi đề), có dịch bài đọc và giải thích tiếng Việt từng câu. Phần Listening của 6 đề này chưa có audio nên tạm thời chưa luyện được.',
       'Làm thử Reading 75 phút hoặc luyện riêng từng Part, chấm điểm ngay và quy đổi điểm Reading ước tính.'
     ]

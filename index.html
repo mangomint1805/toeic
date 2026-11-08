@@ -126,7 +126,7 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
   <ul class="tests" id="tests"></ul>
   <div class="sec" id="de-thi-24"><h2>ETS 2024 · 10 đề thi thử</h2><span>Bộ đề cũ hơn — thêm 2000 câu để luyện</span></div>
   <ul class="tests" id="tests24"></ul>
-  <div class="sec" id="de-thi-xc"><h2>Bộ xanh cam (1000 câu) vol 2 · 10 đề</h2><span>Test 7–10 đủ 200 câu · Test 1–6 hiện có Reading (Listening chưa có audio)</span></div>
+  <div class="sec" id="de-thi-xc"><h2>TOEIC 1000 Listening/Reading · 10 đề</h2><span>Test 7–10 đủ 200 câu · Test 1–6 hiện có Reading (Listening chưa có audio)</span></div>
   <ul class="tests" id="testsXC"></ul>
 
   <div class="sec"><h2>Công cụ ôn tập</h2></div>
@@ -184,7 +184,7 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
   // bài làm dở
   var MN={full:'Full test',lc:'Listening',rc:'Reading'}, cur=null;
   for(var t=1;t<=30;t++) ['full','lc','rc','p1','p2','p3','p4','p5','p6','p7'].forEach(function(m){ var s=get('ets26.t'+t+'.'+m); if(s&&!s.done&&s.ans){ var n=Object.keys(s.ans).length; if(n&&(!cur||s.t0>cur.t0)) cur={t:t,m:m,n:n,t0:s.t0}; } });
-  if(cur) document.getElementById('resume').innerHTML='<a class="resume" href="test.html?t='+cur.t+'&m='+cur.m+'">'+I('play')+'<span><b>Làm tiếp: '+(cur.t>20?'Xanh cam vol 2 · Test '+(cur.t-20):cur.t>10?'ETS 2024 · Test '+(cur.t-10):'Test '+cur.t)+' · '+(MN[cur.m]||'Part '+cur.m.slice(1))+'</b><small>Đã chọn '+cur.n+' câu</small></span><span class="go">'+I('arrow')+'</span></a>';
+  if(cur) document.getElementById('resume').innerHTML='<a class="resume" href="test.html?t='+cur.t+'&m='+cur.m+'">'+I('play')+'<span><b>Làm tiếp: '+(cur.t>20?'TOEIC 1000 Listening/Reading · Test '+(cur.t-20):cur.t>10?'ETS 2024 · Test '+(cur.t-10):'Test '+cur.t)+' · '+(MN[cur.m]||'Part '+cur.m.slice(1))+'</b><small>Đã chọn '+cur.n+' câu</small></span><span class="go">'+I('arrow')+'</span></a>';
   // tên
   var me=document.getElementById('me');
   function drawMe(edit){
@@ -202,7 +202,7 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
     var done={}; mine.forEach(function(r){ Object.keys(r.parts||{}).forEach(function(p){ done[p]=1; }); });
     var np=Object.keys(done).length, frac=full?full/990:np/(k>20&&k<27?3:7);
     var badge=full?'<span class="badge ok">Cao nhất '+full+'</span>':np?'<span class="badge mid">Đã làm '+np+'/7 part</span>':'<span class="badge">Chưa làm</span>';
-    var li='<li><a class="test" href="test.html?t='+k+'"><span class="ring" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#f0eadf" stroke-width="5"/><circle cx="30" cy="30" r="26" fill="none" stroke="'+(full?'#1f8f6c':'#a8691a')+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+(C*frac).toFixed(1)+' '+C.toFixed(1)+'"/></svg><span class="n"><small>TEST</small><b>'+(k>20?k-20:k>10?k-10:k)+'</b></span></span><span class="tinfo"><b>'+(k>20?'Xanh cam vol 2 · Test '+(k-20):k>10?'ETS 2024 · Test '+(k-10):'ETS 2026 · Test '+k)+'</b><span>'+(k>20&&k<27?'100 câu Reading · Part 5–7':'200 câu · 7 part')+'</span>'+badge+'</span></a></li>';
+    var li='<li><a class="test" href="test.html?t='+k+'"><span class="ring" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#f0eadf" stroke-width="5"/><circle cx="30" cy="30" r="26" fill="none" stroke="'+(full?'#1f8f6c':'#a8691a')+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+(C*frac).toFixed(1)+' '+C.toFixed(1)+'"/></svg><span class="n"><small>TEST</small><b>'+(k>20?k-20:k>10?k-10:k)+'</b></span></span><span class="tinfo"><b>'+(k>20?'TOEIC 1000 Listening/Reading · Test '+(k-20):k>10?'ETS 2024 · Test '+(k-10):'ETS 2026 · Test '+k)+'</b><span>'+(k>20&&k<27?'100 câu Reading · Part 5–7':'200 câu · 7 part')+'</span>'+badge+'</span></a></li>';
     if(k>20) hxc+=li; else if(k>10) h24+=li; else h+=li;
   }
   document.getElementById('tests').innerHTML=h; document.getElementById('tests24').innerHTML=h24; document.getElementById('testsXC').innerHTML=hxc;

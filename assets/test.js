@@ -3,7 +3,7 @@
   'use strict';
   var Q = new URLSearchParams(location.search);
   var T = Math.max(1, Math.min(30, parseInt(Q.get('t'), 10) || 1));
-  var NAME = T > 20 ? 'Xanh cam vol 2 · Test ' + (T - 20) : T > 10 ? 'ETS 2024 · Test ' + (T - 10) : 'ETS 2026 · Test ' + T;
+  var NAME = T > 20 ? 'TOEIC 1000 Listening/Reading · Test ' + (T - 20) : T > 10 ? 'ETS 2024 · Test ' + (T - 10) : 'ETS 2026 · Test ' + T;
   var NOLC = false; // đề chưa có audio: chỉ có Reading (Part 5–7)
   var MODE = Q.get('m') || '';
   var L4 = ['A', 'B', 'C', 'D'];
