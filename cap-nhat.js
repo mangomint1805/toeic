@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-08c', date: '08/11/2026',
+    title: 'Mục mới: Starter TOEIC (bài tập theo sách, 12 unit)',
+    items: [
+      'Trang chủ có thêm mục "Starter TOEIC" gồm 12 unit cho bạn mới học: mỗi unit có bài ngữ pháp kiểu Part 5, điền đoạn văn Part 6 và đọc hiểu Part 7 (khoảng 52–53 câu).',
+      'Làm cả unit hoặc luyện riêng từng Part, không giới hạn giờ. Nộp bài xong xem ngay đáp án và giải thích tiếng Việt từng câu; câu sai tự vào Sổ lỗi sai để làm lại.',
+      'Mục này chỉ dành cho học viên trong lớp: đăng nhập bằng tài khoản Google bạn đã dùng trên web. Nếu báo "chưa có trong danh sách lớp", nhắn thầy để thầy ghép tài khoản nhé.'
+    ]
+  },
+  {
     id: '2026-11-08b', date: '08/11/2026',
     title: 'TOEIC 1000 Listening/Reading: Test 7–10 đủ 200 câu',
     items: [

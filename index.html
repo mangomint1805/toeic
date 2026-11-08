@@ -129,6 +129,10 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
   <div class="sec" id="de-thi-xc"><h2>TOEIC 1000 Listening/Reading · 10 đề</h2><span>Test 7–10 đủ 200 câu · Test 1–6 hiện có Reading (Listening chưa có audio)</span></div>
   <ul class="tests" id="testsXC"></ul>
 
+  <div class="sec" id="starter"><h2>Starter TOEIC · bài tập theo sách</h2><span>12 unit · ngữ pháp Part 5, điền đoạn văn Part 6, đọc hiểu Part 7 · dành cho học viên trong lớp (đăng nhập Google)</span></div>
+  <ul class="tests" id="testsST"></ul>
+  <script src="assets/starter-list.js?v=1"></script>
+
   <div class="sec"><h2>Công cụ ôn tập</h2></div>
   <div class="tools">
     <a class="tool" href="mini.html"><span class="ico" data-ic="flame"></span><b>Đề mini mỗi ngày</b><span>20 câu · 10 phút · giữ chuỗi ngày học</span></a>
@@ -179,11 +183,11 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
     '<div class="stat"><span class="lab">'+I('flame')+'Chuỗi ngày học</span><b>'+(window.MSTATS?MSTATS().streak:streak())+'</b><small>ngày liên tục</small></div>'+
     '<div class="stat"><span class="lab">'+I('trophy')+'Điểm cao nhất</span><b>'+(best||'–')+'</b><small>'+(best?'Full test, thang 990':'chưa làm Full test')+'</small></div>'+
     '<div class="stat"><span class="lab">'+I('check')+'Bài đã nộp</span><b>'+hist.length+'</b><small>'+qs+' câu đã làm</small></div>'+
-    '<div class="stat"><span class="lab">'+I('clock')+'Lần gần nhất</span><b style="font-size:20px">'+(last?(last.test>20?'XC2 · T'+(last.test-20):last.test>10?'ETS24 · T'+(last.test-10):'Test '+last.test):'–')+'</b><small>'+(last?esc(last.name)+' · '+last.got+'/'+last.total:'chưa có')+'</small></div>';
+    '<div class="stat"><span class="lab">'+I('clock')+'Lần gần nhất</span><b style="font-size:20px">'+(last?(last.test>100?'Starter · U'+(last.test-100):last.test>20?'XC2 · T'+(last.test-20):last.test>10?'ETS24 · T'+(last.test-10):'Test '+last.test):'–')+'</b><small>'+(last?esc(last.name)+' · '+last.got+'/'+last.total:'chưa có')+'</small></div>';
   if(window.MSTART) MSTART(document.getElementById('stats'));
   // bài làm dở
   var MN={full:'Full test',lc:'Listening',rc:'Reading'}, cur=null;
-  for(var t=1;t<=30;t++) ['full','lc','rc','p1','p2','p3','p4','p5','p6','p7'].forEach(function(m){ var s=get('ets26.t'+t+'.'+m); if(s&&!s.done&&s.ans){ var n=Object.keys(s.ans).length; if(n&&(!cur||s.t0>cur.t0)) cur={t:t,m:m,n:n,t0:s.t0}; } });
+  for(var t=1;t<=112;t++) if(t<=30||t>100) ['full','lc','rc','p1','p2','p3','p4','p5','p6','p7'].forEach(function(m){ var s=get('ets26.t'+t+'.'+m); if(s&&!s.done&&s.ans){ var n=Object.keys(s.ans).length; if(n&&(!cur||s.t0>cur.t0)) cur={t:t,m:m,n:n,t0:s.t0}; } });
   if(cur) document.getElementById('resume').innerHTML='<a class="resume" href="test.html?t='+cur.t+'&m='+cur.m+'">'+I('play')+'<span><b>Làm tiếp: '+(cur.t>20?'TOEIC 1000 Listening/Reading · Test '+(cur.t-20):cur.t>10?'ETS 2024 · Test '+(cur.t-10):'Test '+cur.t)+' · '+(MN[cur.m]||'Part '+cur.m.slice(1))+'</b><small>Đã chọn '+cur.n+' câu</small></span><span class="go">'+I('arrow')+'</span></a>';
   // tên
   var me=document.getElementById('me');

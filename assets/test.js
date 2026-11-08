@@ -2,8 +2,11 @@
 (function () {
   'use strict';
   var Q = new URLSearchParams(location.search);
-  var T = Math.max(1, Math.min(30, parseInt(Q.get('t'), 10) || 1));
-  var NAME = T > 20 ? 'TOEIC 1000 Listening/Reading · Test ' + (T - 20) : T > 10 ? 'ETS 2024 · Test ' + (T - 10) : 'ETS 2026 · Test ' + T;
+  var T = parseInt(Q.get('t'), 10) || 1;
+  // Starter TOEIC: t=101…112 = Unit 1…12, đề lấy từ Firestore (assets/starter.js), không có file data/
+  var SU = T >= 101 && T <= 112 ? T - 100 : 0;
+  if (!SU) T = Math.max(1, Math.min(30, T));
+  var NAME = SU ? 'Starter TOEIC · Unit ' + SU : T > 20 ? 'TOEIC 1000 Listening/Reading · Test ' + (T - 20) : T > 10 ? 'ETS 2024 · Test ' + (T - 10) : 'ETS 2026 · Test ' + T;
   var NOLC = false; // đề chưa có audio: chỉ có Reading (Part 5–7)
   var MODE = Q.get('m') || '';
   var L4 = ['A', 'B', 'C', 'D'];
@@ -88,8 +91,16 @@
   document.title = NAME;
   $('#ttl').firstChild.nodeValue = NAME;
   var sc = document.createElement('script');
-  sc.src = 'data/t' + T + '.js';
-  sc.onload = function () { D = window.ETSDATA && window.ETSDATA[T]; if (!D) return fail(); index(); if (MODE === 'sai') setupSai(); if (ROOM != null) return roomBoot(); route(); };
+  sc.src = SU ? 'assets/starter.js?v=1' : 'data/t' + T + '.js';
+  sc.onload = function () {
+    if (SU) {
+      $('#main').innerHTML = '<div class="box"><p class="hint" style="margin:0">Đang tải bài Starter TOEIC · Unit ' + SU + '…</p></div>';
+      return window.MSTARTER.load(SU).then(function (d) {
+        D = d; index(); MODES.rc = { name: 'Cả unit', parts: [5, 6, 7], mins: 0, exam: false };
+        if (MODE === 'sai') setupSai(); route();
+      }, function (e) { window.MSTARTER.fail(e, $('#main'), SU); });
+    }
+    D = window.ETSDATA && window.ETSDATA[T]; if (!D) return fail(); index(); if (MODE === 'sai') setupSai(); if (ROOM != null) return roomBoot(); route(); };
   sc.onerror = fail;
   document.head.appendChild(sc);
   function fail() { $('#main').innerHTML = '<div class="box"><h3>Test ' + T + ' chưa có trên web.</h3><p><a href="./">← Về trang chủ</a></p></div>'; }
@@ -125,9 +136,11 @@
   function startScreen() {
     var hist = (get('ets26.hist') || []).filter(function (h) { return h.test === T; });
     var resume = Object.keys(MODES).filter(function (m) { var s = get('ets26.t' + T + '.' + m); return s && !s.done && s.ans && Object.keys(s.ans).length; });
-    var h = '<div class="start"><h2>' + NAME + '</h2><p class="lead">' + (NOLC ? 'Reading 100 câu (75 phút). Listening của đề này <b>chưa có audio</b> nên tạm chỉ luyện Reading.' : '200 câu · Listening 100 câu (~46 phút) · Reading 100 câu (75 phút).') + ' Chọn cách làm bài:</p>';
+    var h = '<div class="start"><h2>' + NAME + (SU && D.title ? '<small style="display:block;font-size:16px;font-weight:500">' + esc(D.title) + '</small>' : '') + '</h2><p class="lead">' + (SU ? 'Bài tập trong sách Starter TOEIC: ngữ pháp kiểu Part 5, điền đoạn văn Part 6 và đọc hiểu Part 7 · ' + ORDER.length + ' câu, không giới hạn giờ.' : NOLC ? 'Reading 100 câu (75 phút). Listening của đề này <b>chưa có audio</b> nên tạm chỉ luyện Reading.' : '200 câu · Listening 100 câu (~46 phút) · Reading 100 câu (75 phút).') + ' Chọn cách làm bài:</p>';
     if (resume.length) h += '<div class="resume">' + window.MICON('play') + ' Bạn đang làm dở: ' + resume.map(function (m) { var n = Object.keys(get('ets26.t' + T + '.' + m).ans).length; return '<a href="?t=' + T + '&m=' + m + '"><b>' + MODES[m].name + '</b> (' + n + ' câu đã chọn)</a>'; }).join(' · ') + '</div>';
-    if (NOLC) h += '<div class="modes"><button class="mode" data-m="rc"><span class="mico">' + window.MICON('book') + '</span><b>Chỉ Reading</b><span>Part 5–7 · 100 câu · đếm ngược 75 phút</span></button>' +
+    if (SU) h += '<div class="modes"><button class="mode" data-m="rc"><span class="mico">' + window.MICON('book') + '</span><b>Làm cả unit</b><span>Part 5–7 · ' + ORDER.length + ' câu · nộp xong xem đáp án và giải thích</span></button></div>' +
+      '<div class="box"><h3>Luyện từng Part</h3><p class="hint" style="margin:0">Không giới hạn giờ.</p><div class="parts">';
+    else if (NOLC) h += '<div class="modes"><button class="mode" data-m="rc"><span class="mico">' + window.MICON('book') + '</span><b>Chỉ Reading</b><span>Part 5–7 · 100 câu · đếm ngược 75 phút</span></button>' +
       '<button class="mode" disabled style="opacity:.55;cursor:not-allowed"><span class="mico">' + window.MICON('headphones') + '</span><b>Listening</b><span>Chưa có audio – thầy sẽ bổ sung sau</span></button></div>' +
       '<div class="box"><h3>Luyện từng Part</h3><p class="hint" style="margin:0">Không giới hạn giờ.</p><div class="parts">';
     else h += '<div class="modes">' +
@@ -484,7 +497,7 @@
       h += '<div class="rp-body"><div class="rp-total"><small>' + (r.lcS && r.rcS ? 'Tổng điểm ước tính' : (r.lcS ? 'Listening' : 'Reading') + ' ước tính') + '</small><b>' + ((r.lcS || 0) + (r.rcS || 0)) + '</b><span>/ ' + (r.lcS && r.rcS ? 990 : 495) + '</span><em>' + got + '/' + tot + ' câu đúng</em></div><div class="rp-skills">' +
         (r.lcS ? skillRow('Listening', r.lcS, CEFR_L, 'headphones') : '') + (r.rcS ? skillRow('Reading', r.rcS, CEFR_R, 'book') : '') + '<p class="rp-scale">Vạch mốc trên thanh: A2 · B1 · B2 (khung tham chiếu châu Âu)</p></div></div>';
     } else {
-      h += '<div class="rp-body"><div class="rp-total"><small>Kết quả</small><b>' + got + '</b><span>/ ' + tot + '</span><em>' + Math.round(got / tot * 100) + '% câu đúng</em></div><div class="rp-skills"><p class="rp-scale">Làm "Chỉ Listening", "Chỉ Reading" hoặc "Full test" để có điểm quy đổi thang 990.</p></div></div>';
+      h += '<div class="rp-body"><div class="rp-total"><small>Kết quả</small><b>' + got + '</b><span>/ ' + tot + '</span><em>' + Math.round(got / tot * 100) + '% câu đúng</em></div><div class="rp-skills">' + (SU ? '' : '<p class="rp-scale">Làm "Chỉ Listening", "Chỉ Reading" hoặc "Full test" để có điểm quy đổi thang 990.</p>') + '</div></div>';
     }
     h += '<div class="rp-parts">' + Object.keys(r.parts).map(function (p) { var a = r.parts[p], pc = Math.round(a[0] / a[1] * 100); return '<div><span>' + PART_INFO[p][0] + '</span><i><s style="width:' + pc + '%;background:' + (pc >= 80 ? '#1f8f6c' : pc >= 60 ? '#d9a63c' : '#c14636') + '"></s></i><b>' + a[0] + '/' + a[1] + '</b></div>'; }).join('') + '</div>';
     var cm = comments(r), pcAll = got / tot, mood = pcAll >= .9 ? 'love' : pcAll >= .8 ? 'party' : pcAll >= .65 ? 'cool' : pcAll >= .5 ? 'happy' : pcAll >= .35 ? 'think' : 'oops';

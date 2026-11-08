@@ -20,4 +20,5 @@ Trang luyện đề TOEIC Listening & Reading tự chấm cho học viên: 10 đ
 - `index.html` — trang chủ chọn đề
 - `test.html?t=N` — trang làm bài (một trang dùng chung cho mọi đề)
 - `data/tN.js` — nội dung đề N (1–10 ETS 2026, 11–20 ETS 2024, 21–30 TOEIC 1000 Listening/Reading; đề chưa có audio để `lc: null`, trang làm bài tự ẩn Listening)
+- `test.html?t=101`…`112` — **Starter TOEIC** Unit 1–12 (bài tập sách Starter TOEIC: Part 5/6/7). Đề + đáp án **không** nằm trong repo: thầy tải lên Firestore `starter/u01…u12` ở `/starter-gv.html` (repo trang chủ), chỉ thầy và học viên đã ghép lớp (có `priv/{uid}`) đọc được. `assets/starter.js` lấy dữ liệu, `assets/starter-list.js` vẽ danh sách ở trang chủ.
 - `audio/tN/`, `img/tN/` — audio và hình của đề N
