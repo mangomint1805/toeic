@@ -1,12 +1,21 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-08d', date: '08/11/2026',
+    title: '🔒 Một số bộ đề cần đăng nhập Google mới xem được',
+    items: [
+      'Bộ "TOEIC 1000 Listening/Reading" (10 đề) và "Starter TOEIC" (12 unit) giờ chỉ hiện đề khi bạn đã đăng nhập bằng tài khoản Google. Bấm nút Đăng nhập ở góc trên, đăng nhập xong trang tự tải đề.',
+      'Chưa đăng nhập thì trang chủ và trang làm bài sẽ hiện dòng nhắc "🔒 Đăng nhập bằng Google để xem đề". Các đề ETS 2026, ETS 2024 vẫn làm bình thường không cần đăng nhập.',
+      'Đăng nhập còn giúp lưu bài làm, Sổ lỗi sai và flashcard qua mọi thiết bị. Làm bài, chấm điểm, giải thích và Sổ lỗi sai vẫn y như cũ.'
+    ]
+  },
+  {
     id: '2026-11-08c', date: '08/11/2026',
     title: 'Mục mới: Starter TOEIC (bài tập theo sách, 12 unit)',
     items: [
       'Trang chủ có thêm mục "Starter TOEIC" gồm 12 unit cho bạn mới học: mỗi unit có bài ngữ pháp kiểu Part 5, điền đoạn văn Part 6 và đọc hiểu Part 7 (khoảng 52–53 câu).',
       'Làm cả unit hoặc luyện riêng từng Part, không giới hạn giờ. Nộp bài xong xem ngay đáp án và giải thích tiếng Việt từng câu; câu sai tự vào Sổ lỗi sai để làm lại.',
-      'Mục này chỉ dành cho học viên trong lớp: đăng nhập bằng tài khoản Google bạn đã dùng trên web. Nếu báo "chưa có trong danh sách lớp", nhắn thầy để thầy ghép tài khoản nhé.'
+      'Cần đăng nhập bằng tài khoản Google để xem đề (bấm nút Đăng nhập ở góc trên).'
     ]
   },
   {

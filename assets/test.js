@@ -3,7 +3,7 @@
   'use strict';
   var Q = new URLSearchParams(location.search);
   var T = parseInt(Q.get('t'), 10) || 1;
-  // Starter TOEIC: t=101…112 = Unit 1…12, đề lấy từ Firestore (assets/starter.js), không có file data/
+  // Starter TOEIC: t=101…112 = Unit 1…12, đề lấy từ Firestore (assets/gate.js), không có file data/
   var SU = T >= 101 && T <= 112 ? T - 100 : 0;
   if (!SU) T = Math.max(1, Math.min(30, T));
   var NAME = SU ? 'Starter TOEIC · Unit ' + SU : T > 20 ? 'TOEIC 1000 Listening/Reading · Test ' + (T - 20) : T > 10 ? 'ETS 2024 · Test ' + (T - 10) : 'ETS 2026 · Test ' + T;
@@ -91,14 +91,17 @@
   document.title = NAME;
   $('#ttl').firstChild.nodeValue = NAME;
   var sc = document.createElement('script');
-  sc.src = SU ? 'assets/starter.js?v=1' : 'data/t' + T + '.js';
+  // Đề cần đăng nhập (config.js: MT_GATED) và Starter TOEIC: nội dung lấy từ Firestore (assets/gate.js), không có file data/
+  var GATED = !SU && (window.MT_GATED || []).indexOf(T) >= 0;
+  sc.src = SU || GATED ? 'assets/gate.js?v=1' : 'data/t' + T + '.js';
   sc.onload = function () {
-    if (SU) {
-      $('#main').innerHTML = '<div class="box"><p class="hint" style="margin:0">Đang tải bài Starter TOEIC · Unit ' + SU + '…</p></div>';
-      return window.MSTARTER.load(SU).then(function (d) {
-        D = d; index(); MODES.rc = { name: 'Cả unit', parts: [5, 6, 7], mins: 0, exam: false };
-        if (MODE === 'sai') setupSai(); route();
-      }, function (e) { window.MSTARTER.fail(e, $('#main'), SU); });
+    if (SU || GATED) {
+      $('#main').innerHTML = '<div class="box"><p class="hint" style="margin:0">Đang tải ' + esc(NAME) + '…</p></div>';
+      return (SU ? window.MGATE.loadStarter(SU) : window.MGATE.loadDe(T)).then(function (d) {
+        D = d; index();
+        if (SU) MODES.rc = { name: 'Cả unit', parts: [5, 6, 7], mins: 0, exam: false };
+        if (MODE === 'sai') setupSai(); if (ROOM != null && !SU) return roomBoot(); route();
+      }, function (e) { window.MGATE.fail(e, $('#main'), NAME, SU ? './#starter' : './'); });
     }
     D = window.ETSDATA && window.ETSDATA[T]; if (!D) return fail(); index(); if (MODE === 'sai') setupSai(); if (ROOM != null) return roomBoot(); route(); };
   sc.onerror = fail;

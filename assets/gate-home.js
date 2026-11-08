@@ -1,4 +1,5 @@
-/* Trang chủ: danh sách Starter TOEIC Unit 1–12 (test.html?t=101…112). Đề nằm trong Firestore, không có trong repo. */
+/* Trang chủ: danh sách Starter TOEIC Unit 1–12 (test.html?t=101…112) + dòng nhắc "🔒 Đăng nhập bằng Google để xem đề"
+   ở các mục đề cần đăng nhập (phần tử [data-gate-note]). Đề nằm trong Firestore, không có trong repo. */
 (function () {
   'use strict';
   var U = [
@@ -6,6 +7,11 @@
     ['Phủ định, cấu trúc song song', 'Công việc'], ['So sánh', 'Du lịch'], ['Hoà hợp chủ ngữ – động từ', 'Nghệ thuật'], ['Mệnh đề quan hệ', 'Âm nhạc'],
     ['Tính từ / trạng từ, trật tự từ', 'Thể thao'], ['Đại từ bất định', 'Ăn uống'], ['Câu bị động', 'Khoa học'], ['Liên từ, giới từ', 'Sở thích']
   ];
+  function paintNotes() {
+    var on = false; try { on = !!localStorage.getItem('mt.acc'); } catch (e) {}
+    [].forEach.call(document.querySelectorAll('[data-gate-note]'), function (p) { p.hidden = on; });
+  }
+  paintNotes(); setInterval(paintNotes, 1500); window.addEventListener('storage', paintNotes);
   var box = document.getElementById('testsST'); if (!box) return;
   var hist = []; try { hist = JSON.parse(localStorage.getItem('ets26.hist')) || []; } catch (e) {}
   var C = 2 * Math.PI * 26, h = '';
