@@ -72,7 +72,7 @@ header p{margin:0;color:var(--dim)}
   var main=document.getElementById('main'), tabs=document.getElementById('tabs'), F=0;
   function get(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } }
   function pOf(n){ return n<=6?1:n<=31?2:n<=70?3:n<=100?4:n<=130?5:n<=146?6:7; }
-  function tname(t){ return t>10?'ETS 2024 · Test '+(t-10):'ETS 2026 · Test '+t; }
+  function tname(t){ return t>20?'Xanh cam vol 2 · Test '+(t-20):t>10?'ETS 2024 · Test '+(t-10):'ETS 2026 · Test '+t; }
   var TD=(function(){ var d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); })();
   var TH=['CN','T2','T3','T4','T5','T6','T7'];
   function dayLbl(d){ var x=new Date(d+'T00:00:00'), n=Math.round((x-new Date(TD+'T00:00:00'))/864e5); return n===1?'Ngày mai':TH[x.getDay()]+', '+d.slice(8)+'/'+d.slice(5,7)+(n>1?' · còn '+n+' ngày':''); }
@@ -111,7 +111,7 @@ header p{margin:0;color:var(--dim)}
       h+='<h2 class="sec">🗓️ Chưa đến hạn ('+W.length+' câu)</h2><div class="grp">'+Object.keys(B).sort().map(function(d){
         var T={}; B[d].forEach(function(x){ (T[x.t]=T[x.t]||[]).push(x); });
         return '<div class="pr"><div class="pl">'+dayLbl(d)+'<small>'+B[d].length+' câu</small></div><div class="ns soon">'+Object.keys(T).map(Number).sort(function(a,b){return a-b;}).map(function(t){
-          return T[t].sort(function(a,b){return a.n-b.n;}).map(function(x){ return '<a href="test.html?t='+t+'&m=sai&q='+x.n+'" title="'+tname(t)+' · lần ôn '+(x.s+1)+'/3">'+(t>10?'24-'+(t-10):'T'+t)+'·'+x.n+'<small>'+(x.s+1)+'/3</small></a>'; }).join('');
+          return T[t].sort(function(a,b){return a.n-b.n;}).map(function(x){ return '<a href="test.html?t='+t+'&m=sai&q='+x.n+'" title="'+tname(t)+' · lần ôn '+(x.s+1)+'/3">'+(t>20?'XC-'+(t-20):t>10?'24-'+(t-10):'T'+t)+'·'+x.n+'<small>'+(x.s+1)+'/3</small></a>'; }).join('');
         }).join('')+'</div></div>';
       }).join('')+'</div>';
     }

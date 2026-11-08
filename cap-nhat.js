@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-08', date: '08/11/2026',
+    title: 'Bộ đề mới: Xanh cam (1000 câu) vol 2',
+    items: [
+      'Trang chủ có thêm mục "Bộ xanh cam (1000 câu) vol 2" với 10 đề mới.',
+      'Test 1 đến Test 6: đã có đủ phần Reading (Part 5, 6, 7 – 100 câu mỗi đề), có dịch bài đọc và giải thích tiếng Việt từng câu. Phần Listening của 6 đề này chưa có audio nên tạm thời chưa luyện được.',
+      'Làm thử Reading 75 phút hoặc luyện riêng từng Part, chấm điểm ngay và quy đổi điểm Reading ước tính.'
+    ]
+  },
+  {
     id: '2026-11-03', date: '03/11/2026',
     title: 'Chữ và nút dễ đọc hơn',
     items: [

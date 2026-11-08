@@ -2,8 +2,9 @@
 (function () {
   'use strict';
   var Q = new URLSearchParams(location.search);
-  var T = Math.max(1, Math.min(20, parseInt(Q.get('t'), 10) || 1));
-  var NAME = T > 10 ? 'ETS 2024 · Test ' + (T - 10) : 'ETS 2026 · Test ' + T;
+  var T = Math.max(1, Math.min(30, parseInt(Q.get('t'), 10) || 1));
+  var NAME = T > 20 ? 'Xanh cam vol 2 · Test ' + (T - 20) : T > 10 ? 'ETS 2024 · Test ' + (T - 10) : 'ETS 2026 · Test ' + T;
+  var NOLC = false; // đề chưa có audio: chỉ có Reading (Part 5–7)
   var MODE = Q.get('m') || '';
   var L4 = ['A', 'B', 'C', 'D'];
   var PART_INFO = {
@@ -47,6 +48,7 @@
   var D = null, ITEMS = {}, SETOF = {}, ORDER = [];
   function index() {
     function addQ(q, p, set) { q.p = p; ITEMS[q.n] = q; SETOF[q.n] = set; ORDER.push(q.n); }
+    if (!D.lc) { NOLC = true; D.lc = { p1: [], p2: [], p3: [], p4: [] }; ['full', 'lc', 'p1', 'p2', 'p3', 'p4'].forEach(function (m) { delete MODES[m]; }); }
     D.lc.p1.forEach(function (q) { addQ(q, 1, null); });
     D.lc.p2.forEach(function (q) { addQ(q, 2, null); });
     D.lc.p3.forEach(function (s) { s.qs.forEach(function (q) { addQ(q, 3, s); }); });
@@ -123,14 +125,17 @@
   function startScreen() {
     var hist = (get('ets26.hist') || []).filter(function (h) { return h.test === T; });
     var resume = Object.keys(MODES).filter(function (m) { var s = get('ets26.t' + T + '.' + m); return s && !s.done && s.ans && Object.keys(s.ans).length; });
-    var h = '<div class="start"><h2>' + NAME + '</h2><p class="lead">200 câu · Listening 100 câu (~46 phút) · Reading 100 câu (75 phút). Chọn cách làm bài:</p>';
+    var h = '<div class="start"><h2>' + NAME + '</h2><p class="lead">' + (NOLC ? 'Reading 100 câu (75 phút). Listening của đề này <b>chưa có audio</b> nên tạm chỉ luyện Reading.' : '200 câu · Listening 100 câu (~46 phút) · Reading 100 câu (75 phút).') + ' Chọn cách làm bài:</p>';
     if (resume.length) h += '<div class="resume">' + window.MICON('play') + ' Bạn đang làm dở: ' + resume.map(function (m) { var n = Object.keys(get('ets26.t' + T + '.' + m).ans).length; return '<a href="?t=' + T + '&m=' + m + '"><b>' + MODES[m].name + '</b> (' + n + ' câu đã chọn)</a>'; }).join(' · ') + '</div>';
-    h += '<div class="modes">' +
+    if (NOLC) h += '<div class="modes"><button class="mode" data-m="rc"><span class="mico">' + window.MICON('book') + '</span><b>Chỉ Reading</b><span>Part 5–7 · 100 câu · đếm ngược 75 phút</span></button>' +
+      '<button class="mode" disabled style="opacity:.55;cursor:not-allowed"><span class="mico">' + window.MICON('headphones') + '</span><b>Listening</b><span>Chưa có audio – thầy sẽ bổ sung sau</span></button></div>' +
+      '<div class="box"><h3>Luyện từng Part</h3><p class="hint" style="margin:0">Không giới hạn giờ.</p><div class="parts">';
+    else h += '<div class="modes">' +
       '<button class="mode" data-m="full"><span class="mico">' + window.MICON('target') + '</span><b>Thi thử Full test</b><span>200 câu · 120 phút · audio phát liền như thi thật</span></button>' +
       '<button class="mode" data-m="lc"><span class="mico">' + window.MICON('headphones') + '</span><b>Chỉ Listening</b><span>Part 1–4 · 100 câu · audio phát liền một mạch</span></button>' +
       '<button class="mode" data-m="rc"><span class="mico">' + window.MICON('book') + '</span><b>Chỉ Reading</b><span>Part 5–7 · 100 câu · đếm ngược 75 phút</span></button></div>' +
       '<div class="box"><h3>Luyện từng Part</h3><p class="hint" style="margin:0">Không giới hạn giờ. Part nghe có nút audio riêng từng câu, nghe lại thoải mái.</p><div class="parts">';
-    for (var p = 1; p <= 7; p++) h += '<button data-m="p' + p + '"><b>' + PART_INFO[p][0] + '</b><span>' + PART_INFO[p][1] + '</span></button>';
+    for (var p = NOLC ? 5 : 1; p <= 7; p++) h += '<button data-m="p' + p + '"><b>' + PART_INFO[p][0] + '</b><span>' + PART_INFO[p][1] + '</span></button>';
     h += '</div></div>';
     if (hist.length) {
       h += '<div class="box"><h3>Kết quả đã nộp</h3><table class="hist"><tr><th>Ngày</th><th>Cách làm</th><th>Đúng</th><th>Điểm ước tính</th><th></th></tr>';

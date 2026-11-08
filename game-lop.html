@@ -181,7 +181,7 @@ kbd{font:600 12px 'IBM Plex Sans';background:var(--panel2);border:1px solid var(
   if (S.set) S.part = SETS[S.set].part;
   S.sec = +qs.get('s') || defSec();
 
-  function label(t) { return t <= 10 ? 'ETS 2026 · Test ' + t : 'ETS 2024 · Test ' + (t - 10); }
+  function label(t) { return t <= 10 ? 'ETS 2026 · Test ' + t : t <= 20 ? 'ETS 2024 · Test ' + (t - 10) : 'Xanh cam vol 2 · Test ' + (t - 20); }
   function chipsTests(el, from) {
     el.innerHTML = '';
     for (var i = 0; i < 10; i++) (function (t) {
