@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-09', date: '09/11/2026',
+    title: '📚 Thêm 30 đề mới: YBM Vol 1, 2, 3',
+    items: [
+      'Trang chủ có thêm 3 mục "YBM Vol 1", "YBM Vol 2", "YBM Vol 3", mỗi mục 10 đề đủ 200 câu (Listening có audio từng câu, tranh và bảng biểu; Reading Part 5–7).',
+      'Câu nào cũng có giải thích tiếng Việt, lời bài nghe và bài đọc có bản dịch. Làm theo Full test, từng phần hay từng Part đều được, chấm điểm và Sổ lỗi sai như các đề khác.',
+      'Giống bộ TOEIC 1000, các đề này cần đăng nhập Google mới xem được: bấm nút Đăng nhập ở góc trên rồi mở đề.'
+    ]
+  },
+  {
     id: '2026-11-08d', date: '08/11/2026',
     title: '🔒 Một số bộ đề cần đăng nhập Google mới xem được',
     items: [

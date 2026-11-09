@@ -5,8 +5,8 @@
   var T = parseInt(Q.get('t'), 10) || 1;
   // Starter TOEIC: t=101…112 = Unit 1…12, đề lấy từ Firestore (assets/gate.js), không có file data/
   var SU = T >= 101 && T <= 112 ? T - 100 : 0;
-  if (!SU) T = Math.max(1, Math.min(30, T));
-  var NAME = SU ? 'Starter TOEIC · Unit ' + SU : T > 20 ? 'TOEIC 1000 Listening/Reading · Test ' + (T - 20) : T > 10 ? 'ETS 2024 · Test ' + (T - 10) : 'ETS 2026 · Test ' + T;
+  if (!SU) T = Math.max(1, Math.min(60, T));
+  var NAME = SU ? 'Starter TOEIC · Unit ' + SU : T > 30 ? 'YBM Vol '+Math.floor((T-21)/10)+' · Test '+((T-1)%10+1) : T > 20 ? 'TOEIC 1000 Listening/Reading · Test ' + (T - 20) : T > 10 ? 'ETS 2024 · Test ' + (T - 10) : 'ETS 2026 · Test ' + T;
   var NOLC = false; // đề chưa có audio: chỉ có Reading (Part 5–7)
   var MODE = Q.get('m') || '';
   var L4 = ['A', 'B', 'C', 'D'];

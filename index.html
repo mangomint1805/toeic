@@ -129,6 +129,15 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
   <div class="sec" id="de-thi-xc"><h2>TOEIC 1000 Listening/Reading · 10 đề</h2><span>Test 7–10 đủ 200 câu · Test 1–6 hiện có Reading (Listening chưa có audio)</span></div>
   <p class="gate-note" data-gate-note hidden style="margin:-4px 0 10px;padding:10px 14px;border-radius:12px;background:#fdf1dc;border:1px solid #f0c98a;color:#5c3d00;font-weight:600">🔒 Đăng nhập bằng Google để xem đề (bấm nút Đăng nhập góc trên)</p>
   <ul class="tests" id="testsXC"></ul>
+  <div class="sec" id="de-thi-ybm1"><h2>YBM Vol 1 · 10 đề</h2><span>Mỗi đề 200 câu · Listening + Reading · cần đăng nhập Google</span></div>
+  <p class="gate-note" data-gate-note hidden style="margin:-4px 0 10px;padding:10px 14px;border-radius:12px;background:#fdf1dc;border:1px solid #f0c98a;color:#5c3d00;font-weight:600">🔒 Đăng nhập bằng Google để xem đề (bấm nút Đăng nhập góc trên)</p>
+  <ul class="tests" id="testsY1"></ul>
+  <div class="sec" id="de-thi-ybm2"><h2>YBM Vol 2 · 10 đề</h2><span>Mỗi đề 200 câu · Listening + Reading · cần đăng nhập Google</span></div>
+  <p class="gate-note" data-gate-note hidden style="margin:-4px 0 10px;padding:10px 14px;border-radius:12px;background:#fdf1dc;border:1px solid #f0c98a;color:#5c3d00;font-weight:600">🔒 Đăng nhập bằng Google để xem đề (bấm nút Đăng nhập góc trên)</p>
+  <ul class="tests" id="testsY2"></ul>
+  <div class="sec" id="de-thi-ybm3"><h2>YBM Vol 3 · 10 đề</h2><span>Mỗi đề 200 câu · Listening + Reading · cần đăng nhập Google</span></div>
+  <p class="gate-note" data-gate-note hidden style="margin:-4px 0 10px;padding:10px 14px;border-radius:12px;background:#fdf1dc;border:1px solid #f0c98a;color:#5c3d00;font-weight:600">🔒 Đăng nhập bằng Google để xem đề (bấm nút Đăng nhập góc trên)</p>
+  <ul class="tests" id="testsY3"></ul>
 
   <div class="sec" id="starter"><h2>Starter TOEIC · bài tập theo sách</h2><span>12 unit · ngữ pháp Part 5, điền đoạn văn Part 6, đọc hiểu Part 7 · cần đăng nhập Google</span></div>
   <p class="gate-note" data-gate-note hidden style="margin:-4px 0 10px;padding:10px 14px;border-radius:12px;background:#fdf1dc;border:1px solid #f0c98a;color:#5c3d00;font-weight:600">🔒 Đăng nhập bằng Google để xem đề (bấm nút Đăng nhập góc trên)</p>
@@ -185,12 +194,12 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
     '<div class="stat"><span class="lab">'+I('flame')+'Chuỗi ngày học</span><b>'+(window.MSTATS?MSTATS().streak:streak())+'</b><small>ngày liên tục</small></div>'+
     '<div class="stat"><span class="lab">'+I('trophy')+'Điểm cao nhất</span><b>'+(best||'–')+'</b><small>'+(best?'Full test, thang 990':'chưa làm Full test')+'</small></div>'+
     '<div class="stat"><span class="lab">'+I('check')+'Bài đã nộp</span><b>'+hist.length+'</b><small>'+qs+' câu đã làm</small></div>'+
-    '<div class="stat"><span class="lab">'+I('clock')+'Lần gần nhất</span><b style="font-size:20px">'+(last?(last.test>100?'Starter · U'+(last.test-100):last.test>20?'XC2 · T'+(last.test-20):last.test>10?'ETS24 · T'+(last.test-10):'Test '+last.test):'–')+'</b><small>'+(last?esc(last.name)+' · '+last.got+'/'+last.total:'chưa có')+'</small></div>';
+    '<div class="stat"><span class="lab">'+I('clock')+'Lần gần nhất</span><b style="font-size:20px">'+(last?(last.test>100?'Starter · U'+(last.test-100):last.test>30?'YBM'+Math.floor((last.test-21)/10)+' · T'+((last.test-1)%10+1):last.test>20?'XC2 · T'+(last.test-20):last.test>10?'ETS24 · T'+(last.test-10):'Test '+last.test):'–')+'</b><small>'+(last?esc(last.name)+' · '+last.got+'/'+last.total:'chưa có')+'</small></div>';
   if(window.MSTART) MSTART(document.getElementById('stats'));
   // bài làm dở
   var MN={full:'Full test',lc:'Listening',rc:'Reading'}, cur=null;
-  for(var t=1;t<=112;t++) if(t<=30||t>100) ['full','lc','rc','p1','p2','p3','p4','p5','p6','p7'].forEach(function(m){ var s=get('ets26.t'+t+'.'+m); if(s&&!s.done&&s.ans){ var n=Object.keys(s.ans).length; if(n&&(!cur||s.t0>cur.t0)) cur={t:t,m:m,n:n,t0:s.t0}; } });
-  if(cur) document.getElementById('resume').innerHTML='<a class="resume" href="test.html?t='+cur.t+'&m='+cur.m+'">'+I('play')+'<span><b>Làm tiếp: '+(cur.t>20?'TOEIC 1000 Listening/Reading · Test '+(cur.t-20):cur.t>10?'ETS 2024 · Test '+(cur.t-10):'Test '+cur.t)+' · '+(MN[cur.m]||'Part '+cur.m.slice(1))+'</b><small>Đã chọn '+cur.n+' câu</small></span><span class="go">'+I('arrow')+'</span></a>';
+  for(var t=1;t<=112;t++) if(t<=60||t>100) ['full','lc','rc','p1','p2','p3','p4','p5','p6','p7'].forEach(function(m){ var s=get('ets26.t'+t+'.'+m); if(s&&!s.done&&s.ans){ var n=Object.keys(s.ans).length; if(n&&(!cur||s.t0>cur.t0)) cur={t:t,m:m,n:n,t0:s.t0}; } });
+  if(cur) document.getElementById('resume').innerHTML='<a class="resume" href="test.html?t='+cur.t+'&m='+cur.m+'">'+I('play')+'<span><b>Làm tiếp: '+(cur.t>30?'YBM Vol '+Math.floor((cur.t-21)/10)+' · Test '+((cur.t-1)%10+1):cur.t>20?'TOEIC 1000 Listening/Reading · Test '+(cur.t-20):cur.t>10?'ETS 2024 · Test '+(cur.t-10):'Test '+cur.t)+' · '+(MN[cur.m]||'Part '+cur.m.slice(1))+'</b><small>Đã chọn '+cur.n+' câu</small></span><span class="go">'+I('arrow')+'</span></a>';
   // tên
   var me=document.getElementById('me');
   function drawMe(edit){
@@ -201,17 +210,17 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
   }
   drawMe(false);
   // danh sách đề
-  var h='', h24='', hxc='', C=2*Math.PI*26;
-  for(var k=1;k<=30;k++){
+  var h='', h24='', hxc='', hy={1:'',2:'',3:''}, C=2*Math.PI*26;
+  for(var k=1;k<=60;k++){
     var mine=hist.filter(function(r){ return r.test===k; });
     var full=mine.filter(function(r){ return r.lcS&&r.rcS; }).map(function(r){ return r.lcS+r.rcS; }).sort(function(a,b){ return b-a; })[0];
     var done={}; mine.forEach(function(r){ Object.keys(r.parts||{}).forEach(function(p){ done[p]=1; }); });
     var np=Object.keys(done).length, frac=full?full/990:np/(k>20&&k<27?3:7);
     var badge=full?'<span class="badge ok">Cao nhất '+full+'</span>':np?'<span class="badge mid">Đã làm '+np+'/7 part</span>':'<span class="badge">Chưa làm</span>';
-    var li='<li><a class="test" href="test.html?t='+k+'"><span class="ring" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#f0eadf" stroke-width="5"/><circle cx="30" cy="30" r="26" fill="none" stroke="'+(full?'#1f8f6c':'#a8691a')+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+(C*frac).toFixed(1)+' '+C.toFixed(1)+'"/></svg><span class="n"><small>TEST</small><b>'+(k>20?k-20:k>10?k-10:k)+'</b></span></span><span class="tinfo"><b>'+(k>20?'TOEIC 1000 Listening/Reading · Test '+(k-20):k>10?'ETS 2024 · Test '+(k-10):'ETS 2026 · Test '+k)+'</b><span>'+(k>20&&k<27?'100 câu Reading · Part 5–7':'200 câu · 7 part')+'</span>'+badge+'</span></a></li>';
-    if(k>20) hxc+=li; else if(k>10) h24+=li; else h+=li;
+    var li='<li><a class="test" href="test.html?t='+k+'"><span class="ring" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26" fill="none" stroke="#f0eadf" stroke-width="5"/><circle cx="30" cy="30" r="26" fill="none" stroke="'+(full?'#1f8f6c':'#a8691a')+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+(C*frac).toFixed(1)+' '+C.toFixed(1)+'"/></svg><span class="n"><small>TEST</small><b>'+(k>30?(k-1)%10+1:k>20?k-20:k>10?k-10:k)+'</b></span></span><span class="tinfo"><b>'+(k>30?'YBM Vol '+Math.floor((k-21)/10)+' · Test '+((k-1)%10+1):k>20?'TOEIC 1000 Listening/Reading · Test '+(k-20):k>10?'ETS 2024 · Test '+(k-10):'ETS 2026 · Test '+k)+'</b><span>'+(k>20&&k<27?'100 câu Reading · Part 5–7':'200 câu · 7 part')+'</span>'+badge+'</span></a></li>';
+    if(k>30) hy[Math.floor((k-21)/10)]+=li; else if(k>20) hxc+=li; else if(k>10) h24+=li; else h+=li;
   }
-  document.getElementById('tests').innerHTML=h; document.getElementById('tests24').innerHTML=h24; document.getElementById('testsXC').innerHTML=hxc;
+  document.getElementById('tests').innerHTML=h; document.getElementById('tests24').innerHTML=h24; document.getElementById('testsXC').innerHTML=hxc; [1,2,3].forEach(function(v){ document.getElementById('testsY'+v).innerHTML=hy[v]; });
   // kế hoạch + huy hiệu
   if(window.MPLAN) MPLAN(document.getElementById('plan'));
   if(window.MBADGEHTML){ document.getElementById('badges').innerHTML=MBADGEHTML(); var bb=MBADGES(); document.getElementById('bdgN').textContent='Đã mở '+bb.filter(function(x){return x.at;}).length+'/'+bb.length; }
