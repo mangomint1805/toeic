@@ -1,6 +1,13 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-09b', date: '09/11/2026',
+    title: '🖼 Tranh Part 1 bộ YBM rõ nét hơn',
+    items: [
+      'Tranh Part 1 của 30 đề YBM Vol 1–3 được làm lại: to hơn, bớt mờ và bớt lấm tấm hạt, nhìn rõ chi tiết hơn khi phóng to.'
+    ]
+  },
+  {
     id: '2026-11-09', date: '09/11/2026',
     title: '📚 Thêm 30 đề mới: YBM Vol 1, 2, 3',
     items: [
