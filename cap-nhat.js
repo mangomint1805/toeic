@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-17', date: '17/11/2026',
+    title: '📝 Lớp TOEIC A: thêm đề Exam Master 3 và 4',
+    items: [
+      'Trang chủ có mục mới "Exam Master · lớp TOEIC A" với 2 đề luyện trên lớp, mỗi đề đủ 200 câu (cần đăng nhập Google).',
+      'Listening có file nghe riêng từng câu và từng đoạn hội thoại, kèm lời thoại; câu nào cũng có giải thích tiếng Việt và dẫn chứng.',
+      'Làm Full test, chỉ Listening, chỉ Reading hay từng Part đều được, chấm điểm và lưu Sổ lỗi sai như các đề khác.'
+    ]
+  },
+  {
     id: '2026-11-09b', date: '09/11/2026',
     title: '🖼 Tranh Part 1 bộ YBM rõ nét hơn',
     items: [
