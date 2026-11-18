@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-18', date: '18/11/2026',
+    title: 'Gõ từ rơi: sửa lỗi Enter, thêm chế độ Gõ nhanh',
+    items: [
+      'Sửa lỗi bấm Enter hoặc gõ đúng từ mà chữ cũ vẫn còn trong ô (hay gặp khi bật bộ gõ tiếng Việt hoặc gõ trên điện thoại), làm từ sau bị gõ sai và mất tim. Giờ gõ xong là ô trống ngay.',
+      'Bấm Enter khi đã gõ đúng một từ đang rơi thì từ đó cũng nổ luôn.',
+      'Chế độ mới ⌨️ Gõ nhanh (kiểu Monkeytype): gõ một dãy từ vựng trong 15, 30 hoặc 60 giây, Space để sang từ kế, chữ sai hiện đỏ. Cuối lượt có tốc độ (WPM), độ chính xác, danh sách từ gõ sai kèm nghĩa và nút lưu vào flashcard. Nên tắt bộ gõ tiếng Việt khi chơi.'
+    ]
+  },
+  {
     id: '2026-11-17', date: '17/11/2026',
     title: '📝 Lớp TOEIC A: thêm đề Exam Master 3 và 4',
     items: [
