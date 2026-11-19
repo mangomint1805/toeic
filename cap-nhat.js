@@ -1,6 +1,16 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-19', date: '19/11/2026',
+    title: 'Mới: Luyện phát âm 🎤',
+    items: [
+      'Trang chủ có thêm mục "Luyện phát âm": nghe câu mẫu, bấm 🎤 đọc to, máy chấm điểm từng từ ngay.',
+      'Từ màu đỏ/vàng là chỗ chưa chuẩn. Bấm vào để xem âm nào bị thiếu hoặc đọc lệch (ví dụ quên âm cuối /t/, đọc /θ/ thành /s/) kèm cách sửa bằng tiếng Việt.',
+      'Có bộ câu luyện các âm người Việt hay sai, câu Part 1, Part 2 của các đề ETS (nghe giọng gốc), và ô tự nhập câu bất kỳ.',
+      'Giọng của bạn chỉ được chấm trên máy, không gửi đi đâu. Lần đầu cần tải khoảng 38 MB, nên dùng Wi-Fi.'
+    ]
+  },
+  {
     id: '2026-11-18', date: '18/11/2026',
     title: 'Gõ từ rơi: sửa lỗi Enter, thêm chế độ Gõ nhanh',
     items: [

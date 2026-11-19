@@ -39,3 +39,7 @@ Thêm một đề mới vào hệ thống này (ví dụ đề YBM, `t=31`):
 4. Thầy mở `https://mangomint1805.github.io/tai-de-gv.html`, chọn file → **Tải lên**. Trang chia dữ liệu thành chuỗi JSON từng khúc ≤ 250.000 ký tự: `de/{t}` = `{ t, name, n, size, at, v, j }` (khúc 0) và `de/{t}_1`, `de/{t}_2`… = `{ t, k, j }`; mục lục ở `de/_index`. `assets/gate.js` ghép các khúc lại thành `ETSDATA[t]`, nên chấm điểm, giải thích, Sổ lỗi sai, phân tích dùng như đề thường.
 
 Bài tập Starter (`starter/uNN`) dùng định dạng riêng (`{ u, title, p5: [{n,q,o,a,x}], p6: [{ns, head, text, qs}], p7: [{ns, head, texts, qs}] }`, đoạn văn chữ thường, chỗ trống `[[131]]`).
+
+## Luyện phát âm (phat-am.html)
+
+Chấm phát âm ngay trên trình duyệt học viên: mô hình [lapwing-small](https://huggingface.co/GersonHMG/lapwing-small) (CC BY-NC 4.0, chỉ dùng phi thương mại) chạy bằng onnxruntime-web, tải thẳng từ Hugging Face rồi giữ trong cache `mt-pa-model-v1` (sw.js không xoá cache này). Phiên âm chuẩn: CMU Pronouncing Dictionary (BSD-2-Clause), file `cmu.txt`. Code chung `phat-am.js` giống hệt ở toeic/assets và cam/shared.

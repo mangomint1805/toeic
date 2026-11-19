@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<script>try{var d=document.documentElement,k=JSON.parse(localStorage.getItem('mt.skin')||'""');if(k==='scifi')d.setAttribute('data-theme','dark');if(k)d.setAttribute('data-skin',k)}catch(e){}</script>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#a8691a">
+<link rel="apple-touch-icon" href="icons/apple-180.png?v=3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta property="og:site_name" content="Minto English">
+<meta property="og:title" content="Minto English · Luyện phát âm">
+<meta property="og:image" content="https://mangomint1805.github.io/toeic/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="icons/fav-64.png?v=3">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Luyện phát âm · TOEIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--panel2:#f2efe8;--brand:#a8691a;--brand-soft:#f2e2c4;--brand-ink:#6b4410;--ok:#1f8f6c;--ok-soft:#e1f4ec;--bad:#c14636;--bad-soft:#fbe6e2}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 50px}
+header{padding:26px 0 8px}
+.mback{font-size:14px;font-weight:700;color:var(--brand-ink);text-decoration:none}
+h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:clamp(28px,6vw,40px);margin:10px 0 4px;line-height:1.1}
+header p{margin:0;color:var(--dim)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.lbl{font-size:13px;font-weight:700;color:var(--dim);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.06em}
+.chip{font:inherit;font-weight:600;font-size:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 14px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip small{font-weight:500;opacity:.8}
+.btn{font:inherit;font-weight:700;font-size:16px;border:0;background:var(--brand);color:#fff;border-radius:12px;padding:12px 20px;cursor:pointer}
+.btn.alt{background:var(--card);color:var(--brand-ink);border:1.5px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:default}
+.hint{font-size:13px;color:var(--dim)}
+.best{display:flex;gap:10px;margin-top:12px}
+.best div{flex:1;background:var(--panel2);border-radius:12px;padding:8px 12px}.best b{display:block;font:600 24px/1.1 Fraunces,Georgia,serif;color:var(--brand-ink)}.best span{font-size:12.5px;color:var(--dim)}
+</style>
+</head>
+<body data-nav="game">
+<div class="wrap">
+  <header>
+    <a class="mback" href="./">← Trang chủ</a>
+    <h1>Luyện phát âm</h1>
+    <p>Nghe mẫu, bấm 🎤 rồi đọc to câu tiếng Anh. Máy chấm từng từ, chỉ ra âm nào bạn đọc chưa đúng (âm cuối, /θ/, /ð/, /s/…) và cách sửa.</p>
+  </header>
+  <div id="main"></div>
+</div>
+<script>
+(function () {
+  var sets = [], dictP = null;
+  function ets(cb) { if (window.ETSDICT) return cb(window.ETSDICT); if (!dictP) dictP = new Promise(function (ok) { var s = document.createElement('script'); s.src = 'data/dict.js'; s.onload = s.onerror = function () { ok(window.ETSDICT || {}); }; document.head.appendChild(s); }); dictP.then(cb); }
+  function mk(t, p) {
+    return { id: 't' + t + p, group: p === 'p1' ? 'Part 1 · Mô tả tranh (giọng ETS)' : 'Part 2 · Hỏi – đáp (giọng ETS)', name: (t > 10 ? 'ETS 2024 · Test ' + (t - 10) : 'ETS 2026 · Test ' + t) + (p === 'p1' ? ' · Part 1' : ' · Part 2'),
+      load: function (cb) { ets(function (D) { cb((((D[t] || {})[p]) || []).filter(function (x) { var n = x.t.split(/\s+/).length; return n >= 3 && n <= 16; }).map(function (x) { return { t: x.t, au: { src: 'audio/t' + t + '/' + x.a, s: x.s, e: x.e } }; })); }); } };
+  }
+  ['p1', 'p2'].forEach(function (p) { for (var t = 1; t <= 20; t++) sets.push(mk(t, p)); });
+  window.PA_CFG = { site: 'toeic', dict: 'data/cmu.txt', sets: sets };
+})();
+</script>
+<script src="assets/phat-am.js?v=1"></script>
+<script src="assets/ui.js?v=17"></script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
+</body>
+</html>
