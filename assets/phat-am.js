@@ -294,6 +294,97 @@
   function cls(sc) { return sc >= 80 ? 'g' : sc >= 55 ? 'y' : 'r'; }
   function keyOf(it) { return (set ? set.id : '') + '|' + it.t; }
 
+
+  /* ---------- Làm quen IPA (hiện trước lần luyện đầu tiên) ---------- */
+  var IPA_G = [
+    ['😊 Âm giống tiếng Việt', 'Mấy âm này tiếng Việt có rồi, đọc như bình thường là được.', [
+      ['b', '🐝', 'bee', 'bi', 'như "b" trong "bé"'], ['d', '🐶', 'dog', 'dɔg', 'như "đ", lưỡi chạm cao hơn một chút'], ['f', '🐟', 'fish', 'fɪʃ', 'như "ph" trong "phở"'],
+      ['h', '🎩', 'hat', 'hæt', 'như "h" trong "hoa"'], ['k', '🐱', 'cat', 'kæt', 'như "c" trong "cá"'], ['l', '🦁', 'lion', 'ˈlaɪən', 'như "l" trong "lá"'],
+      ['m', '🌙', 'moon', 'mun', 'như "m" trong "mẹ"'], ['n', '👃', 'nose', 'noʊz', 'như "n" trong "nón"'], ['p', '🐷', 'pig', 'pɪg', 'như "p" trong "pin", bật hơi mạnh hơn'],
+      ['s', '☀️', 'sun', 'sʌn', 'như "x" trong "xe"'], ['t', '🐯', 'tiger', 'ˈtaɪgɚ', 'như "th" trong "thỏ"'], ['v', '🚐', 'van', 'væn', 'như "v" trong "vui"'],
+      ['g', '🐐', 'goat', 'goʊt', 'như "g" trong "gà"'], ['ŋ', '💍', 'ring', 'rɪŋ', 'như "ng" trong "trắng"']]],
+    ['🦄 Âm tiếng Việt không có', 'Đây là mấy âm "đặc biệt". Người Việt hay đọc sai nhất, nhớ tập kỹ nha!', [
+      ['θ', '3️⃣', 'three', 'θri', 'thè lưỡi ra giữa hai hàm răng rồi thổi hơi "thhh", không có tiếng'], ['ð', '👉', 'this', 'ðɪs', 'thè lưỡi y như /θ/ nhưng có tiếng, cổ họng rung'],
+      ['ʃ', '👟', 'shoe', 'ʃu', 'chu môi ra làm "suỵt!" bảo im lặng'], ['ʒ', '📺', 'television', 'ˈteləvɪʒən', 'như /ʃ/ nhưng có tiếng, cổ họng rung'],
+      ['tʃ', '🧀', 'cheese', 'tʃiz', 'chu môi, bật mạnh "ch!" như hắt xì'], ['dʒ', '🧃', 'juice', 'dʒus', 'chu môi, bật mạnh "dj!"'],
+      ['z', '🦓', 'zoo', 'zu', 'như tiếng ong bay "zzz", cổ họng rung'], ['r', '🐰', 'rabbit', 'ˈræbɪt', 'cong lưỡi về sau, lưỡi không chạm đâu, không rung lưỡi'],
+      ['w', '💧', 'water', 'ˈwɔtɚ', 'chu tròn môi như thổi nến rồi mở ra'], ['j', '🪀', 'yo-yo', 'ˈjoʊjoʊ', 'như "d" giọng miền Nam trong "da"']]],
+    ['🍬 Nguyên âm: ngắn và dài', 'Nguyên âm là "a, e, i, o, u" của tiếng Anh. Có cặp na ná nhau, chỉ khác ngắn hay dài.', [
+      ['ɪ', '🐟', 'fish', 'fɪʃ', '"i" ngắn, thả lỏng miệng'], ['i', '🐝', 'bee', 'bi', '"i" dài, kéo mép như đang cười'],
+      ['ʊ', '📖', 'book', 'bʊk', '"u" ngắn, môi hơi tròn'], ['u', '🌙', 'moon', 'mun', '"u" dài, chu tròn môi'],
+      ['e', '🛏️', 'bed', 'bed', 'như "e" trong "xe"'], ['æ', '🍎', 'apple', 'ˈæpəl', 'há to miệng, lai giữa "a" và "e"'],
+      ['ʌ', '☕', 'cup', 'kʌp', 'như "â" ngắn'], ['ə', '🍌', 'banana', 'bəˈnænə', '"ơ" rất nhẹ và ngắn, âm "lười"'],
+      ['ɑ', '🚗', 'car', 'kɑr', 'há rộng miệng như khi khám họng: "a"'], ['ɔ', '⚽', 'ball', 'bɔl', 'tròn môi: "o"'], ['ɝ', '🐦', 'bird', 'bɝd', '"ơ" nhưng cong lưỡi về sau (ɚ là bản ngắn, nhẹ)']]],
+    ['🎢 Nguyên âm đôi: hai âm trượt vào nhau', 'Đọc âm đầu rồi trượt nhẹ sang âm sau, như đi cầu trượt.', [
+      ['eɪ', '🍰', 'cake', 'keɪk', '"ê" trượt sang "i": ê-i'], ['aɪ', '👁️', 'eye', 'aɪ', '"a" trượt sang "i": a-i'], ['ɔɪ', '🧸', 'toy', 'tɔɪ', '"o" trượt sang "i": o-i'],
+      ['aʊ', '🐮', 'cow', 'kaʊ', '"a" trượt sang "u": a-u'], ['oʊ', '🐐', 'goat', 'goʊt', '"ô" trượt sang "u": ô-u']]]
+  ];
+  var MULTI = ['tʃ', 'dʒ', 'eɪ', 'aɪ', 'ɔɪ', 'aʊ', 'oʊ'];
+  function ipaToks(x) { var o = [], i = 0; while (i < x.length) { var two = x.substr(i, 2); if (MULTI.indexOf(two) >= 0) { o.push(two); i += 2; } else { if (!/[ˈˌː.]/.test(x[i])) o.push(x[i]); i++; } } return o; }
+  var IPA_CSS = '.ipa h2{font:600 24px/1.2 Fraunces,Georgia,serif;margin:22px 0 4px}.ipa .lead{font-size:16px}.ipa .big{font:600 22px/1.4 Fraunces,Georgia,serif;text-align:center;background:var(--panel2);border-radius:14px;padding:12px;margin:10px 0}' +
+    '.ipa .rules{display:grid;gap:8px;margin:10px 0}.ipa .rules div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-size:15px}.ipa .rules b.n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--brand);color:#fff;margin-right:8px;font-size:14px}' +
+    '.ipa-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:8px 0}' +
+    '.ipa-c{font:inherit;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer;color:var(--ink)}.ipa-c:hover,.ipa-c.on{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}' +
+    '.ipa-c .sy{font:600 28px/1 "IBM Plex Sans",sans-serif;color:var(--brand-ink)}.ipa-c .em{float:right;font-size:26px;line-height:1}.ipa-c .wd{display:block;font-weight:700;margin-top:6px}.ipa-c .tr{font-weight:500;color:var(--dim)}.ipa-c .hw{display:block;font-size:13px;color:var(--dim);line-height:1.35;margin-top:2px}' +
+    '.ipa-c.hard{border-style:dashed}.ipa .sub{color:var(--dim);margin:0 0 4px;font-size:14.5px}' +
+    '.ipa-q{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}.ipa-q .qs{font-size:17px;margin:0 0 10px}.ipa-q .qs b{font:600 30px/1 "IBM Plex Sans",sans-serif;color:var(--brand-ink);margin:0 4px}' +
+    '.ipa-q .op{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}.ipa-q .op button{font:inherit;font-size:17px;font-weight:700;padding:12px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}' +
+    '.ipa-q .op button.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}.ipa-q .op button.no{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}' +
+    '.ipa .go{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:20px 0 8px}';
+  function say(w, rate) {
+    if (!window.speechSynthesis) return; speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(w); u.lang = 'en-US'; u.rate = rate || .8;
+    var v = speechSynthesis.getVoices().filter(function (x) { return /^en[-_]US/i.test(x.lang); });
+    if (v.length) u.voice = v.filter(function (x) { return /natural|google|samantha|aria|jenny/i.test(x.name); })[0] || v[0];
+    speechSynthesis.speak(u);
+  }
+  function intro() {
+    stopAudio();
+    if (!$('ipa-css')) { var st = document.createElement('style'); st.id = 'ipa-css'; st.textContent = IPA_CSS; document.head.appendChild(st); }
+    var h = '<div class="ipa">' +
+      '<h2>IPA là gì? 🤔</h2>' +
+      '<p class="lead">Tiếng Anh hay <b>viết một đằng, đọc một nẻo</b>. Cùng là chữ <b>c</b> mà:</p>' +
+      '<div class="big">🐱 <b>c</b>at đọc là <span style="color:var(--brand-ink)">/kæt/</span> &nbsp;·&nbsp; 🏙️ <b>c</b>ity đọc là <span style="color:var(--brand-ink)">/ˈsɪti/</span></div>' +
+      '<p class="lead"><b>IPA</b> là bộ "chữ cách đọc". Mỗi ký hiệu IPA <b>chỉ có đúng một cách đọc</b>, không bao giờ đổi. Biết IPA là nhìn từ điển đọc đúng ngay, không phải đoán nữa! 🎉</p>' +
+      '<h2>3 luật nhỏ xíu</h2><div class="rules">' +
+      '<div><b class="n">1</b>IPA luôn nằm giữa hai dấu gạch: <b>/kæt/</b>. Đọc lần lượt từng ký hiệu từ trái sang phải: /k/ + /æ/ + /t/ = cat.</div>' +
+      '<div><b class="n">2</b>Dấu <b>ˈ</b> đứng trước phần cần <b>nhấn mạnh</b>: /ˈsɪti/ là nhấn chữ "SI". Dấu <b>ː</b> là <b>kéo dài</b> ra: /iː/ = "iiii" (sách giọng Anh hay dùng).</div>' +
+      '<div><b class="n">3</b>Âm cuối từ <b>phải đọc ra</b>: cat là /kæt/, có /t/ ở cuối. Người Việt hay quên âm cuối nhất đó!</div></div>' +
+      '<h2>Bảng âm có hình 🖼️</h2><p class="sub">Bấm vào thẻ để nghe từ ví dụ. Thẻ viền nét đứt là âm khó.</p>' +
+      IPA_G.map(function (g, gi) {
+        return '<h3 style="margin:16px 0 2px">' + g[0] + '</h3><p class="sub">' + g[1] + '</p><div class="ipa-grid">' + g[2].map(function (c) {
+          return '<button class="ipa-c' + (gi === 1 ? ' hard' : '') + '" type="button" data-w="' + esc(c[2]) + '"><span class="em">' + c[1] + '</span><span class="sy">/' + c[0] + '/</span><span class="wd">' + esc(c[2]) + ' <span class="tr">/' + c[3] + '/</span> 🔊</span><span class="hw">' + esc(c[4]) + '</span></button>';
+        }).join('') + '</div>';
+      }).join('') +
+      '<h2>Đố vui 🎈</h2><p class="sub">Nhìn ký hiệu, chọn từ có âm đó. Bấm 🔊 trên thẻ ở trên nếu cần nghe lại.</p><div id="ipaQ"></div>' +
+      '<div class="go"><button class="btn" id="ipaGo" type="button">Hiểu rồi, vào luyện phát âm →</button></div></div>';
+    main.innerHTML = h;
+    [].forEach.call(main.querySelectorAll('.ipa-c'), function (b) { b.onclick = function () { [].forEach.call(main.querySelectorAll('.ipa-c.on'), function (x) { x.classList.remove('on'); }); b.classList.add('on'); say(b.dataset.w); }; });
+    $('ipaGo').onclick = function () { put('mt.pa.intro', 1); shell(); window.scrollTo(0, 0); };
+    quiz(0, 0);
+  }
+  function quiz(n, ok) {
+    var box = $('ipaQ'); if (!box) return;
+    if (n >= 5) { box.innerHTML = '<div class="ipa-q"><p class="qs">Bạn đúng <b>' + ok + '</b>/5 câu. ' + (ok >= 4 ? 'Giỏi quá! 🌟' : 'Xem lại bảng rồi chơi lại nha 💪') + '</p><button class="btn alt" type="button" id="ipaAgain">↻ Đố tiếp</button></div>'; $('ipaAgain').onclick = function () { quiz(0, 0); }; return; }
+    var gi = Math.random() < .25 ? 0 : 1 + Math.floor(Math.random() * 3), g = IPA_G[gi][2], c = g[Math.floor(Math.random() * g.length)];
+    function base(t) { return t === 'ɚ' ? 'ɝ' : t === 'ə' ? 'ʌ' : t; }
+    function okDis(x) { return x[2] !== c[2] && ipaToks(x[3]).map(base).indexOf(base(c[0])) < 0; }
+    var pool = g.filter(okDis).sort(function () { return Math.random() - .5; }), opts = [c];
+    if (pool.length < 2) pool = pool.concat([].concat.apply([], IPA_G.map(function (x) { return x[2]; })).filter(okDis).sort(function () { return Math.random() - .5; }));
+    while (opts.length < 3 && pool.length) { var d = pool.pop(); if (opts.every(function (o) { return o[2] !== d[2]; })) opts.push(d); }
+    opts.sort(function () { return Math.random() - .5; });
+    box.innerHTML = '<div class="ipa-q"><p class="qs">Câu ' + (n + 1) + '/5: Từ nào có âm <b>/' + c[0] + '/</b>?</p><div class="op">' + opts.map(function (o) { return '<button type="button" data-w="' + esc(o[2]) + '">' + o[1] + ' ' + esc(o[2]) + '</button>'; }).join('') + '</div></div>';
+    [].forEach.call(box.querySelectorAll('.op button'), function (b) {
+      b.onclick = function () {
+        var right = b.dataset.w === c[2];
+        [].forEach.call(box.querySelectorAll('.op button'), function (x) { x.disabled = true; if (x.dataset.w === c[2]) { x.classList.add('ok'); x.innerHTML += ' <small style="font-weight:500">/' + c[3] + '/</small>'; } });
+        if (!right) b.classList.add('no');
+        say(c[2]); setTimeout(function () { quiz(n + 1, ok + (right ? 1 : 0)); }, 1600);
+      };
+    });
+  }
+
+
   function optHtml() {
     var h = '', g = null;
     SETS.forEach(function (s) {
@@ -306,22 +397,25 @@
     if (!$('pa-css')) { var st = document.createElement('style'); st.id = 'pa-css'; st.textContent = CSS; document.head.appendChild(st); }
     var want = get('mt.pa.set', '');
     main.innerHTML = '<div class="pa-top"><select id="paSet" aria-label="Chọn bộ câu">' + SETS.map(function (s) { return '<option value="' + s.id + '">' + esc(s.name) + '</option>'; }).join('') + '<option value="own">✍️ Tự nhập câu</option></select>' +
-      '<div class="pa-nav"><button id="paPrev" type="button" aria-label="Câu trước">◀</button><span id="paPos"></span><button id="paNext" type="button" aria-label="Câu sau">▶</button><button id="paRnd" type="button" title="Câu ngẫu nhiên">🔀</button></div></div>' +
+      '<button class="btn alt" id="paIpa" type="button" style="padding:8px 12px;font-size:14px">📖 IPA là gì?</button><div class="pa-nav"><button id="paPrev" type="button" aria-label="Câu trước">◀</button><span id="paPos"></span><button id="paNext" type="button" aria-label="Câu sau">▶</button><button id="paRnd" type="button" title="Câu ngẫu nhiên">🔀</button></div></div>' +
       '<div id="paLoad"></div><div id="paOwn"></div><div id="paCard"></div>' +
       '<p class="hint">Giọng của bạn chỉ được chấm ngay trên máy này, không gửi đi đâu. Lần đầu cần tải bộ chấm khoảng ' + MODEL_MB + ' MB, các lần sau dùng lại luôn. Máy chấm chỉ mang tính tham khảo: nghe mẫu, đọc chậm, rõ từng âm cuối là điểm lên ngay.</p>' +
       '<p class="hint" style="font-size:12px">Bộ chấm: lapwing-small (Gerson H. M. G., giấy phép CC BY-NC 4.0, chỉ dùng phi thương mại) · Phiên âm: CMU Pronouncing Dictionary.</p>';
     var sel = $('paSet');
     sel.value = SETS.some(function (s) { return s.id === want; }) || want === 'own' ? want : SETS[0].id;
     sel.onchange = function () { put('mt.pa.set', sel.value); pickSet(); };
+    $('paIpa').onclick = function () { intro(); window.scrollTo(0, 0); };
     $('paPrev').onclick = function () { go(cur - 1); }; $('paNext').onclick = function () { go(cur + 1); };
     $('paRnd').onclick = function () { if (items.length > 1) { var n; do { n = Math.floor(Math.random() * items.length); } while (n === cur); go(n); } };
-    document.addEventListener('keydown', function (e) {
+    if (!keysOn) document.addEventListener('keydown', function (e) {
+      if (!$('paSet')) return;
       if (/INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName)) return;
       if (e.key === 'ArrowRight') go(cur + 1); else if (e.key === 'ArrowLeft') go(cur - 1);
       else if (e.key === ' ' || e.key === 'r') { e.preventDefault(); var b = $('paMic'); if (b) b.click(); }
     });
-    pickSet();
+    keysOn = true; pickSet();
   }
+  var keysOn = false;
   function pickSet() {
     var id = $('paSet').value;
     if (id === 'own') {
@@ -387,7 +481,8 @@
     });
     $('paDet').innerHTML = '<div class="pa-det"><h4>' + esc(w.tok.replace(/^[^A-Za-z0-9']+|[^A-Za-z0-9']+$/g, '')) + ' <small style="font:500 15px \'IBM Plex Sans\',sans-serif;color:var(--dim)">/' + w.ph.map(function (p) { return IPA[p.p]; }).join('') + '/ · ' + w.sc + ' điểm</small></h4>' +
       '<div class="pa-ph">' + w.ph.map(function (p) { var c = p.sc >= .7 ? 'g' : p.sc >= .4 ? 'y' : 'r'; return '<span class="' + c + '">' + IPA[p.p] + '<small>' + (p.heard ? '→ ' + IPA[p.heard] : c === 'g' ? '✓' : c === 'y' ? 'chưa rõ' : 'thiếu') + '</small></span>'; }).join('') + '</div>' +
-      (tips.length ? '<ul>' + tips.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '<p style="margin:4px 0 0;font-size:14.5px">Các âm trong từ này đều rõ rồi 👍</p>') + '</div>';
+      (tips.length ? '<ul>' + tips.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' : '<p style="margin:4px 0 0;font-size:14.5px">Các âm trong từ này đều rõ rồi 👍</p>') + '<p style="margin:8px 0 0;font-size:13.5px"><a href="#" id="paIpa2" style="color:var(--brand-ink);font-weight:700">📖 Quên ký hiệu? Xem bảng IPA có hình</a></p></div>';
+    $('paIpa2').onclick = function (e) { e.preventDefault(); intro(); window.scrollTo(0, 0); };
   }
 
   function stopAudio() { try { au.pause(); } catch (e) {} clearTimeout(auStop); if (window.speechSynthesis) speechSynthesis.cancel(); }
@@ -452,6 +547,6 @@
     });
   }
 
-  shell();
+  if (get('mt.pa.intro', 0)) shell(); else intro();
   window.PA_TEST = { wordsOf: wordsOf, score: score, loadDict: loadDict, prepare: prepare, process: process };
 })();

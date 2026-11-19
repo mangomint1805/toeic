@@ -1,6 +1,15 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-19b', date: '19/11/2026',
+    title: 'Luyện phát âm: thêm bài "IPA là gì?" dễ hiểu',
+    items: [
+      'Lần đầu vào Luyện phát âm sẽ có bài làm quen IPA (ký hiệu phiên âm): giải thích bằng ví dụ siêu dễ, 3 luật nhỏ cần nhớ và bảng 40 âm có hình, bấm vào là nghe từ ví dụ.',
+      'Có trò đố vui 5 câu: nhìn ký hiệu, chọn từ có âm đó.',
+      'Muốn xem lại thì bấm "📖 IPA là gì?" ở trên cùng, hoặc link bảng IPA ngay dưới phần chấm từng từ.'
+    ]
+  },
+  {
     id: '2026-11-19', date: '19/11/2026',
     title: 'Mới: Luyện phát âm 🎤',
     items: [
