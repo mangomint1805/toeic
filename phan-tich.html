@@ -64,7 +64,7 @@ svg text{font-family:'IBM Plex Sans',sans-serif}
   <div class="card"><h2>Theo Part</h2><div class="parts" id="parts"></div></div>
   <div class="card"><h2>Tiến bộ theo Part · 8 tuần gần đây</h2><div id="pwk"></div></div>
   <div class="card"><h2>Dạng câu hỏi</h2><p class="sub">Xếp từ yếu nhất trở xuống. Bấm link để luyện thêm đúng Part có nhiều câu dạng đó.</p>
-    <div class="tabs" role="tablist"><button type="button" data-s="L" aria-selected="true">Listening</button><button type="button" data-s="R" aria-selected="false">Reading</button></div>
+    <div class="tabs" role="tablist"><button type="button" role="tab" data-s="L" aria-selected="true">Listening</button><button type="button" role="tab" data-s="R" aria-selected="false">Reading</button></div>
     <div id="cats"></div></div>
 </div>
 <script src="data/cats.js"></script>
@@ -120,6 +120,6 @@ svg text{font-family:'IBM Plex Sans',sans-serif}
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
 <script src="assets/partwk.js?v=2"></script>
 <script>try{ MPARTWK.render(document.getElementById('pwk'), localStorage.getItem('mt.partwk')); }catch(e){}</script>
-<script src="assets/ui.js?v=17"></script>
+<script src="assets/ui.js?v=18"></script>
 </body>
 </html>

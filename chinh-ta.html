@@ -35,6 +35,7 @@ select,input,textarea{font:inherit}
 .pick select{font-size:15px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--ink);margin-top:3px}
 select:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 .dots{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.dots button{position:relative}.dots button::before{content:"";position:absolute;inset:-3px}
 .dots button{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:var(--card);font:inherit;font-size:13px;font-weight:700;color:var(--dim);cursor:pointer}
 .dots button.cur{border-color:var(--amber);color:var(--amber-ink);background:var(--amber-soft)}
 .dots button.ok{background:var(--teal-soft);border-color:var(--teal);color:var(--teal)}
@@ -182,6 +183,6 @@ footer{padding:30px 0 50px;color:var(--dim);font-size:13px}
 })();
 </script>
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
-<script src="assets/ui.js?v=17"></script>
+<script src="assets/ui.js?v=18"></script>
 </body>
 </html>

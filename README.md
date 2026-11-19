@@ -43,3 +43,7 @@ Bài tập Starter (`starter/uNN`) dùng định dạng riêng (`{ u, title, p5:
 ## Luyện phát âm (phat-am.html)
 
 Chấm phát âm ngay trên trình duyệt học viên: mô hình [lapwing-small](https://huggingface.co/GersonHMG/lapwing-small) (CC BY-NC 4.0, chỉ dùng phi thương mại) chạy bằng onnxruntime-web, tải thẳng từ Hugging Face rồi giữ trong cache `mt-pa-model-v1` (sw.js không xoá cache này). Phiên âm chuẩn: CMU Pronouncing Dictionary (BSD-2-Clause), file `cmu.txt`. Code chung `phat-am.js` giống hệt ở toeic/assets và cam/shared.
+
+## Audio
+
+Mọi file audio đề là MP3 mono CBR: ETS 2026/2024, TOEIC 1000, Exam Master 48 kbps · 24 kHz (nén lại 19/11/2026 để web dưới giới hạn 1 GB của GitHub Pages, bản gốc 56–64 kbps vẫn nằm trong lịch sử git); YBM 40 kbps · 22,05 kHz. Đề mới thêm vào nên nén cùng mức: `ffmpeg -i in.mp3 -c:a libmp3lame -b:a 48k -ar 24000 -ac 1 out.mp3`. Dung lượng web hiện khoảng 810 MB.

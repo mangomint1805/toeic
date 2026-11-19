@@ -137,6 +137,7 @@
     'html[data-theme=dark] .mbtn{background:#1c1f25;border-color:#373b44;color:#f0c787}.mbtn .ic{width:19px;height:19px}' +
     '.mfloat{position:fixed;right:14px;bottom:16px;z-index:58;display:flex;flex-direction:column;gap:8px}' +
     'body.has-nav .mfloat{bottom:84px}@media (min-width:761px){body.has-nav .mfloat{bottom:16px}}' +
+    '.mtool-bar{margin-left:0;flex:none}.mtool-bar .mbtn{width:36px;height:36px}' +
     '.mfloat .mbtn{box-shadow:0 4px 12px rgba(0,0,0,.12);width:38px;height:38px;border-radius:50%;opacity:.72;transition:opacity .2s}.mfloat .mbtn:hover,.mfloat .mbtn:focus-visible{opacity:1}' +
     '.fbk{position:fixed;inset:0;z-index:90;background:rgba(15,17,21,.5);display:flex;align-items:flex-end;justify-content:center;padding:12px}' +
     '@media (min-width:600px){.fbk{align-items:center}}' +
@@ -1097,7 +1098,7 @@
     'html[data-theme=dark] .mp-todo{border-color:#2c3038}html[data-theme=dark] .mp-todo a{color:#e8e4dc}html[data-theme=dark] .mp-todo a:hover{background:#242830}html[data-theme=dark] .mp-ck{border-color:#4a4f58;color:#f0c787}html[data-theme=dark] .mp-bar{background:#2c3038}html[data-theme=dark] .mp-i button{background:#3b2d1b;color:#f0c787}' +
     '@media (max-width:520px){.mp-cd{width:76px;height:76px;border-radius:18px}.mp-cd b{font-size:31px}.mp-top{gap:12px}}' +
     // điện thoại: vùng chạm tối thiểu ~44px (lớp ::before vô hình, không đổi bố cục)
-    '@media (max-width:600px){.mtool .mbtn,.mfloat .mbtn,.mp-i button,.mp-sw,.mp-skins button{position:relative}.mtool .mbtn::before,.mfloat .mbtn::before,.mp-i button::before,.mp-sw::before,.mp-skins button::before{content:"";position:absolute}.mtool .mbtn::before{inset:-5px -2px}.mfloat .mbtn::before{inset:-4px}.mp-i button::before{inset:-10px -4px}.mp-sw::before{inset:-9px -2px}.mp-skins button::before{inset:-7px -3px}.mbrand{position:relative}.mbrand::before{content:"";position:absolute;inset:-6px 0}' +
+    '@media (max-width:600px){.mtool .mbtn,.mfloat .mbtn,.mback,.mp-i button,.mp-sw,.mp-skins button{position:relative}.mtool .mbtn::before,.mfloat .mbtn::before,.mback::before,.mp-i button::before,.mp-sw::before,.mp-skins button::before{content:"";position:absolute}.mtool .mbtn::before{inset:-5px -3px}.mfloat .mbtn::before{inset:-4px}.mback::before{inset:-13px -6px}.mp-i button::before{inset:-10px -4px}.mp-sw::before{inset:-9px -2px}.mp-skins button::before{inset:-7px -3px}.mbrand{position:relative}.mbrand::before{content:"";position:absolute;inset:-6px 0}' +
     '.mp-fs button,.mp-tour,.fbk-types button,.fbk-row button,.mt-row button,.mp-f button,.mp-f input,.mp-f select{min-height:44px}.mgc-x{min-width:44px;min-height:44px}}';
   document.head.appendChild(st3);
 
@@ -1153,7 +1154,7 @@
     // Idol
     'html[data-skin=idol]:not([data-theme=dark]){--paper:#f2fbfa;--panel2:#eaf7f5;--brand:#0e7a73;--brand-soft:#d4f3ef;--brand-ink:#0b6660;--amber:#0e7a73;--amber-soft:#d4f3ef;--amber-ink:#0b6660;--line:#cfeae6}' +
     'html[data-skin=idol] :is(.mdeco,.mdeco2){background-image:' + pat('width="60" height="60" viewBox="0 0 60 60"><path d="M15 8l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#39c5bb" opacity=".13"/><path d="M45 38v-10l8-2v10M45 38a3 3 0 1 1-1-1M53 36a3 3 0 1 1-1-1" stroke="#e12885" stroke-width="1.8" fill="none" opacity=".16"/>') + ';background-size:60px 60px}' +
-    'html[data-skin=idol] .mnav{border-bottom:3px solid #39c5bb;box-shadow:0 2px 0 #f7a8cf}html[data-skin=idol] .mb-bub b,html[data-skin=idol] h1 em{color:#e12885!important}' +
+    'html[data-skin=idol] .mnav{border-bottom:3px solid #39c5bb;box-shadow:0 2px 0 #f7a8cf}html[data-skin=idol] .mb-bub b{color:#c81e74!important}html[data-skin=idol] h1 em{color:#e12885!important}' +
     'html[data-skin=idol] .mbrand b{font-family:"M PLUS Rounded 1c","IBM Plex Sans",sans-serif;font-weight:800;letter-spacing:0}html[data-skin=idol] .mbrand b::after{content:" ♪";color:#e12885;font-size:.8em}' +
     'html[data-skin=idol]:not([data-theme=dark]) :is(.panel,.test,.tool,.mplan,.lesson,.book,.report,.box,.mode){border-top:3px solid #39c5bb!important}' +
     // Y2K
@@ -1208,14 +1209,18 @@
     '.mln-go{border:0;background:#9a5f14;color:#fff;font:700 13px/1 "IBM Plex Sans",sans-serif;border-radius:999px;padding:9px 16px;cursor:pointer}.mln-go:hover{background:#905712}' +
     '.mln-x{border:1px solid #e0cfa6;background:#fff;color:#8a6a2a;font:600 13px/1 "IBM Plex Sans",sans-serif;border-radius:999px;padding:9px 14px;cursor:pointer}' +
     'html[data-theme=dark] .mlogin-nudge{background:linear-gradient(90deg,#2d2614,#241f12);border-color:#5a4a22;color:#f0d9a0}html[data-theme=dark] .mlogin-nudge b{color:#ffd98a}html[data-theme=dark] .mln-x{background:#1f2228;border-color:#4a3f22;color:#e8d6a6}' +
-    '@media (max-width:760px){.mlogin-nudge{font-size:13px;padding:10px 14px}.mln-go,.mln-x{flex:1}}';
+    '@media (max-width:760px){.mlogin-nudge{font-size:13px;padding:10px 14px}.mln-go,.mln-x{flex:1}}' +
+    '.mln-go,.mln-x{white-space:nowrap}.mln-s,.mln-xi{display:none}' +
+    '@media (max-width:600px){.mlogin-nudge{flex-wrap:nowrap;gap:8px;padding:8px 12px}.mlogin-nudge span.mln-t{min-width:0;flex:1}.mln-l,.mln-xt{display:none}.mln-s{display:inline}' +
+    '.mln-go,.mln-x{flex:none;position:relative}.mln-go::before,.mln-x::before{content:"";position:absolute;inset:-6px -3px}.mln-go{padding:10px 14px}.mln-x{width:36px;height:34px;padding:0;display:flex;align-items:center;justify-content:center}.mln-xi{display:inline;font-size:15px;line-height:1}}';
   document.head.appendChild(stA);
   var st6 = document.createElement('style'); st6.textContent = '.mslogan{max-width:760px;margin:-10px auto 0;padding:0 20px 40px;text-align:center;color:var(--dim,#666e7a)}.mslogan span{color:var(--brand,#a8691a);font-size:14px}.mslogan p{font:italic 500 17px/1.5 Fraunces,Georgia,serif;color:var(--brand-ink,#6b4410);margin:6px 0 4px}.mslogan p i{display:inline-block;white-space:nowrap;font-style:inherit}.mslogan small{font-size:12px;letter-spacing:.08em}body.has-nav .mslogan{padding-bottom:20px}@media (max-width:760px){body.has-nav .mslogan{padding-bottom:10px}}'; document.head.appendChild(st6);
   // ================= nút: trong thanh menu (nếu có) + nút nổi =================
   var fl = document.createElement('div'); fl.className = 'mfloat';
   var hasNav = !!document.querySelector('.mnav');
   fl.innerHTML = (hasNav ? '' : '<button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button>') + (hasNav ? '' : '<button type="button" class="mbtn mset" aria-label="Cài đặt" title="Cài đặt: cỡ chữ, giao diện, sao lưu">'+icon('gear')+'</button>');
-  document.body.appendChild(fl);
+  var topBar = hasNav ? null : document.querySelector('header.top .bar');
+  if (topBar) { fl.className = 'mtool mtool-bar'; topBar.appendChild(fl); } else document.body.appendChild(fl);
   var navIn = document.querySelector('.mnav .in');
   if (navIn) { var tl = document.createElement('div'); tl.className = 'mtool'; tl.innerHTML = '<button type="button" class="mbtn macc-b" aria-label="Đăng nhập bằng Google"></button><button type="button" class="mbtn mfb" aria-label="Góp ý, báo lỗi" title="Góp ý / báo lỗi">' + icon('msg') + '</button><button type="button" class="mbtn mset" aria-label="Cài đặt" title="Cài đặt: cỡ chữ, giao diện, sao lưu">'+icon('gear')+'</button>'; navIn.appendChild(tl); }
   [].forEach.call(document.querySelectorAll('.mtheme'), function (b) { b.onclick = toggleTheme; });
@@ -1263,8 +1268,8 @@
     var hideNudge = false; try { var tx = +localStorage.getItem('mt.loginNudgeX') || 0; hideNudge = tx > Date.now() - 864e5 * 10; } catch (e) {}
     if (!logged && !hideNudge) {
       var ln = document.createElement('div'); ln.className = 'mlogin-nudge';
-      ln.innerHTML = '<span>👋 <b>Đăng nhập Google</b> để thầy thấy tiến độ của bạn, và lưu bài làm, flashcard qua mọi thiết bị.</span>' +
-        '<span class="mln-b"><button type="button" class="mln-go">Đăng nhập</button><button type="button" class="mln-x" aria-label="Để sau">Để sau</button></span>';
+      ln.innerHTML = '<span class="mln-t"><span class="mln-l">👋 <b>Đăng nhập Google</b> để thầy thấy tiến độ của bạn, và lưu bài làm, flashcard qua mọi thiết bị.</span><span class="mln-s">👋 <b>Đăng nhập</b> để lưu tiến độ trên mọi máy</span></span>' +
+        '<span class="mln-b"><button type="button" class="mln-go">Đăng nhập</button><button type="button" class="mln-x" aria-label="Để sau" title="Để sau (ẩn 10 ngày)"><span class="mln-xt">Để sau</span><span class="mln-xi" aria-hidden="true">✕</span></button></span>';
       ln.querySelector('.mln-go').onclick = function () { var mb = document.querySelector('.macc-b'); if (mb) mb.click(); };
       ln.querySelector('.mln-x').onclick = function () { ln.remove(); try { localStorage.setItem('mt.loginNudgeX', String(Date.now())); } catch (e) {} };
       var nvn = document.querySelector('.mnav');

@@ -1,6 +1,17 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-19c', date: '19/11/2026',
+    title: 'Giao diện gọn và dễ bấm hơn trên điện thoại',
+    items: [
+      "Trang chủ gọn hơn hẳn: mỗi bộ đề thu lại thành một dòng, bấm \"Xem 10 đề\" để mở. Bộ ETS 2026 và các bộ bạn đã làm dở được mở sẵn.",
+      "Khi làm bài, nút góp ý và cài đặt nằm luôn trên thanh trên cùng, không còn che mất ô Part hay đáp án.",
+      "Dải mời đăng nhập gọn còn một dòng; nút \"Đăng nhập\" không còn bị gãy chữ.",
+      "Nút quay lại, số câu ở trang Chép chính tả… dễ bấm hơn; chữ nhỏ trên thẻ đề to hơn chút cho dễ đọc.",
+      "Audio các đề ETS, TOEIC 1000 và Exam Master được nén nhẹ hơn, tải nhanh hơn trên 4G mà giọng vẫn rõ."
+    ]
+  },
+  {
     id: '2026-11-19b', date: '19/11/2026',
     title: 'Luyện phát âm: thêm bài "IPA là gì?" dễ hiểu',
     items: [

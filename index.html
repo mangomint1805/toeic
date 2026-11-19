@@ -56,13 +56,17 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
 .sec{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:34px 0 12px}
 .sec h2{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:26px;margin:0}
 .sec span{color:var(--dim);font-size:14px}
+.folded{display:none!important}
+.fold-b{display:inline-flex;align-items:center;min-height:44px;margin:-2px 0 6px;font:inherit;font-weight:700;font-size:14.5px;color:var(--brand-ink);background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;cursor:pointer}
+.fold-b:hover{border-color:var(--brand)}
+.fold-b[aria-expanded=true]{min-height:36px;padding:6px 14px;font-size:13.5px;color:var(--dim);margin-bottom:12px}
 .tests{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
 .test{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;text-decoration:none;color:var(--ink);transition:border-color .15s,box-shadow .15s,transform .15s}
 .test:hover{border-color:var(--brand);box-shadow:0 8px 22px rgba(107,68,16,.09);transform:translateY(-1px)}
 .ring{flex:none;position:relative;width:60px;height:60px}
 .ring svg{width:60px;height:60px;transform:rotate(-90deg)}
 .ring .n{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
-.ring .n small{font-size:9.5px;letter-spacing:.1em;color:var(--dim);font-weight:700}
+.ring .n small{font-size:11px;letter-spacing:.08em;color:var(--dim);font-weight:700}
 .ring .n b{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:600;color:var(--brand-ink)}
 .tinfo b{display:block;font-size:16px}
 .tinfo span{display:block;font-size:13px;color:var(--dim)}
@@ -181,7 +185,7 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
   </details>
   <footer><span>© Minto English · Tài liệu luyện tập cho học viên</span><span>Điểm quy đổi chỉ mang tính ước tính</span></footer>
 </div>
-<script src="assets/ui.js?v=17"></script>
+<script src="assets/ui.js?v=18"></script>
 <script>
 (function(){
   var I=window.MICON;
@@ -235,6 +239,29 @@ html[data-theme=dark] .nenbar{background:linear-gradient(120deg,#2a2216,#231c12)
   if(window.matchMedia&&matchMedia('(display-mode: standalone)').matches) document.getElementById('inst').hidden=true;
   window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); ev=e; b.hidden=false; });
   b.onclick=function(){ if(ev){ ev.prompt(); ev=null; b.hidden=true; } };
+})();
+</script>
+<script>
+/* Trang chủ gọn hơn: mỗi bộ đề thu lại thành 1 dòng, bấm "Xem 10 đề" để mở. Mở sẵn ETS 2026, bộ đã làm dở và bộ được link tới (#de-thi-…). Máy nhớ lựa chọn. */
+(function(){
+  var L={'de-thi':'tests','de-thi-24':'tests24','de-thi-xc':'testsXC','de-thi-ybm1':'testsY1','de-thi-ybm2':'testsY2','de-thi-ybm3':'testsY3','de-thi-em':'testsEM','starter':'testsST'};
+  var K='ets26.home.open', O={}; try{ O=JSON.parse(localStorage.getItem(K))||{}; }catch(e){}
+  var F={};
+  Object.keys(L).forEach(function(id){
+    var sec=document.getElementById(id), ul=document.getElementById(L[id]); if(!sec||!ul||!ul.children.length) return;
+    var note=sec.nextElementSibling&&sec.nextElementSibling.hasAttribute('data-gate-note')?sec.nextElementSibling:null;
+    var n=ul.children.length, done=ul.querySelectorAll('.badge.ok,.badge.mid').length, unit=id==='starter'?'bài':'đề';
+    var b=document.createElement('button'); b.type='button'; b.className='fold-b'; b.setAttribute('aria-controls',L[id]);
+    sec.insertAdjacentElement('afterend',b);
+    var open=O[id]!=null?!!O[id]:(id==='de-thi'||done>0);
+    function paint(){ ul.classList.toggle('folded',!open); if(note) note.classList.toggle('folded',!open); b.setAttribute('aria-expanded',open?'true':'false');
+      b.textContent=open?'Thu gọn ▴':'Xem '+n+' '+unit+(done?' · đã làm '+done:'')+' ▾'; }
+    paint();
+    F[id]=function(v){ open=v; paint(); };
+    b.onclick=function(){ open=!open; O[id]=open; try{ localStorage.setItem(K,JSON.stringify(O)); }catch(e){} paint(); };
+  });
+  function hash(){ var id=location.hash.slice(1); if(F[id]){ F[id](true); var s=document.getElementById(id); if(s) s.scrollIntoView(); } }
+  window.addEventListener('hashchange',hash); if(location.hash) hash();
 })();
 </script>
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
