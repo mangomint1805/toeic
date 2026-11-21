@@ -153,6 +153,15 @@
       '<div class="box"><h3>Luyện từng Part</h3><p class="hint" style="margin:0">Không giới hạn giờ. Part nghe có nút audio riêng từng câu, nghe lại thoải mái.</p><div class="parts">';
     for (var p = NOLC ? 5 : 1; p <= 7; p++) h += '<button data-m="p' + p + '"><b>' + PART_INFO[p][0] + '</b><span>' + PART_INFO[p][1] + '</span></button>';
     h += '</div></div>';
+    var pdf = (window.MT_PDF || {})[T];
+    h += '<div class="box pdfbox"><h3>🖨️ Tải bản PDF / In ra làm giấy</h3><p class="hint" style="margin:0 0 10px">In đề chuẩn A4 (chọn Full, Listening, Reading hoặc từng Part), kèm Phiếu tô đáp án ' + (SU ? ORDER.length : NOLC ? 100 : 200) + ' câu' + (NOLC ? '' : ' và Audio nghe làm giấy / tải MP3') + '. Làm giấy xong quay lại mở <b>Phiếu trả lời</b> để chấm điểm ngay!</p><div class="pdfrow">';
+    if (pdf && pdf.full) h += '<a class="btn sm" target="_blank" rel="noopener" href="' + esc(pdf.full) + '">📥 Tải PDF bản gốc (Full)</a>';
+    if (pdf && pdf.lc) h += '<a class="btn sm" target="_blank" rel="noopener" href="' + esc(pdf.lc) + '">📥 Listening (PDF)</a>';
+    if (pdf && pdf.rc) h += '<a class="btn sm" target="_blank" rel="noopener" href="' + esc(pdf.rc) + '">📥 Reading (PDF)</a>';
+    h += '<a class="btn' + (pdf && (pdf.full || pdf.lc || pdf.rc) ? ' alt' : '') + ' sm" href="in-de.html?t=' + T + '">🖨️ In / Lưu PDF tùy chỉnh</a>' +
+      '<a class="btn alt sm" href="in-de.html?t=' + T + '&only=sheet">📄 Phiếu tô đáp án</a>' +
+      (NOLC ? '' : '<a class="btn alt sm" href="in-de.html?t=' + T + '#audio">🎧 Audio làm giấy / Tải MP3</a>') +
+      '</div></div>';
     if (hist.length) {
       h += '<div class="box"><h3>Kết quả đã nộp</h3><table class="hist"><tr><th>Ngày</th><th>Cách làm</th><th>Đúng</th><th>Điểm ước tính</th><th></th></tr>';
       hist.slice(-12).reverse().forEach(function (r) {

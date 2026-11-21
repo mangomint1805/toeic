@@ -1,6 +1,16 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-21', date: '21/11/2026',
+    title: 'Mới: Tải bản PDF & in đề ra làm giấy 🖨️',
+    items: [
+      'Trong mỗi đề thi nay có thêm mục "Tải bản PDF / In ra làm giấy" (tải bản PDF scan gốc khi có link, hoặc in / lưu PDF chuẩn A4 ngay trên trình duyệt).',
+      'Cho chọn in Full 200 câu, chỉ Listening, chỉ Reading hoặc chọn từng Part lẻ.',
+      'Kèm trang Phiếu tô đáp án (Answer Sheet) chuẩn 200 câu để in ra tô bút chì, và tùy chọn in thêm bảng Đáp án / Lời thoại riêng ở cuối (mặc định tắt).',
+      'Có trình phát Audio liền mạch dành riêng cho làm giấy và nút tải về 1 file Audio MP3 duy nhất để nghe offline.'
+    ]
+  },
+  {
     id: '2026-11-19c', date: '19/11/2026',
     title: 'Giao diện gọn và dễ bấm hơn trên điện thoại',
     items: [

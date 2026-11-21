@@ -1,5 +1,5 @@
 /* Service worker: mở nhanh và dùng được khi mạng chập chờn. Ưu tiên mạng, lỗi mạng thì lấy bản đã lưu. Không lưu audio. */
-const C='site-v3';
+const C='site-v4';
 self.addEventListener('install',e=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C&&k.indexOf('mt-pa')!==0).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{

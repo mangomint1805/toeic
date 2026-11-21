@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<script>try{var d=document.documentElement,k=JSON.parse(localStorage.getItem('mt.skin')||'""');if(k==='scifi')d.setAttribute('data-theme','dark');if(k)d.setAttribute('data-skin',k)}catch(e){}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only">
+<title>In đề / Tải PDF · Minto English</title>
+<link rel="icon" type="image/png" href="icons/fav-64.png?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--paper:#faf8f4;--card:#fff;--line:#ddd7c9;--ink:#1e232b;--dim:#666e7a;--brand:#a8691a;--brand-soft:#f2e2c4;--brand-ink:#6b4410;--ok:#1f8f6c;--ok-soft:#e1f4ec;--panel2:#f4f0e8}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55;font-size:15px}
+[hidden]{display:none!important}
+a{color:var(--brand-ink)}
+
+/* thanh điều khiển (ẩn khi in) */
+.ctrl-top{position:sticky;top:0;z-index:30;background:rgba(250,248,244,.97);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.ctrl-bar{max-width:980px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ctrl-bar h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:20px;margin:0;flex:1;min-width:180px}
+.ctrl-bar h1 small{display:block;font-family:'IBM Plex Sans',sans-serif;font-size:12.5px;color:var(--dim);font-weight:500}
+.btn{font:inherit;font-weight:600;font-size:14.5px;border:1.5px solid var(--brand);border-radius:8px;padding:8px 15px;cursor:pointer;background:var(--brand);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:#94590f}
+.btn.alt{background:#fff;color:var(--brand-ink);border-color:var(--line)}
+.btn.alt:hover{border-color:var(--brand)}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.sm{font-size:13.5px;padding:6px 11px}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+
+.ctrl-wrap{max-width:980px;margin:16px auto;padding:0 16px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:0 0 14px;box-shadow:0 6px 20px rgba(107,68,16,.05)}
+.panel h2{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:19px;margin:0 0 6px;color:var(--brand-ink)}
+.panel .note{margin:0 0 10px;color:var(--dim);font-size:13.5px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.chip{font:inherit;font-size:13.5px;font-weight:600;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 13px;cursor:pointer}
+.chip.on{border-color:var(--brand);background:var(--brand);color:#fff}
+.parts-pick{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 4px}
+.parts-pick label{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--panel2);font-size:13.5px;font-weight:600;cursor:pointer}
+.parts-pick label:has(input:checked){border-color:var(--brand);background:var(--brand-soft);color:var(--brand-ink)}
+.opts-row{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0 0;padding-top:12px;border-top:1px dashed var(--line)}
+.opts-row label{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;cursor:pointer}
+.drive-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.audio-box{display:flex;flex-direction:column;gap:10px}
+.audio-controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.audio-now{font-weight:700;color:var(--brand-ink);font-size:14.5px}
+.audio-prog{height:6px;background:var(--panel2);border-radius:999px;overflow:hidden;width:100%}
+.audio-prog i{display:block;height:100%;width:0;background:var(--brand);transition:width .2s}
+.spd{display:inline-flex;gap:4px;align-items:center;font-size:13px;color:var(--dim)}
+.spd button{font:inherit;font-size:12.5px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--dim);border-radius:999px;padding:3px 9px;cursor:pointer}
+.spd button[aria-pressed=true]{border-color:var(--brand);background:var(--brand);color:#fff}
+.dl-status{font-size:13px;color:var(--brand-ink);font-weight:600}
+
+/* vùng xem trước & in A4 */
+.paper-wrap{max-width:980px;margin:0 auto 48px;padding:0 16px}
+#paper{background:#fff;color:#111;border:1px solid var(--line);border-radius:12px;padding:24px 28px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+#paper.big-font{font-size:15px}
+#paper.big-font .p-cols{column-count:1}
+
+.p-head{border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.p-head h2{font-family:'Fraunces',Georgia,serif;font-size:21px;margin:0;color:#111}
+.p-head .p-brand{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#555}
+.p-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;margin-top:6px;color:#333}
+.p-meta span{border-bottom:1px dotted #777;padding-right:60px}
+
+.p-sec{margin:14px 0 8px;padding:4px 8px;background:#f0f0f0;border-left:4px solid #111;font-weight:700;font-size:14px;letter-spacing:.02em;page-break-after:avoid;break-after:avoid}
+.p-dir{font-size:12px;color:#333;font-style:italic;margin:0 0 10px;page-break-after:avoid;break-after:avoid}
+
+.p-cols{column-count:2;column-gap:22px;column-rule:1px solid #ddd}
+.p-p1-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;margin-bottom:10px}
+.p-p1-item{border:1px solid #ccc;border-radius:4px;padding:8px;break-inside:avoid;page-break-inside:avoid}
+.p-p1-item img{display:block;width:100%;max-height:210px;object-fit:contain;margin:4px 0 6px;background:#fff}
+.p-p1-lbl{font-weight:700;font-size:13px}
+.p-p1-bub{font-size:12px;color:#333;letter-spacing:.12em}
+
+.p-p2{font-size:12.5px;margin:0 0 5px;break-inside:avoid;page-break-inside:avoid;display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted #e2e2e2;padding-bottom:3px}
+.p-p2 b{min-width:26px}
+.p-p2 .p-p2-txt{flex:1;color:#444}
+
+.p-set{margin:0 0 12px;break-inside:avoid;page-break-inside:avoid}
+.p-set-break{margin:0 0 14px;border-bottom:1px solid #ddd;padding-bottom:10px}
+.p-ghead{font-weight:700;font-size:12.5px;margin:0 0 5px;color:#111}
+.p-graphic{display:block;max-width:100%;max-height:240px;object-fit:contain;margin:4px 0 8px;border:1px solid #ddd}
+.p-q{margin:0 0 7px;font-size:12.5px;line-height:1.4;break-inside:avoid;page-break-inside:avoid}
+.p-q .qt{font-weight:600;margin-bottom:2px}
+.p-q .qo{margin:0;padding-left:16px;list-style:none}
+.p-q .qo li{margin:1px 0}
+.p-q .qo.inline{display:flex;flex-wrap:wrap;gap:2px 14px}
+
+.p-psg{font-family:Georgia,'Times New Roman',serif;font-size:12px;line-height:1.45;border:1px solid #666;border-radius:3px;padding:8px 10px;margin:4px 0 8px;background:#fff;break-inside:avoid;page-break-inside:avoid}
+.p-psg h3{font-size:13.5px;margin:2px 0 5px;text-align:center}
+.p-psg h4{font-size:12.5px;margin:5px 0 3px}
+.p-psg p{margin:4px 0}
+.p-psg table{border-collapse:collapse;width:100%;margin:5px 0;font-size:11.5px}
+.p-psg th,.p-psg td{border:1px solid #666;padding:3px 5px;text-align:left;vertical-align:top}
+.p-psg th{background:#f2f2f2}
+.p-psg .hdr{border-bottom:1px solid #888;padding-bottom:4px;margin-bottom:5px}
+.p-psg .hdr p{margin:1px 0}
+.p-psg .msg{background:#f7f7f7;border:1px solid #ddd;border-radius:4px;padding:4px 7px;margin:3px 0}
+.p-psg .msg p{margin:1px 0}
+.p-psg .blank{font-family:'IBM Plex Sans',sans-serif;font-weight:700;font-size:11.5px;border-bottom:1px solid #111;padding:0 4px}
+.p-psg .pos{font-weight:700}
+
+/* phiếu tô đáp án 200 câu (vừa khít 1 trang A4) */
+.as-page{page-break-before:always;break-before:page;padding-top:4px}
+.as-page.first{page-break-before:auto;break-before:auto}
+.as-head{border:1.5px solid #111;padding:8px 12px;margin-bottom:10px}
+.as-head h3{margin:0 0 6px;font-family:'Fraunces',Georgia,serif;font-size:17px;text-align:center;text-transform:uppercase;letter-spacing:.04em}
+.as-fields{display:grid;grid-template-columns:1.4fr 1fr 1fr .8fr;gap:8px;font-size:12px}
+.as-fields div{border-bottom:1px solid #555;padding-bottom:2px}
+.as-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0 12px;border:1px solid #888;padding:6px 8px}
+.as-col{display:flex;flex-direction:column;gap:2.2px}
+.as-row{display:flex;align-items:center;gap:4px;font-size:10.8px;line-height:1.15}
+.as-row .n{width:23px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;margin-right:2px}
+.as-row .b{width:14px;height:14px;border-radius:50%;border:1px solid #222;display:inline-flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:600;color:#222}
+.as-row.sep{margin-top:4px;padding-top:3px;border-top:1px dashed #aaa}
+.as-foot{margin-top:6px;font-size:11px;color:#444;display:flex;justify-content:space-between}
+
+/* bảng đáp án cuối đề */
+.key-page{page-break-before:always;break-before:page}
+.key-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px 12px;font-size:12px;margin-top:8px}
+.key-item{display:flex;justify-content:space-between;border-bottom:1px dotted #ccc;padding:2px 4px;font-variant-numeric:tabular-nums}
+.key-item b{color:#111}
+.tr-block{font-size:11.5px;line-height:1.4;margin:0 0 8px;break-inside:avoid;page-break-inside:avoid}
+.tr-block p{margin:2px 0}
+
+.page-break{page-break-before:always;break-before:page}
+
+@media (max-width:720px){
+  .p-cols{column-count:1}
+  .p-p1-grid{grid-template-columns:1fr}
+  .as-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .as-fields{grid-template-columns:1fr 1fr}
+  .key-grid{grid-template-columns:repeat(3,1fr)}
+  #paper{padding:14px}
+}
+
+@page{size:A4;margin:11mm 11mm 13mm 11mm}
+@media print{
+  html,body{background:#fff!important;color:#000!important;font-size:11.5pt}
+  .no-print,.mnav,.mbar,.mfab,.mtool-bar{display:none!important}
+  .paper-wrap{max-width:none;margin:0;padding:0}
+  #paper{border:0;border-radius:0;box-shadow:none;padding:0;margin:0;background:#fff!important;color:#000!important}
+  .p-cols{column-count:2;column-gap:16pt;column-rule:0.5pt solid #ccc}
+  #paper.big-font .p-cols{column-count:1}
+  .p-p1-grid{grid-template-columns:1fr 1fr;gap:8pt 12pt}
+  .as-grid{grid-template-columns:repeat(4,1fr)!important;gap:0 10pt}
+  .as-fields{grid-template-columns:1.4fr 1fr 1fr .8fr!important}
+  .key-grid{grid-template-columns:repeat(5,1fr)!important}
+  img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .p-sec,.as-head,.p-psg th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header class="ctrl-top no-print">
+  <div class="ctrl-bar">
+    <a class="btn alt sm" id="backBtn" href="./">← Quay lại đề</a>
+    <h1 id="ttl">In đề / Tải PDF<small id="sub">Chuẩn A4 · in giấy hoặc lưu PDF trực tiếp</small></h1>
+    <button class="btn" id="printBtn" type="button" disabled>🖨️ In / Lưu PDF</button>
+  </div>
+</header>
+
+<div class="ctrl-wrap no-print" id="ctrlArea">
+  <div class="panel" id="drivePanel" hidden>
+    <h2>📥 Tải bản PDF scan gốc từ sách (Google Drive)</h2>
+    <p class="note">Giữ nguyên 100% bố cục sách in gốc, đã cắt riêng đề này và nén nhẹ để tải nhanh &amp; in sắc nét.</p>
+    <div class="drive-row" id="driveBtns"></div>
+  </div>
+
+  <div class="panel" id="optPanel">
+    <h2>🖨️ Tùy chọn In / Lưu bản PDF trên trình duyệt</h2>
+    <p class="note">Chọn phần muốn in rồi bấm <b>🖨️ In / Lưu PDF</b> (trên máy tính chọn máy in <b>"Lưu dưới dạng PDF / Save as PDF"</b>, trên điện thoại chọn Lưu PDF). Làm giấy xong bạn quay lại trang đề mở <b>Phiếu trả lời</b> để nhập đáp án &amp; chấm điểm ngay!</p>
+    <div class="chips" id="scopeChips">
+      <button type="button" class="chip on" data-sc="full">Full 200 câu</button>
+      <button type="button" class="chip" data-sc="lc">Chỉ Listening (P1–4)</button>
+      <button type="button" class="chip" data-sc="rc">Chỉ Reading (P5–7)</button>
+      <button type="button" class="chip" data-sc="custom">Chọn từng Part</button>
+      <button type="button" class="chip" data-sc="sheet">Chỉ Phiếu tô đáp án</button>
+    </div>
+    <div class="parts-pick" id="partsPick" hidden></div>
+    <div class="opts-row">
+      <label><input type="checkbox" id="optSheet" checked> Kèm Phiếu tô đáp án (Answer Sheet) ở cuối</label>
+      <label><input type="checkbox" id="optKey"> Kèm bảng Đáp án (Answer Key) trang riêng</label>
+      <label id="optTrWrap"><input type="checkbox" id="optTr"> Kèm Lời thoại Listening (Transcript)</label>
+      <label><input type="checkbox" id="optBig"> Cỡ chữ lớn (1 cột dễ đọc)</label>
+    </div>
+  </div>
+
+  <div class="panel" id="audioPanel" hidden>
+    <h2>🎧 Audio làm bài trên giấy</h2>
+    <p class="note">Phát liền mạch Part 1 → Part 4 giống thi thật để bạn cầm tờ giấy làm, hoặc tải về 1 file MP3 duy nhất để nghe offline.</p>
+    <div class="audio-box">
+      <div class="audio-controls">
+        <button type="button" class="btn ok sm" id="auPlay">▶ Bắt đầu nghe</button>
+        <button type="button" class="btn alt sm" id="auPrev">⏮ Câu trước</button>
+        <button type="button" class="btn alt sm" id="auNext">⏭ Câu sau</button>
+        <span class="spd" role="group" aria-label="Tốc độ">
+          Tốc độ:
+          <button type="button" data-spd="0.75">0.75x</button>
+          <button type="button" data-spd="1" aria-pressed="true">1x</button>
+          <button type="button" data-spd="1.25">1.25x</button>
+        </span>
+        <button type="button" class="btn alt sm" id="auDl">⬇ Tải file Audio (.mp3)</button>
+      </div>
+      <div class="chips" style="margin:0" id="auJumps"></div>
+      <div class="audio-now" id="auNow">Sẵn sàng phát Listening (Part 1–4)</div>
+      <div class="audio-prog"><i id="auBar"></i></div>
+      <div class="dl-status" id="dlStatus" hidden></div>
+    </div>
+  </div>
+</div>
+
+<div class="paper-wrap">
+  <div id="paper"><p style="color:#666">Đang tải nội dung đề…</p></div>
+</div>
+
+<script src="config.js?v=3"></script>
+<script src="assets/pdf-links.js?v=1"></script>
+<script>
+(function () {
+  'use strict';
+  var Q = new URLSearchParams(location.search);
+  var T = parseInt(Q.get('t'), 10) || 1;
+  var SU = T >= 101 && T <= 112 ? T - 100 : 0;
+  if (!SU) T = Math.max(1, Math.min(62, T));
+  var NAME = SU ? 'Starter TOEIC · Unit ' + SU
+    : (T === 61 || T === 62) ? 'TOEIC A · Exam Master ' + (T - 58)
+    : T > 30 ? 'YBM Vol ' + Math.floor((T - 21) / 10) + ' · Test ' + ((T - 1) % 10 + 1)
+    : T > 20 ? 'TOEIC 1000 Listening/Reading · Test ' + (T - 20)
+    : T > 10 ? 'ETS 2024 · Test ' + (T - 10)
+    : 'ETS 2026 · Test ' + T;
+  var SLUG = NAME.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '');
+  var PART_INFO = {
+    1: ['Part 1', 'Photographs'],
+    2: ['Part 2', 'Question–Response'],
+    3: ['Part 3', 'Conversations'],
+    4: ['Part 4', 'Talks'],
+    5: ['Part 5', 'Incomplete Sentences'],
+    6: ['Part 6', 'Text Completion'],
+    7: ['Part 7', 'Reading Comprehension']
+  };
+  var DIRS = {
+    1: 'Directions: For each question in this part, you will hear four statements about a picture. Select the one statement that best describes what you see in the picture and mark (A), (B), (C), or (D) on your answer sheet.',
+    2: 'Directions: You will hear a question or statement and three responses spoken in English. Select the best response and mark (A), (B), or (C) on your answer sheet.',
+    3: 'Directions: You will hear some conversations between two or more people. Select the best response to each question and mark (A), (B), (C), or (D) on your answer sheet.',
+    4: 'Directions: You will hear some talks given by a single speaker. Select the best response to each question and mark (A), (B), (C), or (D) on your answer sheet.',
+    5: 'Directions: A word or phrase is missing in each of the sentences below. Select the best answer to complete the sentence.',
+    6: 'Directions: Read the texts that follow. A word, phrase, or sentence is missing in parts of each text. Select the best answer to complete the text.',
+    7: 'Directions: In this part you will read a selection of texts. Select the best answer for each question.'
+  };
+  var L4 = ['A', 'B', 'C', 'D'];
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  document.title = 'In / Tải PDF · ' + NAME;
+  $('#ttl').firstChild.nodeValue = NAME;
+  $('#backBtn').href = 'test.html?t=' + T;
+
+  var D = null, NOLC = false, SCOPE = Q.get('only') === 'sheet' ? 'sheet' : 'full';
+  var SEL_PARTS = [1, 2, 3, 4, 5, 6, 7];
+
+  // Nạp dữ liệu đề (giữ nguyên cổng đăng nhập Google cho đề gated & Starter)
+  var GATED = !SU && (window.MT_GATED || []).indexOf(T) >= 0;
+  var sc = document.createElement('script');
+  sc.src = SU || GATED ? 'assets/gate.js?v=1' : 'data/t' + T + '.js';
+  sc.onload = function () {
+    if (SU || GATED) {
+      (SU ? window.MGATE.loadStarter(SU) : window.MGATE.loadDe(T)).then(init, function (e) {
+        $('#optPanel').hidden = true;
+        window.MGATE.fail(e, $('#paper'), NAME, 'test.html?t=' + T);
+      });
+    } else {
+      var d = window.ETSDATA && window.ETSDATA[T];
+      if (!d) { $('#paper').innerHTML = '<h3>Chưa có dữ liệu đề này.</h3><p><a href="test.html?t=' + T + '">← Quay lại</a></p>'; return; }
+      init(d);
+    }
+  };
+  sc.onerror = function () { $('#paper').innerHTML = '<h3>Không tải được đề.</h3><p><a href="test.html?t=' + T + '">← Quay lại</a></p>'; };
+  document.head.appendChild(sc);
+
+  function renderDriveLinks() {
+    var info = (window.MT_PDF || {})[T];
+    if (!info) return;
+    var btns = [];
+    if (info.full) btns.push('<a class="btn ok" target="_blank" rel="noopener" href="' + esc(info.full) + '">📥 Tải PDF Full đề gốc</a>');
+    if (info.lc) btns.push('<a class="btn" target="_blank" rel="noopener" href="' + esc(info.lc) + '">📥 Listening (PDF gốc)</a>');
+    if (info.rc) btns.push('<a class="btn" target="_blank" rel="noopener" href="' + esc(info.rc) + '">📥 Reading (PDF gốc)</a>');
+    if (info.audio) btns.push('<a class="btn alt" target="_blank" rel="noopener" href="' + esc(info.audio) + '">🎧 Audio trọn bộ (Drive)</a>');
+    var extra = info.key ? '<details style="margin-top:10px;font-size:13.5px"><summary style="cursor:pointer;color:var(--dim);font-weight:600">🗝️ Tải bảng Đáp án gốc (chỉ mở sau khi tự làm xong)</summary><div style="margin-top:8px"><a class="btn alt sm" target="_blank" rel="noopener" href="' + esc(info.key) + '">📥 Đáp án gốc (PDF)</a></div></details>' : '';
+    if (!btns.length && !extra) return;
+    $('#driveBtns').innerHTML = btns.join('') + extra;
+    $('#drivePanel').hidden = false;
+  }
+
+  function init(d) {
+    D = d;
+    if (!D.lc || (!D.lc.p1.length && !D.lc.p2.length && !D.lc.p3.length && !D.lc.p4.length)) {
+      NOLC = true;
+      D.lc = { p1: [], p2: [], p3: [], p4: [] };
+      if (SCOPE === 'full' || SCOPE === 'lc') SCOPE = 'rc';
+      SEL_PARTS = [5, 6, 7];
+      $$('#scopeChips .chip').forEach(function (b) {
+        if (b.dataset.sc === 'full' || b.dataset.sc === 'lc') b.hidden = true;
+      });
+      $('#optTrWrap').hidden = true;
+    } else {
+      setupAudio();
+    }
+
+    renderDriveLinks();
+
+    // Tạo checkbox từng Part
+    var ph = '';
+    for (var p = NOLC ? 5 : 1; p <= 7; p++) {
+      ph += '<label><input type="checkbox" data-p="' + p + '" checked> Part ' + p + '</label>';
+    }
+    $('#partsPick').innerHTML = ph;
+
+    // Bind controls
+    $$('#scopeChips .chip').forEach(function (b) {
+      b.onclick = function () {
+        SCOPE = b.dataset.sc;
+        syncChips();
+        renderPaper();
+      };
+    });
+    $$('#partsPick input').forEach(function (cb) {
+      cb.onchange = function () {
+        SEL_PARTS = $$('#partsPick input:checked').map(function (x) { return +x.dataset.p; });
+        renderPaper();
+      };
+    });
+    ['optSheet', 'optKey', 'optTr', 'optBig'].forEach(function (id) {
+      $('#' + id).onchange = renderPaper;
+    });
+    $('#printBtn').disabled = false;
+    $('#printBtn').onclick = function () { window.print(); };
+
+    syncChips();
+    renderPaper();
+    if (location.hash === '#audio' && !$('#audioPanel').hidden) {
+      $('#audioPanel').scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  function syncChips() {
+    $$('#scopeChips .chip').forEach(function (b) { b.classList.toggle('on', b.dataset.sc === SCOPE); });
+    $('#partsPick').hidden = SCOPE !== 'custom';
+    if (SCOPE === 'sheet') {
+      $('#optSheet').checked = true;
+    }
+  }
+
+  function activeParts() {
+    if (SCOPE === 'sheet') return [];
+    if (SCOPE === 'full') return NOLC ? [5, 6, 7] : [1, 2, 3, 4, 5, 6, 7];
+    if (SCOPE === 'lc') return NOLC ? [] : [1, 2, 3, 4];
+    if (SCOPE === 'rc') return [5, 6, 7];
+    return SEL_PARTS.slice();
+  }
+
+  function allQuestions(parts) {
+    var list = [];
+    if (parts.indexOf(1) >= 0) D.lc.p1.forEach(function (q) { list.push({ p: 1, q: q }); });
+    if (parts.indexOf(2) >= 0) D.lc.p2.forEach(function (q) { list.push({ p: 2, q: q }); });
+    if (parts.indexOf(3) >= 0) D.lc.p3.forEach(function (s) { s.qs.forEach(function (q) { list.push({ p: 3, q: q }); }); });
+    if (parts.indexOf(4) >= 0) D.lc.p4.forEach(function (s) { s.qs.forEach(function (q) { list.push({ p: 4, q: q }); }); });
+    if (parts.indexOf(5) >= 0) D.rc.p5.forEach(function (q) { list.push({ p: 5, q: q }); });
+    if (parts.indexOf(6) >= 0) D.rc.p6.forEach(function (s) { s.qs.forEach(function (q) { list.push({ p: 6, q: q }); }); });
+    if (parts.indexOf(7) >= 0) D.rc.p7.forEach(function (s) { s.qs.forEach(function (q) { list.push({ p: 7, q: q }); }); });
+    return list;
+  }
+
+  function cleanPassage(html) {
+    return String(html || '').replace(/<span[^>]*class=["']?blank["']?[^>]*data-n=["']?(\d+)["']?[^>]*>.*?<\/span>/gi, '<span class="blank">($1) ______</span>');
+  }
+
+  function renderPart(p) {
+    var h = '<div class="p-sec">' + PART_INFO[p][0].toUpperCase() + ' · ' + PART_INFO[p][1] + '</div><p class="p-dir">' + DIRS[p] + '</p>';
+    if (p === 1) {
+      h += '<div class="p-p1-grid">';
+      D.lc.p1.forEach(function (q) {
+        h += '<div class="p-p1-item"><div class="p-p1-lbl">' + q.n + '.</div>' +
+          '<img src="img/t' + T + '/' + esc(q.img) + '" alt="Question ' + q.n + '">' +
+          '<div class="p-p1-bub">(A) (B) (C) (D)</div></div>';
+      });
+      return h + '</div>';
+    }
+    if (p === 2) {
+      h += '<div class="p-cols">';
+      D.lc.p2.forEach(function (q) {
+        h += '<div class="p-p2"><b>' + q.n + '.</b><span class="p-p2-txt">Mark your answer on your answer sheet.</span><span>(A) (B) (C)</span></div>';
+      });
+      return h + '</div>';
+    }
+    if (p === 3 || p === 4) {
+      h += '<div class="p-cols">';
+      (p === 3 ? D.lc.p3 : D.lc.p4).forEach(function (s) {
+        h += '<div class="p-set"><p class="p-ghead">Questions ' + s.ns[0] + '–' + s.ns[1] + (p === 3 ? ' refer to the following conversation.' : ' refer to the following talk.') + '</p>';
+        if (s.img) h += '<img class="p-graphic" src="img/t' + T + '/' + esc(s.img) + '" alt="Graphic">';
+        s.qs.forEach(function (q) {
+          h += '<div class="p-q"><div class="qt">' + q.n + '. ' + esc(q.q) + '</div><ul class="qo">' +
+            q.opts.map(function (o, i) { return '<li>(' + L4[i] + ') ' + esc(o) + '</li>'; }).join('') + '</ul></div>';
+        });
+        h += '</div>';
+      });
+      return h + '</div>';
+    }
+    if (p === 5) {
+      h += '<div class="p-cols">';
+      D.rc.p5.forEach(function (q) {
+        var shortOpts = q.opts.every(function (o) { return String(o).length <= 18; });
+        h += '<div class="p-q"><div class="qt">' + q.n + '. ' + esc(q.q) + '</div><ul class="qo' + (shortOpts ? ' inline' : '') + '">' +
+          q.opts.map(function (o, i) { return '<li>(' + L4[i] + ') ' + esc(o) + '</li>'; }).join('') + '</ul></div>';
+      });
+      return h + '</div>';
+    }
+    if (p === 6 || p === 7) {
+      h += '<div class="p-cols">';
+      (p === 6 ? D.rc.p6 : D.rc.p7).forEach(function (s) {
+        var ps = (s.passages || [s.passage]).map(function (x) { return '<div class="p-psg">' + cleanPassage(x) + '</div>'; }).join('');
+        var cls = (s.passages && s.passages.length > 1) ? 'p-set-break' : 'p-set';
+        h += '<div class="' + cls + '"><p class="p-ghead">' + esc(s.head || ('Questions ' + s.ns[0] + '–' + s.ns[1])) + '</p>' + ps;
+        s.qs.forEach(function (q) {
+          h += '<div class="p-q"><div class="qt">' + q.n + '.' + (q.q ? ' ' + esc(q.q) : '') + '</div><ul class="qo">' +
+            q.opts.map(function (o, i) { return '<li>(' + L4[i] + ') ' + esc(o) + '</li>'; }).join('') + '</ul></div>';
+        });
+        h += '</div>';
+      });
+      return h + '</div>';
+    }
+    return '';
+  }
+
+  function renderAnswerSheet(parts, isFirst) {
+    // Nếu chọn "Chỉ Phiếu tô đáp án" hoặc Full thì vẽ chuẩn 200 câu (hoặc đúng các câu của đề Starter/NOLC)
+    var qs = (SCOPE === 'sheet' || SCOPE === 'full')
+      ? allQuestions(NOLC ? [5, 6, 7] : [1, 2, 3, 4, 5, 6, 7])
+      : allQuestions(parts);
+    if (!qs.length) qs = allQuestions(NOLC ? [5, 6, 7] : [1, 2, 3, 4, 5, 6, 7]);
+    var perCol = Math.ceil(qs.length / 4);
+    var cols = '';
+    for (var c = 0; c < 4; c++) {
+      var slice = qs.slice(c * perCol, (c + 1) * perCol);
+      var rows = slice.map(function (item, idx) {
+        var n = item.q.n, isP2 = item.p === 2;
+        var sep = idx > 0 && idx % 5 === 0 ? ' sep' : '';
+        return '<div class="as-row' + sep + '"><span class="n">' + n + '.</span>' +
+          '<span class="b">A</span><span class="b">B</span><span class="b">C</span>' +
+          (isP2 ? '' : '<span class="b">D</span>') + '</div>';
+      }).join('');
+      cols += '<div class="as-col">' + rows + '</div>';
+    }
+    return '<div class="as-page' + (isFirst ? ' first' : '') + '">' +
+      '<div class="as-head"><h3>PHIẾU TRẢ LỜI · TOEIC ANSWER SHEET</h3>' +
+      '<div class="as-fields"><div><b>Họ tên:</b></div><div><b>Lớp:</b></div><div><b>Đề:</b> ' + esc(NAME) + '</div><div><b>Điểm:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;' + qs.length + '</div></div></div>' +
+      '<div class="as-grid">' + cols + '</div>' +
+      '<div class="as-foot"><span>Minto English · mangomint1805.github.io/toeic</span><span>Tô kín ô đáp án bằng bút chì · Làm xong vào web nhập đáp án để chấm điểm &amp; xem giải thích</span></div></div>';
+  }
+
+  function renderKey(parts) {
+    var qs = allQuestions(parts.length ? parts : (NOLC ? [5, 6, 7] : [1, 2, 3, 4, 5, 6, 7]));
+    if (!qs.length) return '';
+    return '<div class="key-page"><div class="p-head"><div><div class="p-brand">Minto English · Answer Key</div><h2>Đáp án · ' + esc(NAME) + '</h2></div></div>' +
+      '<div class="key-grid">' + qs.map(function (x) { return '<div class="key-item"><span>' + x.q.n + '.</span><b>' + esc(x.q.ans) + '</b></div>'; }).join('') + '</div></div>';
+  }
+
+  function renderTranscript(parts) {
+    if (NOLC) return '';
+    var lp = parts.filter(function (p) { return p <= 4; });
+    if (!lp.length) return '';
+    var h = '<div class="key-page"><div class="p-head"><div><div class="p-brand">Minto English · Listening Transcript</div><h2>Lời thoại · ' + esc(NAME) + '</h2></div></div><div class="p-cols">';
+    if (lp.indexOf(1) >= 0) {
+      h += '<div class="p-sec">PART 1</div>';
+      D.lc.p1.forEach(function (q) {
+        h += '<div class="tr-block"><b>' + q.n + '.</b> (' + esc(q.ans) + ') ' +
+          q.opts.map(function (o, i) { return '(' + L4[i] + ') ' + esc(o); }).join(' · ') + '</div>';
+      });
+    }
+    if (lp.indexOf(2) >= 0) {
+      h += '<div class="p-sec">PART 2</div>';
+      D.lc.p2.forEach(function (q) {
+        h += '<div class="tr-block"><b>' + q.n + '.</b> ' + esc(q.q) + ' <b>[' + esc(q.ans) + ']</b><br>' +
+          q.opts.map(function (o, i) { return '(' + L4[i] + ') ' + esc(o); }).join(' · ') + '</div>';
+      });
+    }
+    if (lp.indexOf(3) >= 0) {
+      h += '<div class="p-sec">PART 3</div>';
+      D.lc.p3.forEach(function (s) {
+        if (!s.script || !s.script.length) return;
+        h += '<div class="tr-block"><b>Questions ' + s.ns[0] + '–' + s.ns[1] + '</b>' +
+          s.script.map(function (t) { return '<p>' + (t[0] ? '<b>' + esc(t[0]) + ':</b> ' : '') + esc(t[1]) + '</p>'; }).join('') + '</div>';
+      });
+    }
+    if (lp.indexOf(4) >= 0) {
+      h += '<div class="p-sec">PART 4</div>';
+      D.lc.p4.forEach(function (s) {
+        if (!s.script || !s.script.length) return;
+        h += '<div class="tr-block"><b>Questions ' + s.ns[0] + '–' + s.ns[1] + '</b>' +
+          s.script.map(function (t) { return '<p>' + (t[0] ? '<b>' + esc(t[0]) + ':</b> ' : '') + esc(t[1]) + '</p>'; }).join('') + '</div>';
+      });
+    }
+    return h + '</div></div>';
+  }
+
+  function renderPaper() {
+    var parts = activeParts();
+    var paper = $('#paper');
+    paper.classList.toggle('big-font', $('#optBig').checked);
+    var h = '';
+    if (SCOPE !== 'sheet') {
+      if (!parts.length) {
+        paper.innerHTML = '<p style="color:#666">Hãy chọn ít nhất 1 Part ở phía trên để xem trước bản in.</p>';
+        return;
+      }
+      var nq = allQuestions(parts).length;
+      h += '<div class="p-head"><div><div class="p-brand">Minto English · TOEIC Practice Test</div><h2>' + esc(NAME) + (SU && D.title ? ' — ' + esc(D.title) : '') + '</h2>' +
+        '<div class="p-meta"><span>Họ tên:</span><span>Lớp:</span><span>Ngày:</span></div></div>' +
+        '<div style="text-align:right;font-size:12px;color:#555">' + parts.map(function (p) { return 'P' + p; }).join(' · ') + '<br><b>' + nq + ' câu</b></div></div>';
+      parts.forEach(function (p, idx) {
+        // Nếu in Full cả Listening và Reading, ngắt trang sạch giữa Part 4 và Part 5
+        if (p === 5 && idx > 0 && parts[idx - 1] <= 4) h += '<div class="page-break"></div>';
+        h += renderPart(p);
+      });
+    }
+    if ($('#optSheet').checked || SCOPE === 'sheet') {
+      h += renderAnswerSheet(parts, SCOPE === 'sheet');
+    }
+    if ($('#optKey').checked) {
+      h += renderKey(parts);
+    }
+    if ($('#optTr').checked && !NOLC) {
+      h += renderTranscript(parts);
+    }
+    paper.innerHTML = h;
+  }
+
+  // ---------- Audio player & ghép tải MP3 offline ----------
+  var PL = { list: [], i: 0, au: null, on: false, spd: 1 };
+  function setupAudio() {
+    PL.list = [];
+    D.lc.p1.forEach(function (q) { if (q.a) PL.list.push({ a: q.a, p: 1, label: 'Part 1 · Câu ' + q.n }); });
+    D.lc.p2.forEach(function (q) { if (q.a) PL.list.push({ a: q.a, p: 2, label: 'Part 2 · Câu ' + q.n }); });
+    D.lc.p3.forEach(function (s) { if (s.a) PL.list.push({ a: s.a, p: 3, label: 'Part 3 · Câu ' + s.ns[0] + '–' + s.ns[1] }); });
+    D.lc.p4.forEach(function (s) { if (s.a) PL.list.push({ a: s.a, p: 4, label: 'Part 4 · Câu ' + s.ns[0] + '–' + s.ns[1] }); });
+    if (!PL.list.length) return;
+    $('#audioPanel').hidden = false;
+
+    // Nút nhảy nhanh theo Part
+    var jh = '';
+    [1, 2, 3, 4].forEach(function (p) {
+      var idx = PL.list.findIndex(function (x) { return x.p === p; });
+      if (idx >= 0) jh += '<button type="button" class="chip" data-jump="' + idx + '">Nhảy tới Part ' + p + '</button>';
+    });
+    $('#auJumps').innerHTML = jh;
+    $$('#auJumps button').forEach(function (b) {
+      b.onclick = function () { playAt(+b.dataset.jump); };
+    });
+
+    PL.au = new Audio();
+    PL.au.onended = function () {
+      if (PL.i + 1 < PL.list.length) playAt(PL.i + 1);
+      else { PL.on = false; $('#auPlay').textContent = '▶ Nghe lại từ đầu'; $('#auNow').textContent = '✓ Đã phát hết phần Listening!'; $('#auBar').style.width = '100%'; }
+    };
+    PL.au.onerror = function () { $('#auNow').textContent = '⚠ Lỗi mạng khi phát ' + PL.list[PL.i].label + ' — bấm Phát tiếp để thử lại.'; PL.on = false; $('#auPlay').textContent = '▶ Phát tiếp từ chỗ dừng'; };
+
+    $('#auPlay').onclick = function () {
+      if (PL.on) { PL.au.pause(); PL.on = false; $('#auPlay').textContent = '▶ Phát tiếp từ chỗ dừng'; }
+      else if (PL.au.src && PL.au.currentTime > 0 && !PL.au.ended) { PL.au.playbackRate = PL.spd; PL.au.play(); PL.on = true; $('#auPlay').textContent = '⏸ Tạm dừng'; }
+      else playAt(PL.i < PL.list.length ? PL.i : 0);
+    };
+    $('#auPrev').onclick = function () { playAt(Math.max(0, PL.i - 1)); };
+    $('#auNext').onclick = function () { playAt(Math.min(PL.list.length - 1, PL.i + 1)); };
+    $$('[data-spd]').forEach(function (b) {
+      b.onclick = function () {
+        PL.spd = +b.dataset.spd;
+        if (PL.au) PL.au.playbackRate = PL.spd;
+        $$('[data-spd]').forEach(function (x) { x.setAttribute('aria-pressed', String(+x.dataset.spd === PL.spd)); });
+      };
+    });
+    $('#auDl').onclick = downloadMergedMp3;
+  }
+
+  function playAt(idx) {
+    PL.i = idx;
+    var item = PL.list[idx];
+    if (!item) return;
+    PL.au.src = 'audio/t' + T + '/' + item.a;
+    PL.au.playbackRate = PL.spd;
+    PL.au.play().then(function () {
+      PL.on = true;
+      $('#auPlay').textContent = '⏸ Tạm dừng';
+      $('#auNow').textContent = '🔊 Đang phát: ' + item.label + ' (' + (idx + 1) + '/' + PL.list.length + ')';
+      $('#auBar').style.width = ((idx + 1) / PL.list.length * 100).toFixed(1) + '%';
+    }).catch(function () {
+      $('#auNow').textContent = 'Bấm nút "▶ Bắt đầu nghe" để phát âm thanh.';
+    });
+  }
+
+  // Bỏ ID3v2 ở đầu & ID3v1 ở cuối từng đoạn CBR MP3 để ghép thành 1 file MP3 sạch
+  function stripMp3Tags(buf) {
+    var u = new Uint8Array(buf), start = 0, end = u.length;
+    if (end > 10 && u[0] === 0x49 && u[1] === 0x44 && u[2] === 0x33) { // "ID3"
+      var sz = ((u[6] & 0x7f) << 21) | ((u[7] & 0x7f) << 14) | ((u[8] & 0x7f) << 7) | (u[9] & 0x7f);
+      start = Math.min(end, 10 + sz);
+    }
+    if (end - start > 128 && u[end - 128] === 0x54 && u[end - 127] === 0x41 && u[end - 126] === 0x47) { // "TAG"
+      end -= 128;
+    }
+    return u.subarray(start, end);
+  }
+
+  async function downloadMergedMp3() {
+    var btn = $('#auDl'), st = $('#dlStatus');
+    var parts = activeParts().filter(function (p) { return p <= 4; });
+    var list = parts.length ? PL.list.filter(function (x) { return parts.indexOf(x.p) >= 0; }) : PL.list;
+    if (!list.length) list = PL.list;
+    btn.disabled = true; st.hidden = false;
+    var chunks = [];
+    try {
+      for (var i = 0; i < list.length; i++) {
+        st.textContent = '⏳ Đang tải & ghép audio (' + (i + 1) + '/' + list.length + ')…';
+        var res = await fetch('audio/t' + T + '/' + list[i].a);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        var buf = await res.arrayBuffer();
+        chunks.push(stripMp3Tags(buf));
+      }
+      var blob = new Blob(chunks, { type: 'audio/mpeg' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = SLUG + '-Listening.mp3';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
+      st.textContent = '✓ Đã tải xong file ' + SLUG + '-Listening.mp3 (' + (blob.size / 1048576).toFixed(1) + ' MB)';
+    } catch (e) {
+      st.textContent = '⚠ Không ghép được audio (mạng yếu hoặc thiếu file). Bạn có thể bấm nghe trực tiếp ở trên nha!';
+    }
+    btn.disabled = false;
+  }
+})();
+</script>
+</body>
+</html>
