@@ -1,6 +1,14 @@
 /* Có gì mới trên web TOEIC — mới nhất ở trên cùng. Thêm mục mới vào ĐẦU danh sách; id là ngày (YYYY-MM-DD), cùng ngày thì thêm hậu tố (2026-10-21b). */
 window.MT_UPDATES = [
   {
+    id: '2026-11-22', date: '22/11/2026',
+    title: 'Bấm vào từ để xem nghĩa',
+    items: [
+      "Đề mini và trang làm đề: bấm vào một từ tiếng Anh bất kỳ là hiện nghĩa tiếng Việt, phiên âm, nút nghe đọc và nút lưu flashcard. Dưới mỗi câu có dòng nhắc 💡 cho bạn nào chưa biết.",
+      "Bôi đen đúng một từ (kéo chuột hoặc bấm đúp) giờ cũng tra được, không chỉ bấm một lần."
+    ]
+  },
+  {
     id: '2026-11-21', date: '21/11/2026',
     title: 'Mới: Tải bản PDF & in đề ra làm giấy 🖨️',
     items: [

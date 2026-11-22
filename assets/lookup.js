@@ -100,8 +100,13 @@
     if (pop.contains(ev.target)) return;
     if (window.ETS_LOOKUP === false) { hide(); return; }
     var zone = ev.target.closest && ev.target.closest(ZONE), bad = ev.target.closest && ev.target.closest(BAD);
-    if (!zone || bad || String(window.getSelection() || '').trim()) { hide(); return; }
-    var c = caret(ev.clientX, ev.clientY), wd = c && wordAt(c.n, c.o);
+    if (!zone || bad) { hide(); return; }
+    var sel = window.getSelection(), st = String(sel || '').trim(), wd = null;
+    if (st) {
+      // Bôi đen đúng 1 từ (kéo chuột / bấm đúp) cũng tra được; vùng tô vàng (.passage) để dành cho việc tô
+      if (!/^[A-Za-z][A-Za-z'’-]{1,29}$/.test(st) || !sel.rangeCount || ev.target.closest('.passage')) { hide(); return; }
+      wd = { w: st, r: sel.getRangeAt(0).cloneRange() };
+    } else { var c = caret(ev.clientX, ev.clientY); wd = c && wordAt(c.n, c.o); }
     if (!wd) { hide(); return; }
     if (PICK) { PICK.clear(); PICK.add(wd.r); }
     loadWords(function () { show(wd.w, wd.r); });

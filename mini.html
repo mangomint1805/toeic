@@ -67,6 +67,7 @@ img.ph{display:block;width:100%;max-height:300px;object-fit:contain;border-radiu
 .res{text-align:center}.res .sc{font-family:'Fraunces',Georgia,serif;font-size:54px;color:var(--brand-ink);line-height:1}
 .hint{font-size:13px;color:var(--dim)}
 @media (max-width:420px){.grid2{grid-template-columns:1fr}}
+.lk-tip{margin:-4px 0 10px;font-size:13px;color:var(--dim)}
 </style>
 </head>
 <body data-nav="mini">
@@ -136,7 +137,7 @@ img.ph{display:block;width:100%;max-height:300px;object-fit:contain;border-radiu
     if(x.p===6){ var pas=String(x.passage||'').replace('class="blank" data-n="'+x.n+'"','class="blank cur" data-n="'+x.n+'"'); h+='<div class="p6pass">'+(x.head?'<p class="p6h">'+esc(x.head)+'</p>':'')+pas+'</div>'; }
     if(x.au) h+='<div class="aud"><button id="bPl">▶ Nghe</button><button class="ghost" id="bSl">🐢 Chậm</button></div>';
     var qt=x.p===5?esc(x.q):x.p===3?esc(x.q):x.p===6?'Chọn phương án điền vào chỗ trống ('+x.n+').':x.p===2?'Nghe câu hỏi và chọn câu đáp phù hợp nhất.':'Nghe 4 câu mô tả và chọn câu đúng với bức tranh.';
-    h+='<div class="q">'+qt+'</div><div class="opts">';
+    h+='<div class="q">'+qt+'</div>'+(showTx?'<p class="lk-tip">💡 Bấm vào một từ tiếng Anh để xem nghĩa, nghe đọc và lưu flashcard.</p>':'')+'<div class="opts">';
     var n=x.o.length;
     for(var k=0;k<n;k++) h+='<button class="opt" data-l="'+'ABCD'[k]+'"><span class="L">'+'ABCD'[k]+'</span><span class="tx">'+(showTx?esc(x.o[k]):'')+'</span></button>';
     h+='</div><div id="fb"></div><div class="nav" id="nav"></div></div>';
@@ -185,7 +186,7 @@ img.ph{display:block;width:100%;max-height:300px;object-fit:contain;border-radiu
 })();
 </script>
 <script>window.LOOKUP_ZONE='.q,.opt .tx,.fb';window.LOOKUP_SRC='ETS mini';</script>
-<script src="assets/lookup.js"></script>
+<script src="assets/lookup.js?v=2"></script>
 <script>if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(function(){});});</script>
 <script src="assets/partwk.js?v=2"></script>
 <script src="assets/ui.js?v=18"></script>
